@@ -1,5 +1,6 @@
 package mainmenu;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -20,14 +21,36 @@ public class PanelMainMenu extends JPanel {
 				RenderingHints.VALUE_ANTIALIAS_OFF);
 
 		g2d.clearRect(0, 0, MainMenuDemo.frameWidth, MainMenuDemo.frameHeight);
+		g2d.drawString("palm x: " + MainMenuDemo.h.palmPosition().getX(), 20,
+				20);
+		g2d.drawString("palm y: " + MainMenuDemo.h.palmPosition().getY(), 20,
+				35);
+		g2d.drawString("panel x: " + Util.palmXToPanelX(), 20, 50);
+		g2d.drawString("panel y: " + Util.palmYToPanelY(), 20, 65);
 
-		g2d.drawRect(200, 100, 200, 200);
-		g2d.drawRect(400, 300, 200, 200);
-		g2d.drawRect(400, 100, 200, 200);
-		g2d.drawRect(200, 300, 200, 200);
+		if (MainMenuDemo.t1.isRunning())
+			g.setColor(Color.gray);
+		else
+			g.setColor(Color.red);
+		g2d.fillRect(200, 100, 200, 200);
 
-		g2d.drawString("x: " + MainMenuDemo.h.palmPosition().getX(), 20, 20);
-		g2d.drawString("y: " + MainMenuDemo.h.palmPosition().getY(), 20, 35);
+		if (MainMenuDemo.t2.isRunning())
+			g.setColor(Color.gray);
+		else
+			g.setColor(Color.green);
+		g2d.fillRect(400, 100, 200, 200);
+
+		if (MainMenuDemo.t3.isRunning())
+			g.setColor(Color.gray);
+		else
+			g.setColor(Color.black);
+		g2d.fillRect(200, 300, 200, 200);
+
+		if (MainMenuDemo.t4.isRunning())
+			g.setColor(Color.gray);
+		else
+			g.setColor(Color.blue);
+		g2d.fillRect(400, 300, 200, 200);
 
 		BufferedImage img = null;
 		try {
@@ -36,7 +59,7 @@ public class PanelMainMenu extends JPanel {
 			e.printStackTrace();
 		}
 
-		g2d.drawImage(img, Util.palmXToPanelX(), Util.pamlYToPanelY(), 40, 40,
-				null);
+		g2d.drawImage(img, Util.palmXToPanelX() - 20,
+				Util.palmYToPanelY() - 20, 40, 40, null);
 	}
 }

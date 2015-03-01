@@ -7,12 +7,12 @@ public class Util {
 	}
 
 	public static int palmXToPanelX() {
-		return Math.round(MainMenuDemo.h.palmPosition().getX() - 15
+		return Math.round(MainMenuDemo.h.palmPosition().getX()
 				+ (MainMenuDemo.frameWidth / 2));
 	}
 
-	public static int pamlYToPanelY() {
-		return (-1 * (Math.round(MainMenuDemo.h.palmPosition().getY()))) - 15
+	public static int palmYToPanelY() {
+		return (-1 * (Math.round(MainMenuDemo.h.palmPosition().getY())))
 				+ MainMenuDemo.frameHeight;
 	}
 }

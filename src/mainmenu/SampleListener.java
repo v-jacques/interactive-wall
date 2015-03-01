@@ -10,23 +10,38 @@ class SampleListener extends Listener {
 	}
 
 	public void onFrame(Controller controller) {
-		// System.out.println("Frame available");
 		Frame frame = controller.frame();
 
 		HandList hands = frame.hands();
 		MainMenuDemo.h = hands.get(0);
 		MainMenuDemo.p.repaint();
-		if (Math.round(MainMenuDemo.h.palmPosition().getX()) - 15
-				+ (MainMenuDemo.frameWidth / 2) >= 0
-				&& Math.round(MainMenuDemo.h.palmPosition().getX()) - 15
-						+ (MainMenuDemo.frameWidth / 2) <= 100
-				&& (-1 * (Math.round(MainMenuDemo.h.palmPosition().getY())))
-						- 15 + MainMenuDemo.frameHeight >= 0
-				&& (-1 * (Math.round(MainMenuDemo.h.palmPosition().getY())))
-						- 15 + MainMenuDemo.frameHeight <= 100) {
-			MainMenuDemo.t.start();
+
+		if (Util.isBetween(200, 400, Util.palmXToPanelX())
+				&& Util.isBetween(100, 300, Util.palmYToPanelY())) {
+			MainMenuDemo.t1.start();
 		} else {
-			MainMenuDemo.t.stop();
+			MainMenuDemo.t1.stop();
+		}
+
+		if (Util.isBetween(400, 600, Util.palmXToPanelX())
+				&& Util.isBetween(100, 300, Util.palmYToPanelY())) {
+			MainMenuDemo.t2.start();
+		} else {
+			MainMenuDemo.t2.stop();
+		}
+
+		if (Util.isBetween(200, 400, Util.palmXToPanelX())
+				&& Util.isBetween(300, 500, Util.palmYToPanelY())) {
+			MainMenuDemo.t3.start();
+		} else {
+			MainMenuDemo.t3.stop();
+		}
+
+		if (Util.isBetween(400, 600, Util.palmXToPanelX())
+				&& Util.isBetween(300, 500, Util.palmYToPanelY())) {
+			MainMenuDemo.t4.start();
+		} else {
+			MainMenuDemo.t4.stop();
 		}
 	}
 
