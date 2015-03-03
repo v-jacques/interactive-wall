@@ -13,35 +13,35 @@ class SampleListener extends Listener {
 		Frame frame = controller.frame();
 
 		HandList hands = frame.hands();
-		MainMenuDemo.h = hands.get(0);
-		MainMenuDemo.p.repaint();
+		MainMenuExperience.h = hands.get(0);
+		MainMenuExperience.p.repaint();
 
 		if (Util.isBetween(200, 400, Util.palmXToPanelX())
 				&& Util.isBetween(100, 300, Util.palmYToPanelY())) {
-			MainMenuDemo.t1.start();
+			MainMenuExperience.t1.start();
 		} else {
-			MainMenuDemo.t1.stop();
+			MainMenuExperience.t1.stop();
 		}
 
 		if (Util.isBetween(400, 600, Util.palmXToPanelX())
 				&& Util.isBetween(100, 300, Util.palmYToPanelY())) {
-			MainMenuDemo.t2.start();
+			MainMenuExperience.t2.start();
 		} else {
-			MainMenuDemo.t2.stop();
+			MainMenuExperience.t2.stop();
 		}
 
 		if (Util.isBetween(200, 400, Util.palmXToPanelX())
 				&& Util.isBetween(300, 500, Util.palmYToPanelY())) {
-			MainMenuDemo.t3.start();
+			MainMenuExperience.t3.start();
 		} else {
-			MainMenuDemo.t3.stop();
+			MainMenuExperience.t3.stop();
 		}
 
 		if (Util.isBetween(400, 600, Util.palmXToPanelX())
 				&& Util.isBetween(300, 500, Util.palmYToPanelY())) {
-			MainMenuDemo.t4.start();
+			MainMenuExperience.t4.start();
 		} else {
-			MainMenuDemo.t4.stop();
+			MainMenuExperience.t4.stop();
 		}
 	}
 

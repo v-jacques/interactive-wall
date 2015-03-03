@@ -20,33 +20,33 @@ public class PanelMainMenu extends JPanel {
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_OFF);
 
-		g2d.clearRect(0, 0, MainMenuDemo.frameWidth, MainMenuDemo.frameHeight);
-		g2d.drawString("palm x: " + MainMenuDemo.h.palmPosition().getX(), 20,
+		g2d.clearRect(0, 0, MainMenuExperience.frameWidth, MainMenuExperience.frameHeight);
+		g2d.drawString("palm x: " + MainMenuExperience.h.palmPosition().getX(), 20,
 				20);
-		g2d.drawString("palm y: " + MainMenuDemo.h.palmPosition().getY(), 20,
+		g2d.drawString("palm y: " + MainMenuExperience.h.palmPosition().getY(), 20,
 				35);
 		g2d.drawString("panel x: " + Util.palmXToPanelX(), 20, 50);
 		g2d.drawString("panel y: " + Util.palmYToPanelY(), 20, 65);
 
-		if (MainMenuDemo.t1.isRunning())
+		if (MainMenuExperience.t1.isRunning())
 			g.setColor(Color.gray);
 		else
 			g.setColor(Color.red);
 		g2d.fillRect(200, 100, 200, 200);
 
-		if (MainMenuDemo.t2.isRunning())
+		if (MainMenuExperience.t2.isRunning())
 			g.setColor(Color.gray);
 		else
 			g.setColor(Color.green);
 		g2d.fillRect(400, 100, 200, 200);
 
-		if (MainMenuDemo.t3.isRunning())
+		if (MainMenuExperience.t3.isRunning())
 			g.setColor(Color.gray);
 		else
 			g.setColor(Color.black);
 		g2d.fillRect(200, 300, 200, 200);
 
-		if (MainMenuDemo.t4.isRunning())
+		if (MainMenuExperience.t4.isRunning())
 			g.setColor(Color.gray);
 		else
 			g.setColor(Color.blue);
