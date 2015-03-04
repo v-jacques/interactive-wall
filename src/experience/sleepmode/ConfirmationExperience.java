@@ -11,9 +11,6 @@ package experience.sleepmode;
 
 import java.io.File;
 
-import main.Experience;
-import main.ExperienceController;
-import main.InteractiveWall;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -27,6 +24,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import main.Experience;
+import main.ExperienceController;
+import main.InteractiveWall;
 
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;

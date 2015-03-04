@@ -4,8 +4,6 @@ import javafx.scene.layout.Pane;
 
 import com.leapmotion.leap.Hand;
 
-import experience.mainmenu.MainMenuExperience;
-
 public class Util {
 	// checks if c is between a and b
 	public static boolean isBetween(int a, int b, int c) {

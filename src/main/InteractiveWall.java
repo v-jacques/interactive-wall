@@ -11,13 +11,13 @@ package main;
  *		
  */
 
-import experience.mainmenu.MainMenuExperience;
-import experience.sleepmode.ConfirmationExperience;
-import experience.sleepmode.SleepModeExperience;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import experience.mainmenu.MainMenuExperience;
+import experience.sleepmode.ConfirmationExperience;
+import experience.sleepmode.SleepModeExperience;
 
 public class InteractiveWall extends Application {
 
@@ -40,7 +40,7 @@ public class InteractiveWall extends Application {
 		mainContainer.loadExperience(CONFRIMATION, CONFRIMATION_Ex);
 		mainContainer.loadExperience(MAIN_MENU, MAIN_MENU_Ex);
 
-		mainContainer.setExperience(MAIN_MENU);
+		mainContainer.setExperience(SLEEP_MODE);
 
 		Scene main = new Scene(mainContainer, 1600, 1000);
 		main.setFill(Color.BLACK);

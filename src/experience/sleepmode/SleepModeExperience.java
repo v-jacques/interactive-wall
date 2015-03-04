@@ -11,8 +11,6 @@ package experience.sleepmode;
 
 import java.io.File;
 
-import main.Experience;
-import main.ExperienceController;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.Node;
@@ -20,6 +18,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import main.Experience;
+import main.ExperienceController;
 
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
@@ -27,7 +27,6 @@ import com.leapmotion.leap.Gesture;
 import com.leapmotion.leap.Listener;
 
 public class SleepModeExperience extends Listener implements Experience {
-
 	Controller controller;
 	ExperienceController myController;
 	MediaPlayer mediaPlayer;
