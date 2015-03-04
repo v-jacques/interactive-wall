@@ -1,4 +1,4 @@
-package experienceController;
+package main;
 
 /*
  *
@@ -11,11 +11,13 @@ package experienceController;
  *		
  */
 
+import experience.mainmenu.MainMenuExperience;
+import experience.sleepmode.ConfirmationExperience;
+import experience.sleepmode.SleepModeExperience;
 import javafx.application.Application;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 public class InteractiveWall extends Application {
 
@@ -23,23 +25,27 @@ public class InteractiveWall extends Application {
 	public static final Experience SLEEP_MODE_Ex = new SleepModeExperience();
 	public static final String CONFRIMATION = "confirm";
 	public static final Experience CONFRIMATION_Ex = new ConfirmationExperience();
+	public static final String MAIN_MENU = "main";
+	public static final Experience MAIN_MENU_Ex = new MainMenuExperience();
+
+	public static void main(String[] args) {
+		launch(args);
+	}
 
 	@Override
 	public void start(Stage primaryStage) {
-
 		ExperienceController mainContainer = new ExperienceController();
 
 		mainContainer.loadExperience(SLEEP_MODE, SLEEP_MODE_Ex);
 		mainContainer.loadExperience(CONFRIMATION, CONFRIMATION_Ex);
+		mainContainer.loadExperience(MAIN_MENU, MAIN_MENU_Ex);
 
-		mainContainer.setExperience(SLEEP_MODE);
+		mainContainer.setExperience(MAIN_MENU);
 
-		Group root = new Group();
-		root.getChildren().addAll(mainContainer);
-		Scene main = new Scene(root, 1280, 720);
+		Scene main = new Scene(mainContainer, 1600, 1000);
 		main.setFill(Color.BLACK);
-
 		primaryStage.setScene(main);
+		primaryStage.setTitle("Interactive Wall");
 		primaryStage.show();
 
 	}

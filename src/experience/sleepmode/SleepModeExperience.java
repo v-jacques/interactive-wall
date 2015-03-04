@@ -1,4 +1,4 @@
-package experienceController;
+package experience.sleepmode;
 
 /*
  *
@@ -9,22 +9,29 @@ package experienceController;
  *		
  */
 
+import java.io.File;
+
+import main.Experience;
+import main.ExperienceController;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
+import javafx.scene.Node;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
-import java.io.File;
-import javafx.event.*;
-import javafx.scene.input.MouseEvent;
-import javafx.beans.binding.Bindings;
-import javafx.beans.property.DoubleProperty;
-import javafx.scene.Node;
 
-public class SleepModeExperience implements Experience {
+import com.leapmotion.leap.Controller;
+import com.leapmotion.leap.Frame;
+import com.leapmotion.leap.Gesture;
+import com.leapmotion.leap.Listener;
 
+public class SleepModeExperience extends Listener implements Experience {
+
+	Controller controller;
 	ExperienceController myController;
 	MediaPlayer mediaPlayer;
-	private File videofile = new File("../../testVideo.mp4");
+	private File videofile = new File("src/media/testVideo.mp4");
 	private final String MEDIA_URL = videofile.toURI().toString();
 
 	BorderPane pane;
@@ -43,22 +50,17 @@ public class SleepModeExperience implements Experience {
 
 		width.bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
 		height.bind(Bindings.selectDouble(mediaView.sceneProperty(), "height"));
-		mediaView.setOnMousePressed(new EventHandler<MouseEvent>() {
-			public void handle(MouseEvent me) {
-				goToConfirm();
-			}
-		});
 		pane.setCenter(mediaView);
 		mediaView.setPreserveRatio(true);
 	}
 
-	public void setParent(ExperienceController controller) {
-		myController = controller;
-	}
-
 	public void startExperience() {
-		System.out.println("Here");
 		mediaPlayer.play();
+		controller = new Controller(this);
+		controller.enableGesture(Gesture.Type.TYPE_SWIPE);
+		controller.enableGesture(Gesture.Type.TYPE_SCREEN_TAP);
+		controller.enableGesture(Gesture.Type.TYPE_KEY_TAP);
+		controller.enableGesture(Gesture.Type.TYPE_CIRCLE);
 	}
 
 	public void stopExperience() {
@@ -70,8 +72,21 @@ public class SleepModeExperience implements Experience {
 	}
 
 	private void goToConfirm() {
-		stopExperience();
-		myController.setExperience(InteractiveWall.CONFRIMATION);
+		controller.removeListener(this);
+		// myController.setExperience(controller.CONFRIMATION);
+	}
+
+	public void onFrame(Controller controller) {
+		Frame frame = controller.frame();
+
+		if (frame.gestures().count() > 0) {
+			goToConfirm();
+		}
+	}
+
+	@Override
+	public void setParent(ExperienceController controller) {
+		myController = controller;
 	}
 
 }

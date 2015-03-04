@@ -1,4 +1,4 @@
-package experienceController;
+package main;
 
 /*
  *
@@ -12,7 +12,6 @@ package experienceController;
 import javafx.scene.Node;
 
 public interface Experience {
-
 	public void setParent(ExperienceController controller);
 
 	public void startExperience();
@@ -20,5 +19,4 @@ public interface Experience {
 	public void stopExperience();
 
 	public Node getNode();
-
 }
