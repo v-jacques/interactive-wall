@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import experience.mainmenu.MainMenuExperience;
 import experience.sleepmode.ConfirmationExperience;
 import experience.sleepmode.SleepModeExperience;
+import static javafx.application.Application.launch;
 
 public class InteractiveWall extends Application {
 
