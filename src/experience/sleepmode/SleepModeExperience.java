@@ -20,6 +20,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import main.Experience;
 import main.ExperienceController;
+import main.InteractiveWall;
 
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
@@ -27,6 +28,7 @@ import com.leapmotion.leap.Gesture;
 import com.leapmotion.leap.Listener;
 
 public class SleepModeExperience extends Listener implements Experience {
+
 	Controller controller;
 	ExperienceController myController;
 	MediaPlayer mediaPlayer;
@@ -53,6 +55,10 @@ public class SleepModeExperience extends Listener implements Experience {
 		mediaView.setPreserveRatio(true);
 	}
 
+	public void setParent(ExperienceController controller) {
+		myController = controller;
+	}
+
 	public void startExperience() {
 		mediaPlayer.play();
 		controller = new Controller(this);
@@ -72,7 +78,7 @@ public class SleepModeExperience extends Listener implements Experience {
 
 	private void goToConfirm() {
 		controller.removeListener(this);
-		// myController.setExperience(controller.CONFRIMATION);
+		myController.setExperience(InteractiveWall.CONFIRMATION);
 	}
 
 	public void onFrame(Controller controller) {
@@ -81,11 +87,6 @@ public class SleepModeExperience extends Listener implements Experience {
 		if (frame.gestures().count() > 0) {
 			goToConfirm();
 		}
-	}
-
-	@Override
-	public void setParent(ExperienceController controller) {
-		myController = controller;
 	}
 
 }

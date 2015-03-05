@@ -23,7 +23,7 @@ public class InteractiveWall extends Application {
 
 	public static final String SLEEP_MODE = "sleep";
 	public static final Experience SLEEP_MODE_Ex = new SleepModeExperience();
-	public static final String CONFRIMATION = "confirm";
+	public static final String CONFIRMATION = "confirm";
 	public static final Experience CONFRIMATION_Ex = new ConfirmationExperience();
 	public static final String MAIN_MENU = "main";
 	public static final Experience MAIN_MENU_Ex = new MainMenuExperience();
@@ -37,10 +37,10 @@ public class InteractiveWall extends Application {
 		ExperienceController mainContainer = new ExperienceController();
 
 		mainContainer.loadExperience(SLEEP_MODE, SLEEP_MODE_Ex);
-		mainContainer.loadExperience(CONFRIMATION, CONFRIMATION_Ex);
+		mainContainer.loadExperience(CONFIRMATION, CONFRIMATION_Ex);
 		mainContainer.loadExperience(MAIN_MENU, MAIN_MENU_Ex);
 
-		mainContainer.setExperience(SLEEP_MODE);
+		mainContainer.setExperience(MAIN_MENU);
 
 		Scene main = new Scene(mainContainer, 1600, 1000);
 		main.setFill(Color.BLACK);

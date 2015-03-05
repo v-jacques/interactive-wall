@@ -17,7 +17,6 @@ import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.Node;
-import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -37,18 +36,17 @@ import com.leapmotion.leap.Listener;
 public class ConfirmationExperience extends Listener implements Experience {
 
 	ExperienceController myController;
-	private File imageFile = new File("media/welcome.png");
+	private File imageFile = new File("src/media/welcome.png");
 	private final String IMAGE_URL = imageFile.toURI().toString();
-	private File leftHandImage = new File("media/palmLeft.png");
+	private File leftHandImage = new File("src/media/palmLeft.png");
 	private final String LEFT_HAND_IMAGE_URL = leftHandImage.toURI().toString();
-	private File rightHandImage = new File("media/palmRight.png");
+	private File rightHandImage = new File("src/media/palmRight.png");
 	private final String RIGHT_HAND_IMAGE_URL = rightHandImage.toURI()
 			.toString();
 
 	Controller controller;
 	StackPane pane;
 	Pane canvas;
-	GraphicsContext gc;
 	Timeline timeline;
 	Text t;
 	ImageView rightHand;
