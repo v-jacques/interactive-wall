@@ -7,6 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import main.Experience;
 import main.ExperienceController;
 import main.InteractiveWall;
@@ -29,12 +30,17 @@ public class MainMenuExperience extends Listener implements Experience {
 	ImageView rightHand;
 	ImageView leftHand;
 	AnimationTimer drawHands;
+        AnimationTimer animationText;
 
 	double rightHandPosX = -50.0;
 	double rightHandPosY = -50.0;
+        double realRightHandPosX = -50.0;
+        double realRightHandPosY = -50.0;
 
 	double leftHandPosX = -50.0;
 	double leftHandPosY = -50.0;
+        double realLeftHandPosX = -50.0;
+        double realLeftHandPosY = -50.0;
 
 	public MainMenuExperience() {
 		pane = new StackPane();
@@ -76,10 +82,10 @@ public class MainMenuExperience extends Listener implements Experience {
 
 		// sleepTimer = new Timeline(new KeyFrame(Duration.millis(15000),
 		// ae -> goToSleepMode()));
-
-		rightHand = new ImageView(new Image("media/palmRight.png", 50, 50,
+                                
+		rightHand = new ImageView(new Image("media/palmRight.png", 100, 100,
 				true, true));
-		leftHand = new ImageView(new Image("media/palmLeft.png", 50, 50, true,
+		leftHand = new ImageView(new Image("media/palmLeft.png", 100, 100, true,
 				true));
 
 		drawHands = new AnimationTimer() {
@@ -91,9 +97,35 @@ public class MainMenuExperience extends Listener implements Experience {
 				leftHand.setTranslateY(leftHandPosY);
 			}
 		};
-
+                
+                Text t = new Text ("screenX" + leftHandPosX);
+                t.setX(150.0);
+                t.setY(289.0);
+                Text t2 = new Text ("screenY" + leftHandPosY);
+                t2.setX(150.0);
+                t2.setY(300.0);
+                Text t3 = new Text ("palmX" + realLeftHandPosX);
+                t3.setX(150.0);
+                t3.setY(311.0);
+                Text t4 = new Text ("palmY" + realLeftHandPosY);
+                t4.setX(150.0);
+                t4.setY(322.0);
+                
+                canvas.getChildren().addAll(t, t2);
+                canvas.getChildren().addAll(t3, t4);
+                
+                animationText = new AnimationTimer() {
+                    @Override
+                    public void handle(long now){
+                        t.setText("screenX" + leftHandPosX);
+                        t2.setText("screenY" + leftHandPosY);
+                        t3.setText("palmX" + realLeftHandPosX);
+                        t4.setText("palmY" + realLeftHandPosY);
+                    }
+                };
+                
 		canvas.getChildren().addAll(rightHand, leftHand);
-
+            
 		rightHand.relocate(rightHandPosX, rightHandPosY);
 		leftHand.relocate(leftHandPosX, leftHandPosY);
 
@@ -109,6 +141,7 @@ public class MainMenuExperience extends Listener implements Experience {
 	public void startExperience() {
 		drawHands.start();
 		// sleepTimer.play();
+                animationText.start();
 		controller = new Controller(this);
 	}
 
@@ -144,20 +177,31 @@ public class MainMenuExperience extends Listener implements Experience {
 
 		rightHandPosX = -50.0;
 		rightHandPosY = -50.0;
+                realRightHandPosX = -50.0;
+                realRightHandPosY = -50.0;
+               
 
 		leftHandPosX = -50.0;
 		leftHandPosY = -50.0;
+                realLeftHandPosX = -50.0;
+                realLeftHandPosY = -50.0;        
+
 
 		for (int i = 0; i < hands.count(); i++) {
 			if (hands.get(i).isRight()) {
 				right = hands.get(i);
 				rightHandPosX = Util.palmXToPanelX(right, pane);
 				rightHandPosY = Util.palmYToPanelY(right, pane);
+                                realRightHandPosX = right.palmPosition().getX();
+                                realRightHandPosY = right.palmPosition().getY();
+                                        
 			} else if (hands.get(i).isLeft()) {
 				left = hands.get(i);
 				leftHandPosX = Util.palmXToPanelX(left, pane);
 				leftHandPosY = Util.palmYToPanelY(left, pane);
+                                realLeftHandPosX = left.palmPosition().getX();
+                                realLeftHandPosY = left.palmPosition().getY();
 			}
-		}
+		}                
 	}
 }

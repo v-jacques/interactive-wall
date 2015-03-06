@@ -11,11 +11,20 @@ public class Util {
 	}
 
 	public static double palmXToPanelX(Hand hand, Pane pane) {
-		return Math.round(hand.palmPosition().getX() + (pane.getWidth() / 2));
+		double origStart = -150;
+                double origEnd = 150;
+                double newStart = 0;
+                double newEnd = 1600;
+                double scale = (newEnd - newStart) / (origEnd - origStart);
+                return (newStart + ((hand.palmPosition().getX() - origStart) * scale));                  
 	}
 
 	public static double palmYToPanelY(Hand hand, Pane pane) {
-		return (-1 * (Math.round(hand.palmPosition().getY())))
-				+ pane.getHeight();
+                double origStart = 400;
+                double origEnd = 30;
+                double newStart = 0;
+                double newEnd = 1000;
+                double scale = (newEnd - newStart) / (origEnd - origStart);
+                return (newStart + ((hand.palmPosition().getY() - origStart) * scale));
 	}
 }
