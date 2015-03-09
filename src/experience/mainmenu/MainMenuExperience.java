@@ -139,7 +139,7 @@ public class MainMenuExperience extends Listener implements Experience {
                         @Override
                         public void handle(long now) {
                                 if (Util.isBetween(270, 270 + 486, (int) rightHandPosX)
-                                                && Util.isBetween(147, 147 + 289, (int) rightHandPosX))
+                                                && Util.isBetween(147, 147 + 289, (int) rightHandPosY))
                                         blockView.setImage(blockkHover);
                                 else
                                         blockView.setImage(blockImg);
@@ -154,7 +154,7 @@ public class MainMenuExperience extends Listener implements Experience {
                                 else
                                         galleryView.setImage(galleryImg);
                                 if (Util.isBetween(843, 843 + 486, (int) rightHandPosX)
-                                                && Util.isBetween(509, 509 + 289, (int) rightHandPosX))
+                                                && Util.isBetween(509, 509 + 289, (int) rightHandPosY))
                                         pondView.setImage(pondHover);
                                 else
                                         pondView.setImage(pondImg);
