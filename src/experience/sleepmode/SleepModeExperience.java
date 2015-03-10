@@ -21,6 +21,7 @@ import javafx.scene.media.MediaView;
 import main.Experience;
 import main.ExperienceController;
 import main.InteractiveWall;
+import main.SystemMusic;
 
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
@@ -32,7 +33,7 @@ public class SleepModeExperience extends Listener implements Experience {
 	Controller controller;
 	ExperienceController myController;
 	MediaPlayer mediaPlayer;
-	private File videofile = new File("src/media/testVideo.mp4");
+	private File videofile = new File("src/media/sleepLoop.mp4");
 	private final String MEDIA_URL = videofile.toURI().toString();
 
 	BorderPane pane;
@@ -42,6 +43,7 @@ public class SleepModeExperience extends Listener implements Experience {
 		// create media player
 		Media media = new Media(MEDIA_URL);
 		mediaPlayer = new MediaPlayer(media);
+		mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
 
 		// create mediaView and add media player to the viewer
 		MediaView mediaView = new MediaView(mediaPlayer);
@@ -60,6 +62,7 @@ public class SleepModeExperience extends Listener implements Experience {
 	}
 
 	public void startExperience() {
+		SystemMusic.stopBackgroundMusic();
 		mediaPlayer.play();
 		controller = new Controller(this);
 		controller.enableGesture(Gesture.Type.TYPE_SWIPE);

@@ -12,19 +12,19 @@ public class Util {
 
 	public static double palmXToPanelX(Hand hand, Pane pane) {
 		double origStart = -150;
-                double origEnd = 150;
-                double newStart = 0;
-                double newEnd = 1600;
-                double scale = (newEnd - newStart) / (origEnd - origStart);
-                return (newStart + ((hand.palmPosition().getX() - origStart) * scale));                  
+		double origEnd = 150;
+		double newStart = 0;
+		double newEnd = 1600;
+		double scale = (newEnd - newStart) / (origEnd - origStart);
+		return (newStart + ((hand.palmPosition().getX() - origStart) * scale));
 	}
 
 	public static double palmYToPanelY(Hand hand, Pane pane) {
-                double origStart = 400;
-                double origEnd = 30;
-                double newStart = 0;
-                double newEnd = 1000;
-                double scale = (newEnd - newStart) / (origEnd - origStart);
-                return (newStart + ((hand.palmPosition().getY() - origStart) * scale));
+		double origStart = 400;
+		double origEnd = 30;
+		double newStart = 0;
+		double newEnd = 1000;
+		double scale = (newEnd - newStart) / (origEnd - origStart);
+		return (newStart + ((hand.palmPosition().getY() - origStart) * scale));
 	}
 }
