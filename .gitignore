@@ -1,1 +1,7 @@
 /bin/
+/interactive-wall/nbproject/private/
+/nbproject/private/
+/build/
+/dist/
+/nbproject/
+build.xml
