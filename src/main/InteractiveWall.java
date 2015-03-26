@@ -16,9 +16,14 @@ import javafx.scene.Scene;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import experience.mainmenu.MainMenuExperience;
+import experience.pond.PondExperience;
+import experience.firework.FireworkExperience;
+import experience.block.BlockExperience;
+import experience.gallery.GalleryExperience;
 import experience.sleepmode.ConfirmationExperience;
 import experience.sleepmode.SleepModeExperience;
 import static javafx.application.Application.launch;
+import javafx.scene.Cursor;
 
 public class InteractiveWall extends Application {
 
@@ -28,6 +33,14 @@ public class InteractiveWall extends Application {
 	public static final Experience CONFRIMATION_Ex = new ConfirmationExperience();
 	public static final String MAIN_MENU = "main";
 	public static final Experience MAIN_MENU_Ex = new MainMenuExperience();
+	public static final String POND = "pond";
+	public static final Experience POND_Ex = new PondExperience();
+	public static final String FIREWORK = "firework";
+	public static final Experience FIREWORK_Ex = new FireworkExperience();
+	public static final String BLOCK = "block";
+	public static final Experience BLOCK_Ex = new BlockExperience();
+	public static final String GALLERY = "gallery";
+	public static final Experience GALLERY_Ex = new GalleryExperience();
 
 	public static void main(String[] args) {
 		launch(args);
@@ -40,13 +53,20 @@ public class InteractiveWall extends Application {
 		mainContainer.loadExperience(SLEEP_MODE, SLEEP_MODE_Ex);
 		mainContainer.loadExperience(CONFIRMATION, CONFRIMATION_Ex);
 		mainContainer.loadExperience(MAIN_MENU, MAIN_MENU_Ex);
+		mainContainer.loadExperience(POND, POND_Ex);
+		mainContainer.loadExperience(FIREWORK, FIREWORK_Ex);
+		mainContainer.loadExperience(BLOCK, BLOCK_Ex);
+		mainContainer.loadExperience(GALLERY, GALLERY_Ex);
 
-		mainContainer.setExperience(MAIN_MENU);
+		// mainContainer.setExperience(SLEEP_MODE);
+		mainContainer.setExperience(POND);
 
 		Scene main = new Scene(mainContainer, 1600, 1000);
 		main.setFill(Color.BLACK);
+		main.setCursor(Cursor.NONE);
 		primaryStage.setScene(main);
 		primaryStage.setTitle("Interactive Wall");
+		// primaryStage.setFullScreen(true);
 		primaryStage.show();
 
 	}
