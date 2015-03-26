@@ -218,13 +218,13 @@ public class ConfirmationExperience extends Listener implements Experience {
 		for (int i = 0; i < hands.count(); i++) {
 			if (hands.get(i).isRight()) {
 				right = hands.get(i);
-				rightHandPosX = Util.palmXToPanelX(right, pane);
-				rightHandPosY = Util.palmYToPanelY(right, pane);
+				rightHandPosX = Util.palmXToPanelX(right);
+				rightHandPosY = Util.palmYToPanelY(right);
 
 			} else if (hands.get(i).isLeft()) {
 				left = hands.get(i);
-				leftHandPosX = Util.palmXToPanelX(left, pane);
-				leftHandPosY = Util.palmYToPanelY(left, pane);
+				leftHandPosX = Util.palmXToPanelX(left);
+				leftHandPosY = Util.palmYToPanelY(left);
 			}
 		}
 		shouldConfirm();

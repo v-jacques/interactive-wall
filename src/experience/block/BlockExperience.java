@@ -161,15 +161,15 @@ public class BlockExperience extends Listener implements Experience {
 
 			if (hands.get(i).isRight()) {
 				right = hands.get(i);
-				rightHandPosX = Util.palmXToPanelX(right, pane);
-				rightHandPosY = Util.palmYToPanelY(right, pane);
+				rightHandPosX = Util.palmXToPanelX(right);
+				rightHandPosY = Util.palmYToPanelY(right);
 				realRightHandPosX = right.palmPosition().getX();
 				realRightHandPosY = right.palmPosition().getY();
 
 			} else if (hands.get(i).isLeft()) {
 				left = hands.get(i);
-				leftHandPosX = Util.palmXToPanelX(left, pane);
-				leftHandPosY = Util.palmYToPanelY(left, pane);
+				leftHandPosX = Util.palmXToPanelX(left);
+				leftHandPosY = Util.palmYToPanelY(left);
 				realLeftHandPosX = left.palmPosition().getX();
 				realLeftHandPosY = left.palmPosition().getY();
 			}

@@ -1,17 +1,18 @@
 package experience.pond;
 
+import java.util.ArrayList;
+
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
+import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import main.Experience;
 import main.ExperienceController;
@@ -35,6 +36,11 @@ public class PondExperience extends Listener implements Experience {
 	ImageView rightHand;
 	ImageView leftHand;
 	AnimationTimer drawHands;
+	ArrayList<Circle> circles;
+	AnimationTimer drawCircles;
+	Timeline circleAnimation;
+
+	int circleNumber = 0;
 
 	double rightHandPosX = -50.0;
 	double rightHandPosY = -50.0;
@@ -56,7 +62,7 @@ public class PondExperience extends Listener implements Experience {
 		backView.setPreserveRatio(true);
 		pane.getChildren().add(backView);
 
-		sleepTimer = new Timeline(new KeyFrame(Duration.millis(5000),
+		sleepTimer = new Timeline(new KeyFrame(Duration.millis(15000),
 				ae -> goToMainMenu()));
 
 		Image palmRightNormal = new Image("media/palmRight.png", 100, 100,
@@ -79,14 +85,14 @@ public class PondExperience extends Listener implements Experience {
 
 		/* PLACE HOLDER STUFF */
 
-		Text t = new Text("POND EXPERIENCE");
-
-		t.setFont(Font.font("Avenir Next", 30));
-		t.setFill(Color.WHITE);
-
-		BorderPane p = new BorderPane();
-		p.setCenter(t);
-		pane.getChildren().add(p);
+		// Text t = new Text("POND EXPERIENCE");
+		//
+		// t.setFont(Font.font("Avenir Next", 30));
+		// t.setFill(Color.WHITE);
+		//
+		// BorderPane p = new BorderPane();
+		// p.setCenter(t);
+		// pane.getChildren().add(p);
 
 		/* PLACE HOLDER STUFF DONE */
 
@@ -95,7 +101,37 @@ public class PondExperience extends Listener implements Experience {
 		rightHand.relocate(rightHandPosX, rightHandPosY);
 		leftHand.relocate(leftHandPosX, leftHandPosY);
 
+		circles = new ArrayList<>();
+		for (int i = 0; i < 50; i++) {
+			Circle circl = new Circle(-50, -50, 100, null);
+			circl.setStroke(Color.rgb(200, 200, 255));
+			circles.add(circl);
+		}
+
+		drawCircles = new AnimationTimer() {
+			@Override
+			public void handle(long arg0) {
+				circles.get(circleNumber).setLayoutX(rightHandPosX);
+				circles.get(circleNumber).setLayoutY(rightHandPosY);
+
+				circleAnimation = new Timeline(
+						new KeyFrame(Duration.ZERO, new KeyValue(circles.get(
+								circleNumber).radiusProperty(), 0)),
+						new KeyFrame(Duration.seconds(1), new KeyValue(circles
+								.get(circleNumber).opacityProperty(), 1)),
+						new KeyFrame(Duration.seconds(3), new KeyValue(circles
+								.get(circleNumber).radiusProperty(), 500)),
+						new KeyFrame(Duration.seconds(3), new KeyValue(circles
+								.get(circleNumber).opacityProperty(), 0)));
+
+				circleAnimation.play();
+			}
+		};
+
+		canvas.getChildren().addAll(circles);
+
 		pane.getChildren().add(canvas);
+
 	}
 
 	@Override
@@ -106,6 +142,7 @@ public class PondExperience extends Listener implements Experience {
 	@Override
 	public void startExperience() {
 		drawHands.start();
+		drawCircles.start();
 		sleepTimer.play();
 		controller = new Controller(this);
 	}
@@ -121,6 +158,7 @@ public class PondExperience extends Listener implements Experience {
 		leftHandPosX = -50.0;
 		leftHandPosY = -50.0;
 		drawHands.stop();
+		drawCircles.stop();
 		sleepTimer.stop();
 	}
 
@@ -156,20 +194,24 @@ public class PondExperience extends Listener implements Experience {
 
 		sleepTimer.play();
 
+		if (circleNumber >= 49)
+			circleNumber = 0;
+		else
+			circleNumber++;
+
 		for (int i = 0; i < hands.count(); i++) {
 			sleepTimer.stop();
 
 			if (hands.get(i).isRight()) {
 				right = hands.get(i);
-				rightHandPosX = Util.palmXToPanelX(right, pane);
-				rightHandPosY = Util.palmYToPanelY(right, pane);
+				rightHandPosX = Util.palmXToPanelX(right);
+				rightHandPosY = Util.palmYToPanelY(right);
 				realRightHandPosX = right.palmPosition().getX();
 				realRightHandPosY = right.palmPosition().getY();
-
 			} else if (hands.get(i).isLeft()) {
 				left = hands.get(i);
-				leftHandPosX = Util.palmXToPanelX(left, pane);
-				leftHandPosY = Util.palmYToPanelY(left, pane);
+				leftHandPosX = Util.palmXToPanelX(left);
+				leftHandPosY = Util.palmYToPanelY(left);
 				realLeftHandPosX = left.palmPosition().getX();
 				realLeftHandPosY = left.palmPosition().getY();
 			}

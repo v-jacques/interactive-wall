@@ -10,7 +10,7 @@ public class Util {
 		return b > a ? c > a && c < b : c > b && c < a;
 	}
 
-	public static double palmXToPanelX(Hand hand, Pane pane) {
+	public static double palmXToPanelX(Hand hand) {
 		double origStart = -150;
 		double origEnd = 150;
 		double newStart = 0;
@@ -19,7 +19,7 @@ public class Util {
 		return (newStart + ((hand.palmPosition().getX() - origStart) * scale));
 	}
 
-	public static double palmYToPanelY(Hand hand, Pane pane) {
+	public static double palmYToPanelY(Hand hand) {
 		double origStart = 400;
 		double origEnd = 30;
 		double newStart = 0;
