@@ -6,6 +6,8 @@ import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -40,6 +42,8 @@ public class PondExperience extends Listener implements Experience {
 	AnimationTimer drawCircles;
 	Timeline circleAnimation;
 
+	boolean visibility = false;
+
 	int circleNumber = 0;
 
 	double rightHandPosX = -50.0;
@@ -56,8 +60,8 @@ public class PondExperience extends Listener implements Experience {
 		pane = new StackPane();
 		canvas = new Pane();
 
-		Image backImg = new Image("media/background1600_1000.jpg", 1600, 1000,
-				true, true);
+		Image backImg = new Image("media/pond1600-1000px-unfinished.jpg", 1600,
+				1000, true, true);
 		ImageView backView = new ImageView(backImg);
 		backView.setPreserveRatio(true);
 		pane.getChildren().add(backView);
@@ -83,19 +87,6 @@ public class PondExperience extends Listener implements Experience {
 			}
 		};
 
-		/* PLACE HOLDER STUFF */
-
-		// Text t = new Text("POND EXPERIENCE");
-		//
-		// t.setFont(Font.font("Avenir Next", 30));
-		// t.setFill(Color.WHITE);
-		//
-		// BorderPane p = new BorderPane();
-		// p.setCenter(t);
-		// pane.getChildren().add(p);
-
-		/* PLACE HOLDER STUFF DONE */
-
 		canvas.getChildren().addAll(rightHand, leftHand);
 
 		rightHand.relocate(rightHandPosX, rightHandPosY);
@@ -114,6 +105,8 @@ public class PondExperience extends Listener implements Experience {
 				circles.get(circleNumber).setLayoutX(rightHandPosX);
 				circles.get(circleNumber).setLayoutY(rightHandPosY);
 
+				circles.get(circleNumber).setVisible(visibility);
+
 				circleAnimation = new Timeline(
 						new KeyFrame(Duration.ZERO, new KeyValue(circles.get(
 								circleNumber).radiusProperty(), 0)),
@@ -125,11 +118,33 @@ public class PondExperience extends Listener implements Experience {
 								.get(circleNumber).opacityProperty(), 0)));
 
 				circleAnimation.play();
+				circleAnimation.setOnFinished(new EventHandler<ActionEvent>() {
+
+					@Override
+					public void handle(ActionEvent arg0) {
+						drawCircles.stop();
+					}
+
+				});
+
 			}
 		};
 
-		canvas.getChildren().addAll(circles);
+		Timeline visibilityTimer = new Timeline(new KeyFrame(
+				Duration.millis(500), new EventHandler<ActionEvent>() {
 
+					@Override
+					public void handle(ActionEvent event) {
+						if (visibility)
+							visibility = false;
+						else
+							visibility = true;
+					}
+				}));
+		visibilityTimer.setCycleCount(Timeline.INDEFINITE);
+		visibilityTimer.play();
+
+		canvas.getChildren().addAll(circles);
 		pane.getChildren().add(canvas);
 
 	}
@@ -142,7 +157,7 @@ public class PondExperience extends Listener implements Experience {
 	@Override
 	public void startExperience() {
 		drawHands.start();
-		drawCircles.start();
+		// drawCircles.start();
 		sleepTimer.play();
 		controller = new Controller(this);
 	}
@@ -203,6 +218,9 @@ public class PondExperience extends Listener implements Experience {
 			sleepTimer.stop();
 
 			if (hands.get(i).isRight()) {
+
+				drawCircles.start();
+
 				right = hands.get(i);
 				rightHandPosX = Util.palmXToPanelX(right);
 				rightHandPosY = Util.palmYToPanelY(right);
@@ -215,6 +233,10 @@ public class PondExperience extends Listener implements Experience {
 				realLeftHandPosX = left.palmPosition().getX();
 				realLeftHandPosY = left.palmPosition().getY();
 			}
+		}
+
+		if (hands.count() == 0) {
+			drawCircles.stop();
 		}
 	}
 }
