@@ -1,20 +1,26 @@
 package experience.pond;
 
-import java.util.ArrayList;
-
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Point2D;
+import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelFormat;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
+import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 import main.Experience;
 import main.ExperienceController;
@@ -22,10 +28,13 @@ import main.InteractiveWall;
 import main.Util;
 
 import com.leapmotion.leap.Controller;
+import com.leapmotion.leap.Finger;
 import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Hand;
 import com.leapmotion.leap.HandList;
 import com.leapmotion.leap.Listener;
+import com.leapmotion.leap.Screen;
+import com.leapmotion.leap.Vector;
 
 public class PondExperience extends Listener implements Experience {
 	Controller controller;
@@ -38,13 +47,6 @@ public class PondExperience extends Listener implements Experience {
 	ImageView rightHand;
 	ImageView leftHand;
 	AnimationTimer drawHands;
-	ArrayList<Circle> circles;
-	AnimationTimer drawCircles;
-	Timeline circleAnimation;
-
-	boolean visibility = false;
-
-	int circleNumber = 0;
 
 	double rightHandPosX = -50.0;
 	double rightHandPosY = -50.0;
@@ -56,6 +58,18 @@ public class PondExperience extends Listener implements Experience {
 	double realLeftHandPosX = -50.0;
 	double realLeftHandPosY = -50.0;
 
+	private int original[], water[];
+	private short waterMap[];
+	private int width, height, halfWidth, halfHeight, size;
+	private int oldInd, newInd, mapInd;
+
+	private AnimationTimer timer;
+	private long lastTimerCall;
+
+	private final BooleanProperty drop = new SimpleBooleanProperty(false);
+	protected final ObservableList<Point3D> points = FXCollections
+			.observableArrayList();
+
 	public PondExperience() {
 		pane = new StackPane();
 		canvas = new Pane();
@@ -63,8 +77,34 @@ public class PondExperience extends Listener implements Experience {
 		Image backImg = new Image("media/pond1600-1000px-unfinished.jpg", 1600,
 				1000, true, true);
 		ImageView backView = new ImageView(backImg);
+
+		width = (int) backView.getImage().getWidth();
+		height = (int) backView.getImage().getHeight();
+		halfWidth = width >> 1;
+		halfHeight = height >> 1;
+		size = width * (height + 2) * 2;
+		waterMap = new short[size];
+		water = new int[width * height];
+		original = new int[width * height];
+		oldInd = width;
+		newInd = width * (height + 3);
+		PixelReader pixelReader = backView.getImage().getPixelReader();
+		pixelReader.getPixels(0, 0, width, height,
+				WritablePixelFormat.getIntArgbInstance(), original, 0, width);
+
 		backView.setPreserveRatio(true);
 		pane.getChildren().add(backView);
+
+		lastTimerCall = System.nanoTime();
+		timer = new AnimationTimer() {
+			@Override
+			public void handle(long now) {
+				if (now > lastTimerCall + 30_000_000l) {
+					backView.setImage(applyEffect());
+					lastTimerCall = now;
+				}
+			}
+		};
 
 		sleepTimer = new Timeline(new KeyFrame(Duration.millis(15000),
 				ae -> goToMainMenu()));
@@ -92,61 +132,27 @@ public class PondExperience extends Listener implements Experience {
 		rightHand.relocate(rightHandPosX, rightHandPosY);
 		leftHand.relocate(leftHandPosX, leftHandPosY);
 
-		circles = new ArrayList<>();
-		for (int i = 0; i < 50; i++) {
-			Circle circl = new Circle(-50, -50, 100, null);
-			circl.setStroke(Color.rgb(200, 200, 255));
-			circles.add(circl);
-		}
-
-		drawCircles = new AnimationTimer() {
-			@Override
-			public void handle(long arg0) {
-				circles.get(circleNumber).setLayoutX(rightHandPosX);
-				circles.get(circleNumber).setLayoutY(rightHandPosY);
-
-				circles.get(circleNumber).setVisible(visibility);
-
-				circleAnimation = new Timeline(
-						new KeyFrame(Duration.ZERO, new KeyValue(circles.get(
-								circleNumber).radiusProperty(), 0)),
-						new KeyFrame(Duration.seconds(1), new KeyValue(circles
-								.get(circleNumber).opacityProperty(), 1)),
-						new KeyFrame(Duration.seconds(3), new KeyValue(circles
-								.get(circleNumber).radiusProperty(), 500)),
-						new KeyFrame(Duration.seconds(3), new KeyValue(circles
-								.get(circleNumber).opacityProperty(), 0)));
-
-				circleAnimation.play();
-				circleAnimation.setOnFinished(new EventHandler<ActionEvent>() {
-
-					@Override
-					public void handle(ActionEvent arg0) {
-						drawCircles.stop();
-					}
-
-				});
-
-			}
-		};
-
-		Timeline visibilityTimer = new Timeline(new KeyFrame(
-				Duration.millis(500), new EventHandler<ActionEvent>() {
-
-					@Override
-					public void handle(ActionEvent event) {
-						if (visibility)
-							visibility = false;
-						else
-							visibility = true;
-					}
-				}));
-		visibilityTimer.setCycleCount(Timeline.INDEFINITE);
-		visibilityTimer.play();
-
-		canvas.getChildren().addAll(circles);
 		pane.getChildren().add(canvas);
 
+		isDrop().addListener(
+				(ov, b, b1) -> {
+					if (b1) {
+						Platform.runLater(() -> {
+							for (int i = 0; i < points.size(); i++) {
+								Point3D t1 = points.get(i);
+								Point2D d = canvas.sceneToLocal(t1.getX(),
+										t1.getY());
+								double dx = d.getX(), dy = d.getY(), dz = Math
+										.abs(t1.getZ());
+								int rad = (dz < 50) ? 5 : ((dz < 150) ? 4 : 3);
+								if (dx >= 0d && dx <= canvas.getWidth()
+										&& dy >= 0d && dy <= canvas.getHeight()) {
+									waterDrop((int) dx, (int) dy, rad);
+								}
+							}
+						});
+					}
+				});
 	}
 
 	@Override
@@ -157,8 +163,8 @@ public class PondExperience extends Listener implements Experience {
 	@Override
 	public void startExperience() {
 		drawHands.start();
-		// drawCircles.start();
 		sleepTimer.play();
+		timer.start();
 		controller = new Controller(this);
 	}
 
@@ -173,18 +179,13 @@ public class PondExperience extends Listener implements Experience {
 		leftHandPosX = -50.0;
 		leftHandPosY = -50.0;
 		drawHands.stop();
-		drawCircles.stop();
 		sleepTimer.stop();
+		timer.stop();
 	}
 
 	@Override
 	public Node getNode() {
 		return pane;
-	}
-
-	private void goToSleepMode() {
-		controller.removeListener(this);
-		myController.setExperience(InteractiveWall.SLEEP_MODE);
 	}
 
 	private void goToMainMenu() {
@@ -209,18 +210,10 @@ public class PondExperience extends Listener implements Experience {
 
 		sleepTimer.play();
 
-		if (circleNumber >= 49)
-			circleNumber = 0;
-		else
-			circleNumber++;
-
 		for (int i = 0; i < hands.count(); i++) {
 			sleepTimer.stop();
 
 			if (hands.get(i).isRight()) {
-
-				drawCircles.start();
-
 				right = hands.get(i);
 				rightHandPosX = Util.palmXToPanelX(right);
 				rightHandPosY = Util.palmYToPanelY(right);
@@ -235,8 +228,75 @@ public class PondExperience extends Listener implements Experience {
 			}
 		}
 
-		if (hands.count() == 0) {
-			drawCircles.stop();
+		Screen screen = controller.locatedScreens().get(0);
+		drop.set(false);
+		points.clear();
+		for (Finger finger : frame.fingers()) {
+			if (finger.isValid()) {
+				Vector inter = screen.intersect(finger.tipPosition(),
+						finger.direction(), true);
+				Point3D p = new Point3D(screen.widthPixels()
+						* Math.min(1d, Math.max(0d, inter.getX())),
+						screen.heightPixels()
+								* Math.min(1d,
+										Math.max(0d, (1d - inter.getY()))),
+						finger.tipPosition().getZ());
+				points.add(p);
+			}
 		}
+		drop.set(!points.isEmpty());
+	}
+
+	public void waterDrop(int dx, int dy, int rad) {
+		for (int j = dy - rad; j < dy + rad; j++) {
+			for (int k = dx - rad; k < dx + rad; k++) {
+				if (j >= 0 && j < height && k >= 0 && k < width) {
+					waterMap[oldInd + (j * width) + k] += 128;
+				}
+			}
+		}
+	}
+
+	private Image applyEffect() {
+		int a, b, i = oldInd;
+		oldInd = newInd;
+		newInd = i;
+		i = 0;
+		mapInd = oldInd;
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				short data = (short) ((waterMap[mapInd - width]
+						+ waterMap[mapInd + width] + waterMap[mapInd - 1] + waterMap[mapInd + 1]) >> 1);
+				data -= waterMap[newInd + i];
+				data -= data >> 4;
+				waterMap[newInd + i] = data;
+				data = (short) (1024 - data);
+				a = ((x - halfWidth) * data / 1024) + halfWidth;
+				if (a >= width) {
+					a = width - 1;
+				}
+				if (a < 0) {
+					a = 0;
+				}
+				b = ((y - halfHeight) * data / 1024) + halfHeight;
+				if (b >= height) {
+					b = height - 1;
+				}
+				if (b < 0) {
+					b = 0;
+				}
+				water[i++] = original[a + (b * width)];
+				mapInd++;
+			}
+		}
+		WritableImage raster = new WritableImage(width, height);
+		PixelWriter pixelWriter = raster.getPixelWriter();
+		pixelWriter.setPixels(0, 0, width, height,
+				PixelFormat.getIntArgbInstance(), water, 0, width);
+		return raster;
+	}
+
+	public ObservableValue<Boolean> isDrop() {
+		return drop;
 	}
 }
