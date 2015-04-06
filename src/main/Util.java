@@ -1,7 +1,5 @@
 package main;
 
-import javafx.scene.layout.Pane;
-
 import com.leapmotion.leap.Hand;
 
 public class Util {
@@ -26,5 +24,23 @@ public class Util {
 		double newEnd = 1000;
 		double scale = (newEnd - newStart) / (origEnd - origStart);
 		return (newStart + ((hand.palmPosition().getY() - origStart) * scale));
+	}
+	
+	public static double fingerXtoPanelX(double x) {
+		double origStart = -150;
+		double origEnd = 150;
+		double newStart = 0;
+		double newEnd = 1600;
+		double scale = (newEnd - newStart) / (origEnd - origStart);
+		return (newStart + ((x - origStart) * scale));
+	}
+	
+	public static double fingerYToPanelY(double y) {
+		double origStart = 400;
+		double origEnd = 30;
+		double newStart = 0;
+		double newEnd = 1000;
+		double scale = (newEnd - newStart) / (origEnd - origStart);
+		return (newStart + ((y - origStart) * scale));
 	}
 }

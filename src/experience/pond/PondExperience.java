@@ -33,8 +33,6 @@ import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Hand;
 import com.leapmotion.leap.HandList;
 import com.leapmotion.leap.Listener;
-import com.leapmotion.leap.Screen;
-import com.leapmotion.leap.Vector;
 
 public class PondExperience extends Listener implements Experience {
 	Controller controller;
@@ -142,12 +140,13 @@ public class PondExperience extends Listener implements Experience {
 								Point3D t1 = points.get(i);
 								Point2D d = canvas.sceneToLocal(t1.getX(),
 										t1.getY());
-								double dx = d.getX(), dy = d.getY(), dz = Math
-										.abs(t1.getZ());
-								int rad = (dz < 50) ? 5 : ((dz < 150) ? 4 : 3);
+								double dx = d.getX(), dy = d.getY();
+								// System.out.println("x " + dx);
+								// System.out.println("h " + rightHandPosX);
+
 								if (dx >= 0d && dx <= canvas.getWidth()
 										&& dy >= 0d && dy <= canvas.getHeight()) {
-									waterDrop((int) dx, (int) dy, rad);
+									waterDrop((int) dx, (int) dy, 10);
 								}
 							}
 						});
@@ -162,7 +161,7 @@ public class PondExperience extends Listener implements Experience {
 
 	@Override
 	public void startExperience() {
-		drawHands.start();
+		// drawHands.start();
 		sleepTimer.play();
 		timer.start();
 		controller = new Controller(this);
@@ -228,19 +227,15 @@ public class PondExperience extends Listener implements Experience {
 			}
 		}
 
-		Screen screen = controller.locatedScreens().get(0);
 		drop.set(false);
 		points.clear();
 		for (Finger finger : frame.fingers()) {
-			if (finger.isValid()) {
-				Vector inter = screen.intersect(finger.tipPosition(),
-						finger.direction(), true);
-				Point3D p = new Point3D(screen.widthPixels()
-						* Math.min(1d, Math.max(0d, inter.getX())),
-						screen.heightPixels()
-								* Math.min(1d,
-										Math.max(0d, (1d - inter.getY()))),
-						finger.tipPosition().getZ());
+			// getZ is being used to only capture pointing fingers
+			if (finger.isValid() && finger.tipPosition().getZ() < 25) {
+				// System.out.println(finger.tipPosition().getX());
+				Point3D p = new Point3D(Util.fingerXtoPanelX(finger
+						.tipPosition().getX()), Util.fingerYToPanelY(finger
+						.tipPosition().getY()), finger.tipPosition().getZ());
 				points.add(p);
 			}
 		}
