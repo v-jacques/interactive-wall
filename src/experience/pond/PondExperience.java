@@ -3,15 +3,24 @@ package experience.pond;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Point2D;
+import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.image.PixelFormat;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
+import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.util.Duration;
 import main.Experience;
 import main.ExperienceController;
@@ -19,6 +28,7 @@ import main.InteractiveWall;
 import main.Util;
 
 import com.leapmotion.leap.Controller;
+import com.leapmotion.leap.Finger;
 import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Hand;
 import com.leapmotion.leap.HandList;
@@ -46,17 +56,55 @@ public class PondExperience extends Listener implements Experience {
 	double realLeftHandPosX = -50.0;
 	double realLeftHandPosY = -50.0;
 
+	private int original[], water[];
+	private short waterMap[];
+	private int width, height, halfWidth, halfHeight, size;
+	private int oldInd, newInd, mapInd;
+
+	private AnimationTimer timer;
+	private long lastTimerCall;
+
+	private final BooleanProperty drop = new SimpleBooleanProperty(false);
+	protected final ObservableList<Point3D> points = FXCollections
+			.observableArrayList();
+
 	public PondExperience() {
 		pane = new StackPane();
 		canvas = new Pane();
 
-		Image backImg = new Image("media/background1600_1000.jpg", 1600, 1000,
-				true, true);
+		Image backImg = new Image("media/pond1600-1000px-unfinished.jpg", 1600,
+				1000, true, true);
 		ImageView backView = new ImageView(backImg);
+
+		width = (int) backView.getImage().getWidth();
+		height = (int) backView.getImage().getHeight();
+		halfWidth = width >> 1;
+		halfHeight = height >> 1;
+		size = width * (height + 2) * 2;
+		waterMap = new short[size];
+		water = new int[width * height];
+		original = new int[width * height];
+		oldInd = width;
+		newInd = width * (height + 3);
+		PixelReader pixelReader = backView.getImage().getPixelReader();
+		pixelReader.getPixels(0, 0, width, height,
+				WritablePixelFormat.getIntArgbInstance(), original, 0, width);
+
 		backView.setPreserveRatio(true);
 		pane.getChildren().add(backView);
 
-		sleepTimer = new Timeline(new KeyFrame(Duration.millis(5000),
+		lastTimerCall = System.nanoTime();
+		timer = new AnimationTimer() {
+			@Override
+			public void handle(long now) {
+				if (now > lastTimerCall + 30_000_000l) {
+					backView.setImage(applyEffect());
+					lastTimerCall = now;
+				}
+			}
+		};
+
+		sleepTimer = new Timeline(new KeyFrame(Duration.millis(15000),
 				ae -> goToMainMenu()));
 
 		Image palmRightNormal = new Image("media/palmRight.png", 100, 100,
@@ -77,25 +125,33 @@ public class PondExperience extends Listener implements Experience {
 			}
 		};
 
-		/* PLACE HOLDER STUFF */
-
-		Text t = new Text("POND EXPERIENCE");
-
-		t.setFont(Font.font("Avenir Next", 30));
-		t.setFill(Color.WHITE);
-
-		BorderPane p = new BorderPane();
-		p.setCenter(t);
-		pane.getChildren().add(p);
-
-		/* PLACE HOLDER STUFF DONE */
-
 		canvas.getChildren().addAll(rightHand, leftHand);
 
 		rightHand.relocate(rightHandPosX, rightHandPosY);
 		leftHand.relocate(leftHandPosX, leftHandPosY);
 
 		pane.getChildren().add(canvas);
+
+		isDrop().addListener(
+				(ov, b, b1) -> {
+					if (b1) {
+						Platform.runLater(() -> {
+							for (int i = 0; i < points.size(); i++) {
+								Point3D t1 = points.get(i);
+								Point2D d = canvas.sceneToLocal(t1.getX(),
+										t1.getY());
+								double dx = d.getX(), dy = d.getY();
+								// System.out.println("x " + dx);
+								// System.out.println("h " + rightHandPosX);
+
+								if (dx >= 0d && dx <= canvas.getWidth()
+										&& dy >= 0d && dy <= canvas.getHeight()) {
+									waterDrop((int) dx, (int) dy, 10);
+								}
+							}
+						});
+					}
+				});
 	}
 
 	@Override
@@ -105,8 +161,9 @@ public class PondExperience extends Listener implements Experience {
 
 	@Override
 	public void startExperience() {
-		drawHands.start();
+		// drawHands.start();
 		sleepTimer.play();
+		timer.start();
 		controller = new Controller(this);
 	}
 
@@ -122,16 +179,12 @@ public class PondExperience extends Listener implements Experience {
 		leftHandPosY = -50.0;
 		drawHands.stop();
 		sleepTimer.stop();
+		timer.stop();
 	}
 
 	@Override
 	public Node getNode() {
 		return pane;
-	}
-
-	private void goToSleepMode() {
-		controller.removeListener(this);
-		myController.setExperience(InteractiveWall.SLEEP_MODE);
 	}
 
 	private void goToMainMenu() {
@@ -161,18 +214,84 @@ public class PondExperience extends Listener implements Experience {
 
 			if (hands.get(i).isRight()) {
 				right = hands.get(i);
-				rightHandPosX = Util.palmXToPanelX(right, pane);
-				rightHandPosY = Util.palmYToPanelY(right, pane);
+				rightHandPosX = Util.palmXToPanelX(right);
+				rightHandPosY = Util.palmYToPanelY(right);
 				realRightHandPosX = right.palmPosition().getX();
 				realRightHandPosY = right.palmPosition().getY();
-
 			} else if (hands.get(i).isLeft()) {
 				left = hands.get(i);
-				leftHandPosX = Util.palmXToPanelX(left, pane);
-				leftHandPosY = Util.palmYToPanelY(left, pane);
+				leftHandPosX = Util.palmXToPanelX(left);
+				leftHandPosY = Util.palmYToPanelY(left);
 				realLeftHandPosX = left.palmPosition().getX();
 				realLeftHandPosY = left.palmPosition().getY();
 			}
 		}
+
+		drop.set(false);
+		points.clear();
+		for (Finger finger : frame.fingers()) {
+			// getZ is being used to only capture pointing fingers
+			if (finger.isValid() && finger.tipPosition().getZ() < 25) {
+				// System.out.println(finger.tipPosition().getX());
+				Point3D p = new Point3D(Util.fingerXtoPanelX(finger
+						.tipPosition().getX()), Util.fingerYToPanelY(finger
+						.tipPosition().getY()), finger.tipPosition().getZ());
+				points.add(p);
+			}
+		}
+		drop.set(!points.isEmpty());
+	}
+
+	public void waterDrop(int dx, int dy, int rad) {
+		for (int j = dy - rad; j < dy + rad; j++) {
+			for (int k = dx - rad; k < dx + rad; k++) {
+				if (j >= 0 && j < height && k >= 0 && k < width) {
+					waterMap[oldInd + (j * width) + k] += 128;
+				}
+			}
+		}
+	}
+
+	private Image applyEffect() {
+		int a, b, i = oldInd;
+		oldInd = newInd;
+		newInd = i;
+		i = 0;
+		mapInd = oldInd;
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				short data = (short) ((waterMap[mapInd - width]
+						+ waterMap[mapInd + width] + waterMap[mapInd - 1] + waterMap[mapInd + 1]) >> 1);
+				data -= waterMap[newInd + i];
+				data -= data >> 4;
+				waterMap[newInd + i] = data;
+				data = (short) (1024 - data);
+				a = ((x - halfWidth) * data / 1024) + halfWidth;
+				if (a >= width) {
+					a = width - 1;
+				}
+				if (a < 0) {
+					a = 0;
+				}
+				b = ((y - halfHeight) * data / 1024) + halfHeight;
+				if (b >= height) {
+					b = height - 1;
+				}
+				if (b < 0) {
+					b = 0;
+				}
+				water[i++] = original[a + (b * width)];
+				mapInd++;
+			}
+		}
+		WritableImage raster = new WritableImage(width, height);
+		PixelWriter pixelWriter = raster.getPixelWriter();
+		pixelWriter.setPixels(0, 0, width, height,
+				PixelFormat.getIntArgbInstance(), water, 0, width);
+		return raster;
+	}
+
+	public ObservableValue<Boolean> isDrop() {
+		return drop;
 	}
 }
