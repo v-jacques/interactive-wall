@@ -6,12 +6,8 @@ import javafx.animation.Timeline;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.util.Duration;
 import main.Experience;
 import main.ExperienceController;
@@ -38,7 +34,7 @@ public class GalleryExperience extends Listener implements Experience {
 	ImageView rightHand;
 	ImageView leftHand;
 	AnimationTimer drawHands;
-        
+
 	double rightHandPosX = -50.0;
 	double rightHandPosY = -50.0;
 	double realRightHandPosX = -50.0;
@@ -66,10 +62,10 @@ public class GalleryExperience extends Listener implements Experience {
         "media/View of the Bridge and Part of the Town of Cava, Kingdom of Naples.jpg",
         "media/Water Lilies.jpg",
         "media/Wooded River Landscape in the Alps.jpg" };
-        
-        public GalleryExperience() {
+
+	public GalleryExperience() {
 		pane = new StackPane();
-		canvas = new Pane();             
+		canvas = new Pane();
 
 		Image backImg = new Image("media/background1600_1000.jpg", 1600, 1000,
 				true, true);
@@ -234,26 +230,29 @@ public class GalleryExperience extends Listener implements Experience {
 
 			if (hands.get(i).isRight()) {
 				right = hands.get(i);
-				rightHandPosX = Util.palmXToPanelX(right);
-				rightHandPosY = Util.palmYToPanelY(right);
+				rightHandPosX = Util.leapXtoPanelX(right
+						.stabilizedPalmPosition().getX());
+				rightHandPosY = Util.leapYToPanelY(right
+						.stabilizedPalmPosition().getY());
 				realRightHandPosX = right.palmPosition().getX();
 				realRightHandPosY = right.palmPosition().getY();
 
 			} else if (hands.get(i).isLeft()) {
 				left = hands.get(i);
-				leftHandPosX = Util.palmXToPanelX(left);
-				leftHandPosY = Util.palmYToPanelY(left);
+				leftHandPosX = Util.leapXtoPanelX(left.stabilizedPalmPosition()
+						.getX());
+				leftHandPosY = Util.leapYToPanelY(left.stabilizedPalmPosition()
+						.getY());
 				realLeftHandPosX = left.palmPosition().getX();
 				realLeftHandPosY = left.palmPosition().getY();
 			}
 		}
-                
+               
                 GestureList gestures = frame.gestures();
                 SwipeGesture swipe = new SwipeGesture(gestures.get(0));
                 if (swipe.isValid()){
                         change = true;
-                }
-                
-                
+                }             
+
 	}
 }
