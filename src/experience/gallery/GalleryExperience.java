@@ -49,22 +49,25 @@ public class GalleryExperience extends Listener implements Experience {
 	double realLeftHandPosX = -50.0;
 	double realLeftHandPosY = -50.0;
         
-        String img1 = "media/A Calm at a Mediterranean Port.jpg";
-        String img2 = "media/Classical Landscape with Figures and Sculpture.jpg";
-        String img3 = "media/Irises.jpg";
-        String img4 = "media/Mountain Landscape with road to Naples.jpg";
-        String img5 = "media/Italian Landscape (Site d'Italie, Soleil Levant).jpg";
-        String img6 = "media/Landscape with Lake and Boatman.jpg";
-        String img7 = "media/O.T. 2013.jpg";
-        String img8 = "media/Renee Levi 640_341.jpg";
-        String img9 = "media/Starry Night.jpg";
-        String img10 = "media/The Wounded Foot.jpg";
-        String img11 = "media/View of the Bridge and Part of the Town of Cava, Kingdom of Naples.jpg";
-        String img12 = "media/Water Lilies.jpg";
-        String img13 = "media/Wooded River Landscape in the Alps.jpg";
-        String holder = "";
-
-	public GalleryExperience() {
+        boolean change = false;
+        int imageHolder = 1;
+                
+        String[] imgs = { 
+        "media/A Calm at a Mediterranean Port.jpg",
+        "media/Classical Landscape with Figures and Sculpture.jpg",
+        "media/Irises.jpg",
+        "media/Mountain Landscape with road to Naples.jpg",
+        "media/Italian Landscape (Site d'Italie, Soleil Levant).jpg",
+        "media/Landscape with Lake and Boatman.jpg",
+        "media/O.T. 2013.jpg",
+        "media/Renee Levi 640_341.jpg",
+        "media/Starry Night.jpg",
+        "media/The Wounded Foot.jpg",
+        "media/View of the Bridge and Part of the Town of Cava, Kingdom of Naples.jpg",
+        "media/Water Lilies.jpg",
+        "media/Wooded River Landscape in the Alps.jpg" };
+        
+        public GalleryExperience() {
 		pane = new StackPane();
 		canvas = new Pane();             
 
@@ -74,26 +77,30 @@ public class GalleryExperience extends Listener implements Experience {
 		backView.setPreserveRatio(true);
 		pane.getChildren().add(backView);
                 
-                Image mainImg = new Image(img2, 900, 600,
-                                true, true);
-                ImageView mainView = new ImageView(mainImg);
-                mainView.setLayoutX(400);
-                mainView.setLayoutY(200);
-                canvas.getChildren().add(mainView);
-                
-                Image leftImg = new Image(img1, 800, 500,
-                                true, true);
+                Image leftImg = new Image(imgs[imageHolder-1], 800, 500,
+                                false, false);
                 ImageView leftView = new ImageView(leftImg);
-                leftView.setLayoutX(1400);
+                leftView.setLayoutX(-600);
                 leftView.setLayoutY(250);
                 canvas.getChildren().add(leftView);
                 
-                Image rightImg = new Image(img3, 800, 500,
-                                true, true);
+                Image mainImg = new Image(imgs[imageHolder], 900, 600,
+                                false, false);
+                ImageView mainView = new ImageView(mainImg);
+                mainView.setLayoutX(350);
+                mainView.setLayoutY(200);
+                canvas.getChildren().add(mainView);
+                
+                Image rightImg = new Image(imgs[imageHolder+1], 800, 500,
+                                false, false);
                 ImageView rightView = new ImageView(rightImg);
-                rightView.setLayoutX(-450);
+                rightView.setLayoutX(1400);
                 rightView.setLayoutY(250);
                 canvas.getChildren().add(rightView);
+                
+                if(change){
+                        changeImg(leftView, mainView, rightView, imageHolder);
+                }
 
 		sleepTimer = new Timeline(new KeyFrame(Duration.millis(5000),
 				ae -> goToMainMenu()));
@@ -161,6 +168,44 @@ public class GalleryExperience extends Listener implements Experience {
 		myController.setExperience(InteractiveWall.MAIN_MENU);
 	}
         
+        public void changeImg(ImageView l, ImageView m, ImageView r, int i){
+                i++;
+                if(i==12){
+                    Image newLeft = new Image(imgs[i--], 800, 500,
+                            false, false);
+                    Image newMain = new Image(imgs[i], 900, 600,
+                            false, false);
+                    Image newRight = new Image(imgs[0], 800, 500,
+                            false, false);
+                    l.setImage(newLeft);
+                    m.setImage(newMain);
+                    r.setImage(newRight);
+                    i=-1;
+                }
+                else if(i==0){
+                    Image newLeft = new Image(imgs[12], 800, 500,
+                            false, false);
+                    Image newMain = new Image(imgs[i], 900, 600,
+                            false, false);
+                    Image newRight = new Image(imgs[i++], 800, 500,
+                            false, false);
+                    l.setImage(newLeft);
+                    m.setImage(newMain);
+                    r.setImage(newRight);
+                }
+                else{
+                        Image newLeft = new Image(imgs[i-1], 800, 500,
+                                        false, false);
+                        Image newMain = new Image(imgs[i], 900, 600,
+                                        false, false);
+                        Image newRight = new Image(imgs[i+1], 800, 500,
+                                        false, false);
+                        l.setImage(newLeft);
+                        m.setImage(newMain);
+                        r.setImage(newRight);
+                }
+        }
+        
         public void onConnect(Controller controller){
                 controller.enableGesture(Gesture.Type.TYPE_SWIPE);
                 controller.config().setFloat("Gesture.Swipe.MinLength", 200.0f);
@@ -206,21 +251,7 @@ public class GalleryExperience extends Listener implements Experience {
                 GestureList gestures = frame.gestures();
                 SwipeGesture swipe = new SwipeGesture(gestures.get(0));
                 if (swipe.isValid()){
-                        holder = img1;
-                        img1 = img2;
-                        img2 = img3;
-                        img3 = img4;
-                        img4 = img5;
-                        img5 = img6;
-                        img6 = img7;
-                        img7 = img8;
-                        img8 = img9;
-                        img9 = img10;
-                        img10 = img11;
-                        img11 = img12;
-                        img12 = img13;
-                        img13 = holder;
-                        
+                        change = true;
                 }
                 
                 
