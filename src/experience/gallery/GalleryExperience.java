@@ -20,9 +20,12 @@ import main.Util;
 
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
+import com.leapmotion.leap.Gesture;
+import com.leapmotion.leap.GestureList;
 import com.leapmotion.leap.Hand;
 import com.leapmotion.leap.HandList;
 import com.leapmotion.leap.Listener;
+import com.leapmotion.leap.SwipeGesture;
 
 public class GalleryExperience extends Listener implements Experience {
 	Controller controller;
@@ -35,7 +38,7 @@ public class GalleryExperience extends Listener implements Experience {
 	ImageView rightHand;
 	ImageView leftHand;
 	AnimationTimer drawHands;
-
+        
 	double rightHandPosX = -50.0;
 	double rightHandPosY = -50.0;
 	double realRightHandPosX = -50.0;
@@ -45,16 +48,52 @@ public class GalleryExperience extends Listener implements Experience {
 	double leftHandPosY = -50.0;
 	double realLeftHandPosX = -50.0;
 	double realLeftHandPosY = -50.0;
+        
+        String img1 = "media/A Calm at a Mediterranean Port.jpg";
+        String img2 = "media/Classical Landscape with Figures and Sculpture.jpg";
+        String img3 = "media/Irises.jpg";
+        String img4 = "media/Mountain Landscape with road to Naples.jpg";
+        String img5 = "media/Italian Landscape (Site d'Italie, Soleil Levant).jpg";
+        String img6 = "media/Landscape with Lake and Boatman.jpg";
+        String img7 = "media/O.T. 2013.jpg";
+        String img8 = "media/Renee Levi 640_341.jpg";
+        String img9 = "media/Starry Night.jpg";
+        String img10 = "media/The Wounded Foot.jpg";
+        String img11 = "media/View of the Bridge and Part of the Town of Cava, Kingdom of Naples.jpg";
+        String img12 = "media/Water Lilies.jpg";
+        String img13 = "media/Wooded River Landscape in the Alps.jpg";
+        String holder = "";
 
 	public GalleryExperience() {
 		pane = new StackPane();
-		canvas = new Pane();
+		canvas = new Pane();             
 
 		Image backImg = new Image("media/background1600_1000.jpg", 1600, 1000,
 				true, true);
 		ImageView backView = new ImageView(backImg);
 		backView.setPreserveRatio(true);
 		pane.getChildren().add(backView);
+                
+                Image mainImg = new Image(img2, 900, 600,
+                                true, true);
+                ImageView mainView = new ImageView(mainImg);
+                mainView.setLayoutX(400);
+                mainView.setLayoutY(200);
+                canvas.getChildren().add(mainView);
+                
+                Image leftImg = new Image(img1, 800, 500,
+                                true, true);
+                ImageView leftView = new ImageView(leftImg);
+                leftView.setLayoutX(1400);
+                leftView.setLayoutY(250);
+                canvas.getChildren().add(leftView);
+                
+                Image rightImg = new Image(img3, 800, 500,
+                                true, true);
+                ImageView rightView = new ImageView(rightImg);
+                rightView.setLayoutX(-450);
+                rightView.setLayoutY(250);
+                canvas.getChildren().add(rightView);
 
 		sleepTimer = new Timeline(new KeyFrame(Duration.millis(5000),
 				ae -> goToMainMenu()));
@@ -76,19 +115,6 @@ public class GalleryExperience extends Listener implements Experience {
 				leftHand.setTranslateY(leftHandPosY);
 			}
 		};
-
-		/* PLACE HOLDER STUFF */
-
-		Text t = new Text("GALLERY EXPERIENCE");
-
-		t.setFont(Font.font("Avenir Next", 30));
-		t.setFill(Color.WHITE);
-
-		BorderPane p = new BorderPane();
-		p.setCenter(t);
-		pane.getChildren().add(p);
-
-		/* PLACE HOLDER STUFF DONE */
 
 		canvas.getChildren().addAll(rightHand, leftHand);
 
@@ -130,15 +156,16 @@ public class GalleryExperience extends Listener implements Experience {
 		return pane;
 	}
 
-	private void goToSleepMode() {
-		controller.removeListener(this);
-		myController.setExperience(InteractiveWall.SLEEP_MODE);
-	}
-
 	private void goToMainMenu() {
 		controller.removeListener(this);
 		myController.setExperience(InteractiveWall.MAIN_MENU);
 	}
+        
+        public void onConnect(Controller controller){
+                controller.enableGesture(Gesture.Type.TYPE_SWIPE);
+                controller.config().setFloat("Gesture.Swipe.MinLength", 200.0f);
+                controller.config().save();
+        }
 
 	public void onFrame(Controller controller) {
 		Frame frame = controller.frame();
@@ -175,5 +202,27 @@ public class GalleryExperience extends Listener implements Experience {
 				realLeftHandPosY = left.palmPosition().getY();
 			}
 		}
+                
+                GestureList gestures = frame.gestures();
+                SwipeGesture swipe = new SwipeGesture(gestures.get(0));
+                if (swipe.isValid()){
+                        holder = img1;
+                        img1 = img2;
+                        img2 = img3;
+                        img3 = img4;
+                        img4 = img5;
+                        img5 = img6;
+                        img6 = img7;
+                        img7 = img8;
+                        img8 = img9;
+                        img9 = img10;
+                        img10 = img11;
+                        img11 = img12;
+                        img12 = img13;
+                        img13 = holder;
+                        
+                }
+                
+                
 	}
 }
