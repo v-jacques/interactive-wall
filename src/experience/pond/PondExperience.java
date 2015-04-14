@@ -72,7 +72,7 @@ public class PondExperience extends Listener implements Experience {
 		pane = new StackPane();
 		canvas = new Pane();
 
-		Image backImg = new Image("media/pond1600-1000px-unfinished.jpg", 1600,
+		Image backImg = new Image("media/TaiChi1600_1000.jpg", 1600,
 				1000, true, true);
 		ImageView backView = new ImageView(backImg);
 
@@ -110,10 +110,12 @@ public class PondExperience extends Listener implements Experience {
 		Image palmRightNormal = new Image("media/palmRight.png", 100, 100,
 				true, true);
 		rightHand = new ImageView(palmRightNormal);
+		rightHand.setVisible(false);
 
 		Image palmLeftNormal = new Image("media/palmLeft.png", 100, 100, true,
 				true);
 		leftHand = new ImageView(palmLeftNormal);
+		leftHand.setVisible(false);
 
 		drawHands = new AnimationTimer() {
 			@Override
@@ -263,7 +265,8 @@ public class PondExperience extends Listener implements Experience {
 				short data = (short) ((waterMap[mapInd - width]
 						+ waterMap[mapInd + width] + waterMap[mapInd - 1] + waterMap[mapInd + 1]) >> 1);
 				data -= waterMap[newInd + i];
-				data -= data >> 4;
+				//ripple effect size
+				data -= data >> 5;
 				waterMap[newInd + i] = data;
 				data = (short) (1024 - data);
 				a = ((x - halfWidth) * data / 1024) + halfWidth;
