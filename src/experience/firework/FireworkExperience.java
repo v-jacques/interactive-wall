@@ -161,15 +161,19 @@ public class FireworkExperience extends Listener implements Experience {
 
 			if (hands.get(i).isRight()) {
 				right = hands.get(i);
-				rightHandPosX = Util.palmXToPanelX(right);
-				rightHandPosY = Util.palmYToPanelY(right);
+				rightHandPosX = Util.leapXtoPanelX(right
+						.stabilizedPalmPosition().getX());
+				rightHandPosY = Util.leapYToPanelY(right
+						.stabilizedPalmPosition().getY());
 				realRightHandPosX = right.palmPosition().getX();
 				realRightHandPosY = right.palmPosition().getY();
 
 			} else if (hands.get(i).isLeft()) {
 				left = hands.get(i);
-				leftHandPosX = Util.palmXToPanelX(left);
-				leftHandPosY = Util.palmYToPanelY(left);
+				leftHandPosX = Util.leapXtoPanelX(left.stabilizedPalmPosition()
+						.getX());
+				leftHandPosY = Util.leapYToPanelY(left.stabilizedPalmPosition()
+						.getY());
 				realLeftHandPosX = left.palmPosition().getX();
 				realLeftHandPosY = left.palmPosition().getY();
 			}
