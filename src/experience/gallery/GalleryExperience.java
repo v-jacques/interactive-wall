@@ -46,7 +46,7 @@ public class GalleryExperience extends Listener implements Experience {
 	double realLeftHandPosY = -50.0;
         
         boolean change = false;
-        int imageHolder = 7;
+        int imageHolder = 8;
                 
         String[] imgs = { 
         "media/A Calm at a Mediterranean Port.jpg",
@@ -62,6 +62,18 @@ public class GalleryExperience extends Listener implements Experience {
         "media/View of the Bridge and Part of the Town of Cava, Kingdom of Naples.jpg",
         "media/Water Lilies.jpg",
         "media/Wooded River Landscape in the Alps.jpg" };
+        
+        Image leftImg = new Image(imgs[imageHolder-1], 800, 500,
+                        false, false);
+        ImageView leftView = new ImageView(leftImg);
+
+        Image mainImg = new Image(imgs[imageHolder], 900, 600, 
+                        true, true);
+        ImageView mainView = new ImageView(mainImg);
+
+        Image rightImg = new Image(imgs[imageHolder+1], 800, 500,
+                        false, false);
+        ImageView rightView = new ImageView(rightImg);
 
 	public GalleryExperience() {
 		pane = new StackPane();
@@ -73,30 +85,17 @@ public class GalleryExperience extends Listener implements Experience {
 		backView.setPreserveRatio(true);
 		pane.getChildren().add(backView);
                 
-                Image leftImg = new Image(imgs[imageHolder-1], 800, 500,
-                                false, false);
-                ImageView leftView = new ImageView(leftImg);
                 leftView.setLayoutX(-600);
                 leftView.setLayoutY(250);
                 canvas.getChildren().add(leftView);
                 
-                Image mainImg = new Image(imgs[imageHolder], 900, 600,
-                                true, true);
-                ImageView mainView = new ImageView(mainImg);
-                mainView.setLayoutX(350);
-                mainView.setLayoutY(200);
+                mainView.setLayoutX((1600-mainImg.getWidth())/2);
+                mainView.setLayoutY((1000-mainImg.getHeight())/2);
                 canvas.getChildren().add(mainView);
                 
-                Image rightImg = new Image(imgs[imageHolder+1], 800, 500,
-                                false, false);
-                ImageView rightView = new ImageView(rightImg);
                 rightView.setLayoutX(1400);
                 rightView.setLayoutY(250);
                 canvas.getChildren().add(rightView);
-                
-                /*if(change){
-                        changeImg(leftView, mainView, rightView, imageHolder);
-                }*/
 
 		sleepTimer = new Timeline(new KeyFrame(Duration.millis(5000),
 				ae -> goToMainMenu()));
@@ -251,7 +250,7 @@ public class GalleryExperience extends Listener implements Experience {
                 GestureList gestures = frame.gestures();
                 SwipeGesture swipe = new SwipeGesture(gestures.get(0));
                 if (swipe.isValid()){
-                        change = true;
+                        changeImg(leftView, mainView, rightView, imageHolder);
                 }             
 
 	}
