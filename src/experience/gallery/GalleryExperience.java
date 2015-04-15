@@ -46,7 +46,7 @@ public class GalleryExperience extends Listener implements Experience {
 	double realLeftHandPosY = -50.0;
         
         boolean change = false;
-        int imageHolder = 1;
+        int imageHolder = 7;
                 
         String[] imgs = { 
         "media/A Calm at a Mediterranean Port.jpg",
@@ -81,7 +81,7 @@ public class GalleryExperience extends Listener implements Experience {
                 canvas.getChildren().add(leftView);
                 
                 Image mainImg = new Image(imgs[imageHolder], 900, 600,
-                                false, false);
+                                true, true);
                 ImageView mainView = new ImageView(mainImg);
                 mainView.setLayoutX(350);
                 mainView.setLayoutY(200);
@@ -94,9 +94,9 @@ public class GalleryExperience extends Listener implements Experience {
                 rightView.setLayoutY(250);
                 canvas.getChildren().add(rightView);
                 
-                if(change){
+                /*if(change){
                         changeImg(leftView, mainView, rightView, imageHolder);
-                }
+                }*/
 
 		sleepTimer = new Timeline(new KeyFrame(Duration.millis(5000),
 				ae -> goToMainMenu()));
@@ -170,7 +170,7 @@ public class GalleryExperience extends Listener implements Experience {
                     Image newLeft = new Image(imgs[i--], 800, 500,
                             false, false);
                     Image newMain = new Image(imgs[i], 900, 600,
-                            false, false);
+                            true, true);
                     Image newRight = new Image(imgs[0], 800, 500,
                             false, false);
                     l.setImage(newLeft);
@@ -182,7 +182,7 @@ public class GalleryExperience extends Listener implements Experience {
                     Image newLeft = new Image(imgs[12], 800, 500,
                             false, false);
                     Image newMain = new Image(imgs[i], 900, 600,
-                            false, false);
+                            true, true);
                     Image newRight = new Image(imgs[i++], 800, 500,
                             false, false);
                     l.setImage(newLeft);
@@ -193,7 +193,7 @@ public class GalleryExperience extends Listener implements Experience {
                         Image newLeft = new Image(imgs[i-1], 800, 500,
                                         false, false);
                         Image newMain = new Image(imgs[i], 900, 600,
-                                        false, false);
+                                        true, true);
                         Image newRight = new Image(imgs[i+1], 800, 500,
                                         false, false);
                         l.setImage(newLeft);
