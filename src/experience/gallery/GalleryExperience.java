@@ -15,6 +15,7 @@ import main.InteractiveWall;
 import main.Util;
 
 import com.leapmotion.leap.Controller;
+import com.leapmotion.leap.FingerList;
 import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Gesture;
 import com.leapmotion.leap.GestureList;
@@ -22,6 +23,7 @@ import com.leapmotion.leap.Hand;
 import com.leapmotion.leap.HandList;
 import com.leapmotion.leap.Listener;
 import com.leapmotion.leap.SwipeGesture;
+import com.leapmotion.leap.Vector;
 
 public class GalleryExperience extends Listener implements Experience {
 	Controller controller;
@@ -34,6 +36,7 @@ public class GalleryExperience extends Listener implements Experience {
 	ImageView rightHand;
 	ImageView leftHand;
 	AnimationTimer drawHands;
+        AnimationTimer changeImgs;
 
 	double rightHandPosX = -50.0;
 	double rightHandPosY = -50.0;
@@ -45,8 +48,12 @@ public class GalleryExperience extends Listener implements Experience {
 	double realLeftHandPosX = -50.0;
 	double realLeftHandPosY = -50.0;
         
+        private long lastTimerCall;
+        long lastSwipe = 0;
+        
         boolean change = false;
-        int imageHolder = 8;
+        int imageHolder = 1;
+        boolean direction;
                 
         String[] imgs = { 
         "media/A Calm at a Mediterranean Port.jpg",
@@ -96,8 +103,8 @@ public class GalleryExperience extends Listener implements Experience {
                 rightView.setLayoutX(1400);
                 rightView.setLayoutY(250);
                 canvas.getChildren().add(rightView);
-
-		sleepTimer = new Timeline(new KeyFrame(Duration.millis(5000),
+                
+                sleepTimer = new Timeline(new KeyFrame(Duration.millis(5000),
 				ae -> goToMainMenu()));
 
 		Image palmRightNormal = new Image("media/palmRight.png", 100, 100,
@@ -117,6 +124,19 @@ public class GalleryExperience extends Listener implements Experience {
 				leftHand.setTranslateY(leftHandPosY);
 			}
 		};
+                
+                lastTimerCall = System.nanoTime();
+                changeImgs = new AnimationTimer() {
+                        @Override
+			public void handle(long now){                            
+                            if (now > lastTimerCall + 30_000_000l) {                               
+                               
+                                changeImg();
+                                
+                                lastTimerCall = now;
+                            }
+			}
+                };
 
 		canvas.getChildren().addAll(rightHand, leftHand);
 
@@ -134,7 +154,7 @@ public class GalleryExperience extends Listener implements Experience {
 	@Override
 	public void startExperience() {
 		drawHands.start();
-		sleepTimer.play();
+		//sleepTimer.play();
 		controller = new Controller(this);
 	}
 
@@ -163,47 +183,104 @@ public class GalleryExperience extends Listener implements Experience {
 		myController.setExperience(InteractiveWall.MAIN_MENU);
 	}
         
-        public void changeImg(ImageView l, ImageView m, ImageView r, int i){
-                i++;
-                if(i==12){
-                    Image newLeft = new Image(imgs[i--], 800, 500,
-                            false, false);
-                    Image newMain = new Image(imgs[i], 900, 600,
-                            true, true);
-                    Image newRight = new Image(imgs[0], 800, 500,
-                            false, false);
-                    l.setImage(newLeft);
-                    m.setImage(newMain);
-                    r.setImage(newRight);
-                    i=-1;
-                }
-                else if(i==0){
-                    Image newLeft = new Image(imgs[12], 800, 500,
-                            false, false);
-                    Image newMain = new Image(imgs[i], 900, 600,
-                            true, true);
-                    Image newRight = new Image(imgs[i++], 800, 500,
-                            false, false);
-                    l.setImage(newLeft);
-                    m.setImage(newMain);
-                    r.setImage(newRight);
+        public void changeImg(){
+                if (direction){
+                    if(imageHolder==11){
+                        Image newLeft = new Image(imgs[imageHolder], 800, 500,
+                                false, false);
+                        Image newMain = new Image(imgs[imageHolder+1], 900, 600,
+                                true, true);
+                        Image newRight = new Image(imgs[0], 800, 500,
+                                false, false);
+                        leftView.setImage(newLeft);
+                        mainView.setImage(newMain);
+                        mainView.setLayoutX((1600-newMain.getWidth())/2);
+                        mainView.setLayoutY((1000-newMain.getHeight())/2);
+                        rightView.setImage(newRight);
+                        imageHolder++;
+                    }
+                    else if(imageHolder==12){
+                        Image newLeft = new Image(imgs[imageHolder], 800, 500,
+                                false, false);
+                        Image newMain = new Image(imgs[0], 900, 600,
+                                true, true);
+                        Image newRight = new Image(imgs[1], 800, 500,
+                                false, false);
+                        leftView.setImage(newLeft);
+                        mainView.setImage(newMain);
+                        mainView.setLayoutX((1600-newMain.getWidth())/2);
+                        mainView.setLayoutY((1000-newMain.getHeight())/2);
+                        rightView.setImage(newRight);
+                        imageHolder = 0;
+                    }
+                    else{
+                        Image newLeft = new Image(imgs[imageHolder], 800, 500,
+                                        false, false);
+                        Image newMain = new Image(imgs[imageHolder+1], 900, 600,
+                                        true, true);
+                        Image newRight = new Image(imgs[imageHolder+2], 800, 500,
+                                        false, false);
+                        leftView.setImage(newLeft);
+                        mainView.setImage(newMain);
+                        mainView.setLayoutX((1600-newMain.getWidth())/2);
+                        mainView.setLayoutY((1000-newMain.getHeight())/2);
+                        rightView.setImage(newRight);
+                        imageHolder++;
+                    }
                 }
                 else{
-                        Image newLeft = new Image(imgs[i-1], 800, 500,
+                    if(imageHolder==1){
+                        Image newLeft = new Image(imgs[12], 800, 500,
+                                false, false);
+                        Image newMain = new Image(imgs[imageHolder-1], 900, 600,
+                                true, true);
+                        Image newRight = new Image(imgs[imageHolder], 800, 500,
+                                false, false);
+                        leftView.setImage(newLeft);
+                        mainView.setImage(newMain);
+                        mainView.setLayoutX((1600-newMain.getWidth())/2);
+                        mainView.setLayoutY((1000-newMain.getHeight())/2);
+                        rightView.setImage(newRight);
+                        imageHolder--;
+                    }
+                    else if(imageHolder==0){
+                        Image newLeft = new Image(imgs[11], 800, 500,
+                                false, false);
+                        Image newMain = new Image(imgs[12], 900, 600,
+                                true, true);
+                        Image newRight = new Image(imgs[imageHolder], 800, 500,
+                                false, false);
+                        leftView.setImage(newLeft);
+                        mainView.setImage(newMain);
+                        mainView.setLayoutX((1600-newMain.getWidth())/2);
+                        mainView.setLayoutY((1000-newMain.getHeight())/2);
+                        rightView.setImage(newRight);
+                        imageHolder = 12;
+                    }
+                    else{
+                        Image newLeft = new Image(imgs[imageHolder-2], 800, 500,
                                         false, false);
-                        Image newMain = new Image(imgs[i], 900, 600,
+                        Image newMain = new Image(imgs[imageHolder-1], 900, 600,
                                         true, true);
-                        Image newRight = new Image(imgs[i+1], 800, 500,
+                        Image newRight = new Image(imgs[imageHolder], 800, 500,
                                         false, false);
-                        l.setImage(newLeft);
-                        m.setImage(newMain);
-                        r.setImage(newRight);
+                        leftView.setImage(newLeft);
+                        mainView.setImage(newMain);
+                        mainView.setLayoutX((1600-newMain.getWidth())/2);
+                        mainView.setLayoutY((1000-newMain.getHeight())/2);
+                        rightView.setImage(newRight); 
+                        imageHolder--;
+                    }
+                    
                 }
+                System.out.print(imageHolder + " ");
+                changeImgs.stop();
         }
         
         public void onConnect(Controller controller){
                 controller.enableGesture(Gesture.Type.TYPE_SWIPE);
                 controller.config().setFloat("Gesture.Swipe.MinLength", 200.0f);
+                controller.config().setFloat("Gesture.Swipe.MinVelocity", 1000f);
                 controller.config().save();
         }
 
@@ -249,9 +326,27 @@ public class GalleryExperience extends Listener implements Experience {
                
                 GestureList gestures = frame.gestures();
                 SwipeGesture swipe = new SwipeGesture(gestures.get(0));
-                if (swipe.isValid()){
-                        changeImg(leftView, mainView, rightView, imageHolder);
-                }             
+                
+                Vector swipeStart = swipe.startPosition();
+                Vector swipeDir = swipe.direction();
+                
+                if (swipe.isValid() && swipeStart.getX() > 130 && swipeDir.getX() < 0) {
+                    direction = true;
+                    switch (swipe.state()){
+                        case STATE_STOP:
+                            changeImgs.start();
+                    }
+                    System.out.println(swipe.state());
+                }
+                
+                else if(swipe.isValid() && swipeStart.getX() < -130 && swipeDir.getX() > 0){
+                    direction = false;
+                    switch (swipe.state()){
+                        case STATE_STOP:
+                            changeImgs.start();
+                    }
+                    System.out.println(swipe.state());
+                }
 
 	}
 }
