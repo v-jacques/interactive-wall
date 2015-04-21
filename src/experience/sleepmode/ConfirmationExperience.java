@@ -41,19 +41,19 @@ import com.leapmotion.leap.Listener;
 public class ConfirmationExperience extends Listener implements Experience {
 
 	ExperienceController myController;
-	private File imageFile = new File("src/media/welcome.png");
+	private File imageFile = new File("media/welcome.png");
 	private final String IMAGE_URL = imageFile.toURI().toString();
-	private File leftHandImage = new File("src/media/palmLeft.png");
+	private File leftHandImage = new File("media/palmLeft.png");
 	private final String LEFT_HAND_IMAGE_URL = leftHandImage.toURI().toString();
-	private File rightHandImage = new File("src/media/palmRight.png");
+	private File rightHandImage = new File("media/palmRight.png");
 	private final String RIGHT_HAND_IMAGE_URL = rightHandImage.toURI()
 			.toString();
 	private File leftHandFullImage = new File(
-			"src/media/HoldLeft_fullHand_102_107.png");
+			"media/HoldLeft_fullHand_102_107.png");
 	private final String LEFT_HAND_FULL_IMAGE_URL = leftHandFullImage.toURI()
 			.toString();
 	private File rightHandFullImage = new File(
-			"src/media/Hold_fullHand_102_107.png");
+			"media/Hold_fullHand_102_107.png");
 	private final String RIGHT_HAND_FULL_IMAGE_URL = rightHandFullImage.toURI()
 			.toString();
 
@@ -79,7 +79,7 @@ public class ConfirmationExperience extends Listener implements Experience {
 	Hand left;
 
 	MediaPlayer confirmSound;
-	private File audiofile = new File("src/media/confirmComplete.mp3");
+	private File audiofile = new File("media/confirmComplete.mp3");
 	private final String MEDIA_URL = audiofile.toURI().toString();
 
 	public ConfirmationExperience() {
@@ -217,15 +217,15 @@ public class ConfirmationExperience extends Listener implements Experience {
 
 		for (int i = 0; i < hands.count(); i++) {
 			if (hands.get(i).isRight()) {
-				right = hands.get(i);
-				rightHandPosX = Util.palmXToPanelX(right);
-				rightHandPosY = Util.palmYToPanelY(right);
-
-			} else if (hands.get(i).isLeft()) {
-				left = hands.get(i);
-				leftHandPosX = Util.palmXToPanelX(left);
-				leftHandPosY = Util.palmYToPanelY(left);
-			}
+                                right = hands.get(i);
+                                rightHandPosX = Util.leapXtoPanelX(right.stabilizedPalmPosition().getX());
+                                rightHandPosY = Util.leapYToPanelY(right.stabilizedPalmPosition().getY());
+                        
+                        } else if (hands.get(i).isLeft()) {
+                                left = hands.get(i);
+                                leftHandPosX = Util.leapXtoPanelX(left.stabilizedPalmPosition().getX());
+                                leftHandPosY = Util.leapYToPanelY(left.stabilizedPalmPosition().getY());
+                        }
 		}
 		shouldConfirm();
 	}
