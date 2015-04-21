@@ -44,10 +44,10 @@ public class MainMenuExperience extends Listener implements Experience {
         
         MediaPlayer countPing;
         MediaPlayer confirmComplete;
-        private File count = new File("src/media/countPing.mp3");
+        private File count = new File("media/countPing.mp3");
         private final String COUNT_URL = count.toURI().toString();
         
-        private File confirm = new File("src/media/confirmComplete.mp3");
+        private File confirm = new File("media/confirmComplete.mp3");
         private final String CONFIRM_URL = confirm.toURI().toString();
         
         double rightHandPosX = -100.0;
@@ -129,20 +129,20 @@ public class MainMenuExperience extends Listener implements Experience {
                 Image rightHandFull = new Image("media/Hold_fullHand_102_107.png", 100,
                                 100, true, true);
                 
-                rightHandChange = new Timeline(new KeyFrame(Duration.seconds(2),
+                rightHandChange = new Timeline(new KeyFrame(Duration.seconds(1),
                                 ae -> {
                                         countPing.stop();
                                         countPing.play();
                                 }, new KeyValue(rightHand.imageProperty(), rightHand2)),
-                                new KeyFrame(Duration.seconds(3), ae -> {
+                                new KeyFrame(Duration.seconds(1.5), ae -> {
                                         countPing.stop();
                                         countPing.play();
                                 }, new KeyValue(rightHand.imageProperty(), rightHand1)),
-                                        new KeyFrame(Duration.seconds(4), ae -> {
+                                        new KeyFrame(Duration.seconds(2), ae -> {
                                         countPing.stop();
                                         countPing.play();
                                 }, new KeyValue(rightHand.imageProperty(), rightHand0)),
-                                new KeyFrame(Duration.seconds(5), ae -> {
+                                new KeyFrame(Duration.seconds(2.5), ae -> {
                                         goToNextExperience();
                                         confirmComplete.stop();
                                         confirmComplete.play();
@@ -257,7 +257,7 @@ public class MainMenuExperience extends Listener implements Experience {
                 confirmComplete.stop();
                 countPing.stop();
                 drawHands.start();
-                // sleepTimer.play();
+                sleepTimer.play();
                 // animationText.start();
                 drawIcons.start();
                 sleepTimer.play();
@@ -324,17 +324,17 @@ public class MainMenuExperience extends Listener implements Experience {
                         
                         if (hands.get(i).isRight()) {
                                 right = hands.get(i);
-                                rightHandPosX = Util.palmXToPanelX(right);
-                                rightHandPosY = Util.palmYToPanelY(right);
-                                realRightHandPosX = right.palmPosition().getX();
-                                realRightHandPosY = right.palmPosition().getY();
+                                rightHandPosX = Util.leapXtoPanelX(right.stabilizedPalmPosition().getX());
+                                rightHandPosY = Util.leapYToPanelY(right.stabilizedPalmPosition().getY());
+                                realRightHandPosX = right.stabilizedPalmPosition().getX();
+                                realRightHandPosY = right.stabilizedPalmPosition().getY();
                         
                         } else if (hands.get(i).isLeft()) {
                                 left = hands.get(i);
-                                leftHandPosX = Util.palmXToPanelX(left);
-                                leftHandPosY = Util.palmYToPanelY(left);
-                                realLeftHandPosX = left.palmPosition().getX();
-                                realLeftHandPosY = left.palmPosition().getY();
+                                leftHandPosX = Util.leapXtoPanelX(left.stabilizedPalmPosition().getX());
+                                leftHandPosY = Util.leapYToPanelY(left.stabilizedPalmPosition().getY());
+                                realLeftHandPosX = left.stabilizedPalmPosition().getX();
+                                realLeftHandPosY = left.stabilizedPalmPosition().getY();
                         }
                 }
         }
