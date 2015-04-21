@@ -15,7 +15,6 @@ import main.InteractiveWall;
 import main.Util;
 
 import com.leapmotion.leap.Controller;
-import com.leapmotion.leap.FingerList;
 import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Gesture;
 import com.leapmotion.leap.GestureList;
@@ -48,7 +47,6 @@ public class GalleryExperience extends Listener implements Experience {
 	double realLeftHandPosX = -50.0;
 	double realLeftHandPosY = -50.0;
         
-        private long lastTimerCall;
         long lastSwipe = 0;
         
         boolean change = false;
@@ -125,16 +123,10 @@ public class GalleryExperience extends Listener implements Experience {
 			}
 		};
                 
-                lastTimerCall = System.nanoTime();
                 changeImgs = new AnimationTimer() {
                         @Override
 			public void handle(long now){                            
-                            if (now > lastTimerCall + 30_000_000l) {                               
-                               
-                                changeImg();
-                                
-                                lastTimerCall = now;
-                            }
+                            changeImg();
 			}
                 };
 
@@ -154,7 +146,7 @@ public class GalleryExperience extends Listener implements Experience {
 	@Override
 	public void startExperience() {
 		drawHands.start();
-		//sleepTimer.play();
+		sleepTimer.play();
 		controller = new Controller(this);
 	}
 

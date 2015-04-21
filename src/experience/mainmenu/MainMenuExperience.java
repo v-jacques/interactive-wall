@@ -128,20 +128,20 @@ public class MainMenuExperience extends Listener implements Experience {
 		Image rightHandFull = new Image("media/Hold_fullHand_102_107.png", 100,
 				100, true, true);
 
-		rightHandChange = new Timeline(new KeyFrame(Duration.seconds(2),
+		rightHandChange = new Timeline(new KeyFrame(Duration.seconds(1),
 				ae -> {
 					countPing.stop();
 					countPing.play();
 				}, new KeyValue(rightHand.imageProperty(), rightHand2)),
-				new KeyFrame(Duration.seconds(3), ae -> {
+				new KeyFrame(Duration.seconds(1.5), ae -> {
 					countPing.stop();
 					countPing.play();
 				}, new KeyValue(rightHand.imageProperty(), rightHand1)),
-				new KeyFrame(Duration.seconds(4), ae -> {
+				new KeyFrame(Duration.seconds(2), ae -> {
 					countPing.stop();
 					countPing.play();
 				}, new KeyValue(rightHand.imageProperty(), rightHand0)),
-				new KeyFrame(Duration.seconds(5), ae -> {
+				new KeyFrame(Duration.seconds(2.5), ae -> {
 					goToNextExperience();
 					confirmComplete.stop();
 					confirmComplete.play();
@@ -256,7 +256,7 @@ public class MainMenuExperience extends Listener implements Experience {
 		confirmComplete.stop();
 		countPing.stop();
 		drawHands.start();
-		// sleepTimer.play();
+		sleepTimer.play();
 		// animationText.start();
 		drawIcons.start();
 		sleepTimer.play();
