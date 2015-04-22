@@ -44,10 +44,10 @@ public class MainMenuExperience extends Listener implements Experience {
 
 	MediaPlayer countPing;
 	MediaPlayer confirmComplete;
-	private File count = new File("media/countPing.mp3");
+	private File count = new File("src/media/countPing.mp3");
 	private final String COUNT_URL = count.toURI().toString();
 
-	private File confirm = new File("media/confirmComplete.mp3");
+	private File confirm = new File("src/media/confirmComplete.mp3");
 	private final String CONFIRM_URL = confirm.toURI().toString();
 
 	double rightHandPosX = -100.0;

@@ -33,7 +33,7 @@ public class SleepModeExperience extends Listener implements Experience {
 	Controller controller;
 	ExperienceController myController;
 	MediaPlayer mediaPlayer;
-	private File videofile = new File("media/sleepLoop.mp4");
+	private File videofile = new File("src/media/sleepLoop.mp4");
 	private final String MEDIA_URL = videofile.toURI().toString();
 
 	BorderPane pane;

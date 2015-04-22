@@ -11,7 +11,7 @@ import javafx.util.Duration;
 
 public class SystemMusic {
 
-	private static File background = new File("media/systemLoop.mp3");
+	private static File background = new File("src/media/systemLoop.mp3");
 	private static final String BACKGROUND_MUSIC = background.toURI()
 			.toString();
 	private static Media backgroundMusic = new Media(BACKGROUND_MUSIC);

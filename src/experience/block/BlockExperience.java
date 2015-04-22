@@ -83,13 +83,13 @@ public class BlockExperience extends Listener implements Experience {
 	MediaPlayer countPing;
 	MediaPlayer confirmComplete;
 
-	private File count = new File("media/countPing.mp3");
+	private File count = new File("src/media/countPing.mp3");
 	private final String COUNT_URL = count.toURI().toString();
 
-	private File confirm = new File("media/confirmComplete.mp3");
+	private File confirm = new File("src/media/confirmComplete.mp3");
 	private final String CONFIRM_URL = confirm.toURI().toString();
 
-	private File background = new File("media/blockBackgroundLoop.mp3");
+	private File background = new File("src/media/blockBackgroundLoop.mp3");
 	private final String BACKGROUND_MUSIC = background.toURI().toString();
 
 	double rightHandPosX = -50.0;

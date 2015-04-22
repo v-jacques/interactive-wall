@@ -60,27 +60,27 @@ public class FireworkExperience extends Listener implements Experience {
 	MediaPlayer confirmComplete;
 	Media backgroundMusic;
 	MediaPlayer backgroundMusicPlayer;
-	private File count = new File("media/countPing.mp3");
+	private File count = new File("src/media/countPing.mp3");
 	private final String COUNT_URL = count.toURI().toString();
-	private File confirm = new File("media/confirmComplete.mp3");
+	private File confirm = new File("src/media/confirmComplete.mp3");
 	private final String CONFIRM_URL = confirm.toURI().toString();
 
 	List<Particle> particles = new ArrayList<Particle>();
 	Paint[] colors;
 
-	private File launch = new File("media/sounds/firework_rocket_launch.mp3");
+	private File launch = new File("src/media/sounds/firework_rocket_launch.mp3");
 	String launchSoundURL = launch.toURI().toString();
 	private File norm = new File(
-			"media/sounds/firework_medium_distant_explosion.mp3");
+			"src/media/sounds/firework_medium_distant_explosion.mp3");
 	String normalSoundURL = norm.toURI().toString();
 	private File small = new File(
-			"media/sounds/firework_explode_and_crackle.mp3");
+			"src/media/sounds/firework_explode_and_crackle.mp3");
 	String smallSoundURL = small.toURI().toString();
 	private File willow = new File(
-			"media/sounds/firework_explosion_with_fizz_005.mp3");
+			"src/media/sounds/firework_explosion_with_fizz_005.mp3");
 	String willowSoundURL = willow.toURI().toString();
 	private File rings = new File(
-			"media/sounds/fireworks_multiple_explosions_with_fizz_003.mp3");
+			"src/media/sounds/fireworks_multiple_explosions_with_fizz_003.mp3");
 	String ringsSoundURL = rings.toURI().toString();
 
 	AudioClip launchSound = new AudioClip(launchSoundURL);
@@ -159,7 +159,7 @@ public class FireworkExperience extends Listener implements Experience {
 
 		}));
 
-		File backgroundMusicFile = new File("media/fireBackgroundLoop.mp3");
+		File backgroundMusicFile = new File("src/media/fireBackgroundLoop.mp3");
 		String BACKGROUND_MUSIC = backgroundMusicFile.toURI().toString();
 		backgroundMusic = new Media(BACKGROUND_MUSIC);
 		backgroundMusicPlayer = new MediaPlayer(backgroundMusic);
