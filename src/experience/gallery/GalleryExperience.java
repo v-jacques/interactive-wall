@@ -1,5 +1,7 @@
 package experience.gallery;
 
+import java.util.Date;
+
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -72,6 +74,8 @@ public class GalleryExperience extends Listener implements Experience {
 			"media/Allison_Steel_-_Seeking_Solace.jpg", "media/ontario.jpg",
 			"media/infinite.jpg", "media/clangone.jpg" };
 
+	ExperienceImage[] imageList;
+
 	Image leftImg = new Image(imgs[imageHolder - 1], 800, 500, false, false);
 	ImageView leftView = new ImageView(leftImg);
 
@@ -82,6 +86,18 @@ public class GalleryExperience extends Listener implements Experience {
 	ImageView rightView = new ImageView(rightImg);
 
 	public GalleryExperience() {
+		imageList = new ExperienceImage[] {
+				new ExperienceImage("media/A Calm at a Mediterranean Port.jpg",
+						800, 500, true, true, "A Calm at a Mediterranean Port",
+						"Claude-Joseph Vernet", "Oil on canvas", new Date(
+								"1770")),
+				new ExperienceImage(
+						"media/Classical Landscape with Figures and Sculpture.jpg",
+						800, 500, true, true,
+						"Classical Landscape with Figures and Sculpture",
+						"Pierre-Henri de Valenciennes", "Oil on panel",
+						new Date("1788")) };
+
 		pane = new StackPane();
 		canvas = new Pane();
 		quote = new Pane();
