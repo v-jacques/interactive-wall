@@ -324,7 +324,7 @@ public class GalleryExperience extends Listener implements Experience {
 				mainView.setLayoutX((1600 - newMain.getWidth()) / 2);
 				mainView.setLayoutY((1000 - newMain.getHeight()) / 2);
 				rightView.setImage(newRight);
-				imageHolder = imgs.length - 1;
+				imageHolder = imageList.length - 1;
 			} else {
 				Image newLeft = new Image(imageList[imageHolder - 2].getPath(), 800, 500,
 						false, false);
