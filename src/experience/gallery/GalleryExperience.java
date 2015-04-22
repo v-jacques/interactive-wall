@@ -29,6 +29,7 @@ public class GalleryExperience extends Listener implements Experience {
 	ExperienceController myController;
 	StackPane pane;
 	Pane canvas;
+        Pane quote;
 	Timeline sleepTimer;
 	Hand right;
 	Hand left;
@@ -36,6 +37,7 @@ public class GalleryExperience extends Listener implements Experience {
 	ImageView leftHand;
 	AnimationTimer drawHands;
         AnimationTimer changeImgs;
+        AnimationTimer information;
 
 	double rightHandPosX = -50.0;
 	double rightHandPosY = -50.0;
@@ -66,7 +68,11 @@ public class GalleryExperience extends Listener implements Experience {
         "media/The Wounded Foot.jpg",
         "media/View of the Bridge and Part of the Town of Cava, Kingdom of Naples.jpg",
         "media/Water Lilies.jpg",
-        "media/Wooded River Landscape in the Alps.jpg" };
+        "media/Wooded River Landscape in the Alps.jpg",
+        "media/Allison_Steel_-_Seeking_Solace.jpg",
+        "media/ontario.jpg",
+        "media/infinite.jpg",
+        "media/clangone.jpg"   };
         
         Image leftImg = new Image(imgs[imageHolder-1], 800, 500,
                         false, false);
@@ -83,6 +89,8 @@ public class GalleryExperience extends Listener implements Experience {
 	public GalleryExperience() {
 		pane = new StackPane();
 		canvas = new Pane();
+                quote = new Pane();
+                quote.setVisible(false);
 
 		Image backImg = new Image("media/background1600_1000.jpg", 1600, 1000,
 				true, true);
@@ -127,6 +135,21 @@ public class GalleryExperience extends Listener implements Experience {
                         @Override
 			public void handle(long now){                            
                             changeImg();
+			}
+                };
+                
+                information = new AnimationTimer() {
+                        @Override
+                        public void handle(long now){ 
+                                if (Util.isBetween((int)(1600-mainImg.getWidth())/2, (int)(1600-mainImg.getWidth())/2 
+                                                + (int)mainImg.getWidth(), (int) rightHandPosX)
+						&& Util.isBetween((int)(1000-mainImg.getHeight())/2, 
+                                                (int)(1000-mainImg.getHeight())/2 + (int)mainImg.getHeight(), (int) rightHandPosY)
+                                                ) {
+					//mainView.setImage(mainHover);
+                                } else {
+					mainView.setImage(mainImg);
+                                }
 			}
                 };
 
@@ -177,7 +200,7 @@ public class GalleryExperience extends Listener implements Experience {
         
         public void changeImg(){
                 if (direction){
-                    if(imageHolder==11){
+                    if(imageHolder==(imgs.length - 2)){
                         Image newLeft = new Image(imgs[imageHolder], 800, 500,
                                 false, false);
                         Image newMain = new Image(imgs[imageHolder+1], 900, 600,
@@ -191,7 +214,7 @@ public class GalleryExperience extends Listener implements Experience {
                         rightView.setImage(newRight);
                         imageHolder++;
                     }
-                    else if(imageHolder==12){
+                    else if(imageHolder==(imgs.length - 1)){
                         Image newLeft = new Image(imgs[imageHolder], 800, 500,
                                 false, false);
                         Image newMain = new Image(imgs[0], 900, 600,
@@ -222,7 +245,7 @@ public class GalleryExperience extends Listener implements Experience {
                 }
                 else{
                     if(imageHolder==1){
-                        Image newLeft = new Image(imgs[12], 800, 500,
+                        Image newLeft = new Image(imgs[imgs.length-1], 800, 500,
                                 false, false);
                         Image newMain = new Image(imgs[imageHolder-1], 900, 600,
                                 true, true);
@@ -236,9 +259,9 @@ public class GalleryExperience extends Listener implements Experience {
                         imageHolder--;
                     }
                     else if(imageHolder==0){
-                        Image newLeft = new Image(imgs[11], 800, 500,
+                        Image newLeft = new Image(imgs[imgs.length-2], 800, 500,
                                 false, false);
-                        Image newMain = new Image(imgs[12], 900, 600,
+                        Image newMain = new Image(imgs[imgs.length-1], 900, 600,
                                 true, true);
                         Image newRight = new Image(imgs[imageHolder], 800, 500,
                                 false, false);
@@ -247,7 +270,7 @@ public class GalleryExperience extends Listener implements Experience {
                         mainView.setLayoutX((1600-newMain.getWidth())/2);
                         mainView.setLayoutY((1000-newMain.getHeight())/2);
                         rightView.setImage(newRight);
-                        imageHolder = 12;
+                        imageHolder = imgs.length-1;
                     }
                     else{
                         Image newLeft = new Image(imgs[imageHolder-2], 800, 500,
@@ -322,22 +345,43 @@ public class GalleryExperience extends Listener implements Experience {
                 Vector swipeStart = swipe.startPosition();
                 Vector swipeDir = swipe.direction();
                 
-                if (swipe.isValid() && swipeStart.getX() > 130 && swipeDir.getX() < 0) {
-                    direction = true;
-                    switch (swipe.state()){
-                        case STATE_STOP:
-                            changeImgs.start();
-                    }
-                    System.out.println(swipe.state());
+                if(canvas.isVisible()){
+                        if (swipe.isValid() && swipeStart.getX() > 130 && swipeDir.getX() < 0) {
+                            direction = true;
+                            switch (swipe.state()){
+                                case STATE_STOP:
+                                    changeImgs.start();
+                            }
+                            System.out.println(swipe.state());
+                        }
+
+                        else if(swipe.isValid() && swipeStart.getX() < -130 && swipeDir.getX() > 0){
+                            direction = false;
+                            switch (swipe.state()){
+                                case STATE_STOP:
+                                    changeImgs.start();
+                            }
+                            System.out.println(swipe.state());
+                        }
                 }
-                
-                else if(swipe.isValid() && swipeStart.getX() < -130 && swipeDir.getX() > 0){
-                    direction = false;
-                    switch (swipe.state()){
-                        case STATE_STOP:
-                            changeImgs.start();
-                    }
-                    System.out.println(swipe.state());
+                if(quote.isVisible()){
+                        if (swipe.isValid() && swipeStart.getY() > 130 && swipeDir.getY() < 0) {
+                            direction = true;
+                            switch (swipe.state()){
+                                case STATE_STOP:
+                                    changeImgs.start();
+                            }
+                            System.out.println(swipe.state());
+                        }
+
+                        else if(swipe.isValid() && swipeStart.getY() < -130 && swipeDir.getY() > 0){
+                            direction = false;
+                            switch (swipe.state()){
+                                case STATE_STOP:
+                                    changeImgs.start();
+                            }
+                            System.out.println(swipe.state());
+                        }
                 }
 
 	}
