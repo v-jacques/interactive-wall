@@ -5,52 +5,61 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.animation.Animation;
+import javafx.util.Duration;
+
 import javafx.scene.Node;
+import javafx.scene.Group;
+
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.Media;
+
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.Group;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.util.Duration;
-import javafx.geometry.Point2D;
-import javafx.scene.effect.GaussianBlur;
-import javafx.scene.effect.InnerShadow;
-import main.Experience;
-import main.ExperienceController;
-import main.InteractiveWall;
-import main.Util;
 
-import java.io.File;
+import javafx.geometry.Point2D;
 
 import javafx.scene.paint.*;
 import javafx.scene.shape.*;
+import javafx.scene.effect.GaussianBlur;
 
 import org.jbox2d.dynamics.*;
 import org.jbox2d.common.*;
 
 import com.leapmotion.leap.*;
 
+import java.io.File;
+import java.util.ArrayList;
+
+import main.Experience;
+import main.ExperienceController;
+import main.InteractiveWall;
+import main.Util;
+
 public class BlockExperience extends Listener implements Experience {
+	
 	Controller controller;
+	
 	ExperienceController myController;
+	
 	StackPane pane;
 	Pane canvas;
 	AnchorPane buttons;
 	Group blocks;
+	
 	Timeline sleepTimer;
 	Timeline exit;
-	Timeline addBlock;
+	Timeline addSquareBlock;
+	Timeline addRectBlock;
+	
 	Hand right;
 	Hand left;
-	Block block;
-	Node selected;
+	
+	ArrayList<Block> arrayBlocks;
+	Block selected;
 	
 	Image palmRightNormal;
 	Image pointNormal;
@@ -60,13 +69,16 @@ public class BlockExperience extends Listener implements Experience {
 	ImageView leftHand;
 	ImageView point;
 	ImageView exitImage;
-	ImageView addBlockImage;
+	ImageView addSquareBlockImage;
+	ImageView addRectBlockImage;
 	
 	AnimationTimer drawHands;
 	Timeline blockDrawer;
-	File background;
+		
 	Media backgroundMusic;
 	MediaPlayer backgroundMusicPlayer;
+	Timeline fadePlay;
+	Timeline fadeStop;
 	
 	MediaPlayer countPing;
 	MediaPlayer confirmComplete;
@@ -77,25 +89,22 @@ public class BlockExperience extends Listener implements Experience {
         
     private File confirm = new File("media/confirmComplete.mp3");
     private final String CONFIRM_URL = confirm.toURI().toString();
-
-	Timeline fadePlay;
-	Timeline fadeStop;
+	
+	private	File background = new File("media/blockBackgroundLoop.mp3");
+	private final String BACKGROUND_MUSIC = background.toURI().toString();
 	
 	
 	double rightHandPosX = -50.0;
 	double rightHandPosY = -50.0;
-	double realRightHandPosX = -50.0;
-	double realRightHandPosY = -50.0;
+	
 
 	double leftHandPosX = -50.0;
 	double leftHandPosY = -50.0;
-	double realLeftHandPosX = -50.0;
-	double realLeftHandPosY = -50.0;
+	
 	
 	double pointPosX = -50.0;
 	double pointPosY = -50.0;
-	double realPointPosX = -50.0;
-	double realPointPosY = -50.0;
+	
 
 	public BlockExperience() {
 		
@@ -103,6 +112,10 @@ public class BlockExperience extends Listener implements Experience {
 		canvas = new Pane();
 		blocks = new Group();
 		buttons = new AnchorPane();
+		arrayBlocks = new ArrayList<Block>();
+		
+		sleepTimer = new Timeline(new KeyFrame(Duration.millis(30000),
+				ae -> goToMainMenu()));
 		
 		/* SET UP HAND AND POINT IMAGE */
 		
@@ -110,10 +123,6 @@ public class BlockExperience extends Listener implements Experience {
 				true, true);
 		ImageView backView = new ImageView(backImg);
 		backView.setPreserveRatio(true);
-		pane.getChildren().add(backView);
-
-		sleepTimer = new Timeline(new KeyFrame(Duration.millis(30000),
-				ae -> goToMainMenu()));
 			
 		Media countMedia = new Media(COUNT_URL);
 		countPing = new MediaPlayer(countMedia);
@@ -130,14 +139,21 @@ public class BlockExperience extends Listener implements Experience {
 		Image exitImageHovered = new Image("media/ExitHovered180_180.png", 150,150,
 				true, true);
 		
-		Image addBlockNormal = new Image("media/BlockPlus60_60.png", 125,125,
+		Image addSquareBlockNormal = new Image("media/BlockPlus60_60.png", 125,125,
 				true, true);
-		addBlockImage = new ImageView(addBlockNormal);
+		addSquareBlockImage = new ImageView(addSquareBlockNormal);
 		
-		Image addBlockHovered = new Image("media/BlockPlusHovered.png", 125,125,
+		Image addSquareBlockHovered = new Image("media/BlockPlusHovered.png", 125,125,
+				true, true);
+				
+		Image addRectBlockNormal = new Image("media/BlockPlus60_60.png", 125,125,
+				true, true);
+		addRectBlockImage = new ImageView(addSquareBlockNormal);
+		
+		Image addRectBlockHovered = new Image("media/BlockPlusHovered.png", 125,125,
 				true, true);
 		
-		 palmRightNormal = new Image("media/palmRight.png", 100, 100,
+		palmRightNormal = new Image("media/palmRight.png", 100, 100,
 				true, true);
 		
 		rightHand = new ImageView(palmRightNormal);
@@ -165,7 +181,8 @@ public class BlockExperience extends Listener implements Experience {
 				point.setTranslateY(pointPosY);
 				
 				if(!exitImage.getBoundsInParent().contains(rightHand.getBoundsInParent()) 
-					&& !addBlockImage.getBoundsInParent().contains(rightHand.getBoundsInParent())){
+					&& !addSquareBlockImage.getBoundsInParent().contains(rightHand.getBoundsInParent())
+					&& !addRectBlockImage.getBoundsInParent().contains(rightHand.getBoundsInParent())){
 					
 					rightHand.setImage(palmRightNormal);
 					
@@ -186,21 +203,36 @@ public class BlockExperience extends Listener implements Experience {
 				}
 				
 				if(blocks.getChildren().size() < 25){
-					addBlockImage.setVisible(true);
-					if(addBlockImage.getBoundsInParent().contains(rightHand.getBoundsInParent())){
-						addBlockImage.setImage(addBlockHovered);
+					addSquareBlockImage.setVisible(true);
+					if(addSquareBlockImage.getBoundsInParent().contains(rightHand.getBoundsInParent())){
+						addSquareBlockImage.setImage(addSquareBlockHovered);
 					
-						if(addBlock.getStatus() != Animation.Status.RUNNING){
-							addBlock.play();
+						if(addSquareBlock.getStatus() != Animation.Status.RUNNING){
+							addSquareBlock.play();
 						}
 						
 					
 					}else{
-						addBlock.stop();
-						addBlockImage.setImage(addBlockNormal);
+						addSquareBlock.stop();
+						addSquareBlockImage.setImage(addSquareBlockNormal);
+					}
+					
+					addRectBlockImage.setVisible(true);
+					if(addRectBlockImage.getBoundsInParent().contains(rightHand.getBoundsInParent())){
+						addRectBlockImage.setImage(addRectBlockHovered);
+					
+						if(addRectBlock.getStatus() != Animation.Status.RUNNING){
+							addRectBlock.play();
+						}
+						
+					
+					}else{
+						addRectBlock.stop();
+						addRectBlockImage.setImage(addRectBlockNormal);
 					}
 				}else{
-					addBlockImage.setVisible(false);
+					addSquareBlockImage.setVisible(false);
+					addRectBlockImage.setVisible(false);
 				}
 				
 				if(selected == null){
@@ -227,38 +259,34 @@ public class BlockExperience extends Listener implements Experience {
 
 							}));
 							
-		addBlock = new Timeline(new KeyFrame(Duration.seconds(.5),
+		addSquareBlock = new Timeline(new KeyFrame(Duration.seconds(.5),
 								 ae -> {
 								 	rightHand.setImage(rightHandFull);
-								 	addBlock();
+								 	addSquareBlock();
+								 	countPing.stop();
+								 	countPing.play();
 							}),
 							new KeyFrame(Duration.seconds(1),
-								 ae -> {
-										countPing.stop();
-									countPing.play();
-							}),
-							new KeyFrame(Duration.seconds(2),
 								 ae -> {
 									rightHand.setImage(palmRightNormal);
 
 							}));
 							
+		addRectBlock = new Timeline(new KeyFrame(Duration.seconds(.5),
+								 ae -> {
+								 	rightHand.setImage(rightHandFull);
+								 	addRectBlock();
+								 	countPing.stop();
+								 	countPing.play();
+							}),
+							new KeyFrame(Duration.seconds(1),
+								 ae -> {
+									rightHand.setImage(palmRightNormal);
+							}));
 		
-		/* PLACE HOLDER  
-
-		Text t = new Text("BLOCK EXPERIENCE");
-
-		t.setFont(Font.font("Avenir Next", 30));
-		t.setFill(Color.WHITE);
-
-		BorderPane p = new BorderPane();
-		p.setCenter(t);
-		pane.getChildren().add(p);
-
-		 PLACE HOLDER  DONE */
 		
-		background = new File("media/blockBackgroundLoop.mp3");
-		String BACKGROUND_MUSIC = background.toURI().toString();
+		/* BACKGROUND AUDIO */
+		
 		backgroundMusic = new Media(BACKGROUND_MUSIC);
 	 	backgroundMusicPlayer = new MediaPlayer(backgroundMusic);
 
@@ -276,21 +304,9 @@ public class BlockExperience extends Listener implements Experience {
 		
 		/* CREATE THE GROUND AND WALLS 	*/	
 		
-		WorldModel.addWall(8,1f,16.0f,1.0f);
+		WorldModel.addWall(8,.5f,16.0f,1.0f); // not a wall actually the ground
 		
-		/* THIS IS FOR TESTING -- TO SEE GROUND
-		
-		Rectangle ground = new Rectangle();
-		ground.setWidth(WorldModel.fromMetersToPixels(16.0f));
-		ground.setHeight(WorldModel.fromMetersToPixels(1.0f));
-		ground.setFill(Color.ORANGE);
-		ground.setStroke(Color.BLACK);
-		//ground.setStrokeWidth(1.5);
-		ground.setLayoutX(WorldModel.fromJPosXToSPosX(0.0f));
-		ground.setLayoutY(WorldModel.fromJPosYToSPosY(1.0f));*/
-		
-			
-		WorldModel.addWall(2.5f,5.0f,0.25f,10.0f);
+		WorldModel.addWall(3.0f,5.0f,0.25f,10.0f);
 		Rectangle left = new Rectangle();
 		left.setWidth(WorldModel.fromMetersToPixels(0.25f));
 		left.setHeight(WorldModel.fromMetersToPixels(9.0f));
@@ -300,11 +316,10 @@ public class BlockExperience extends Listener implements Experience {
 		left.setStroke(Color.LIGHTCYAN);
 		left.setOpacity(0.70);
 		left.setEffect(new GaussianBlur());
-		//ground.setStrokeWidth(1.5);
 		left.setLayoutX(WorldModel.fromJPosXToSPosX(3.00f));
 		left.setLayoutY(WorldModel.fromJPosYToSPosY(10.5f));
 		
-		WorldModel.addWall(12.5f,5.0f,0.25f,10.0f);
+		WorldModel.addWall(13f,5.0f,0.25f,10.0f);
 		Rectangle right = new Rectangle();
 		right.setWidth(WorldModel.fromMetersToPixels(0.25f));
 		right.setHeight(WorldModel.fromMetersToPixels(9.0f));
@@ -312,57 +327,56 @@ public class BlockExperience extends Listener implements Experience {
 		right.setStroke(Color.LIGHTCYAN);
 		right.setOpacity(0.70);
 		right.setEffect(new GaussianBlur());
-		//ground.setStrokeWidth(1.5);
 		right.setLayoutX(WorldModel.fromJPosXToSPosX(12.75f));
 		right.setLayoutY(WorldModel.fromJPosYToSPosY(10.5f));
 		
         
+        /* DRAWING THE BLOCKS */        
+
         blockDrawer = new Timeline();
         blockDrawer.setCycleCount(Timeline.INDEFINITE);
  		
- 		
         Duration duration = Duration.seconds(1.0/60.0); // Set duration for frame.
              
-         /**
-         * Set ActionEvent and duration to the KeyFrame. 
-         * The ActionEvent is trigged when KeyFrame execution is over. 
-         */
         KeyFrame frame = new KeyFrame(duration, ae ->{
 			//Create time step. Set Iteration count 8 for velocity and 3 for positions
 			WorldModel.WORLD.step(1.0f/60.f, 8, 3); 
 			//Move balls to the new position computed by JBox2D
-			for(int i = 0 ; i< blocks.getChildren().size(); i++){
-			Node current = blocks.getChildren().get(i);
-			Body body = (Body)current.getUserData();
+			for(int i = 0 ; i< arrayBlocks.size(); i++){
+			
+			Block current =  arrayBlocks.get(i);
+			Body body = (Body)current.node.getUserData();
 			float xpos = body.getPosition().x;
 			float ypos = body.getPosition().y;
-			
-			current.setLayoutX(WorldModel.fromJPosXToSPosX((float)xpos));
-			current.setLayoutY(WorldModel.fromJPosYToSPosY((float)ypos));
-			current.setRotate(-(180*body.getAngle())/Math.PI);
+			current.node.setLayoutX(WorldModel.fromJPosXToSPosX((float)xpos) - current.getWidth() * 50);
+			current.node.setLayoutY(WorldModel.fromJPosYToSPosY((float)ypos) - current.getHeight() * 50);
+			current.node.setRotate(-(180*body.getAngle())/Math.PI);
 			}
 
         }, null,null);
  
         blockDrawer.getKeyFrames().add(frame);
-        
-        
         blocks.setManaged(false);
         
 		selected = null;
 	
-	
-		canvas.getChildren().addAll(rightHand, leftHand, point,left,right);//, ground ,left,right );
+		/* ADD NODES TO PANES */
+		pane.getChildren().add(backView);
+		
+		canvas.getChildren().addAll(rightHand, leftHand, point,left,right);
 
 		rightHand.relocate(rightHandPosX, rightHandPosY);
 		leftHand.relocate(leftHandPosX, leftHandPosY);
 		point.relocate(pointPosX, pointPosY);
 		
-		buttons.getChildren().addAll(exitImage,addBlockImage);
+		buttons.getChildren().addAll(exitImage,addSquareBlockImage,addRectBlockImage);
+		
 		buttons.setBottomAnchor(exitImage, 100.0); 
 		buttons.setRightAnchor(exitImage, 115.0);
-		buttons.setBottomAnchor(addBlockImage, 105.0);
-		buttons.setLeftAnchor(addBlockImage, 140.0);
+		buttons.setBottomAnchor(addSquareBlockImage, 105.0);
+		buttons.setLeftAnchor(addSquareBlockImage, 140.0);
+		buttons.setBottomAnchor(addRectBlockImage, 250.0);
+		buttons.setLeftAnchor(addRectBlockImage, 140.0);
 		
 		pane.getChildren().add(blocks);
 		pane.getChildren().addAll(buttons,canvas);
@@ -383,7 +397,6 @@ public class BlockExperience extends Listener implements Experience {
 		backgroundMusicPlayer.setCycleCount(MediaPlayer.INDEFINITE);
 		fadePlay.play();
 		controller = new Controller(this);
-		controller.enableGesture(Gesture.Type.TYPE_SCREEN_TAP);
 	}
 
 	@Override
@@ -414,6 +427,7 @@ public class BlockExperience extends Listener implements Experience {
 				WorldModel.WORLD.destroyBody(body);
 		}
 		blocks.getChildren().clear();
+		arrayBlocks.clear();
 		
 		fadeStop.play();
 
@@ -438,37 +452,26 @@ public class BlockExperience extends Listener implements Experience {
 		Frame frame = controller.frame();
 
 		HandList hands = frame.hands();
-		GestureList gestures = frame.gestures();
 		FingerList extended = frame.fingers().extended();
 		
 		rightHandPosX = -50.0;
 		rightHandPosY = -50.0;
-		realRightHandPosX = -50.0;
-		realRightHandPosY = -50.0;
-
+	
 		leftHandPosX = -50.0;
 		leftHandPosY = -50.0;
-		realLeftHandPosX = -50.0;
-		realLeftHandPosY = -50.0;
-		
+
 		pointPosX = -50.0;
 		pointPosY = -50.0;
-		realPointPosX = -50.0;
-		realPointPosY = -50.0;
-
 		
 		if(extended.count() == 1){	
-			pointPosX = Util.pointXToPanelX(extended.get(0));
-			pointPosY = Util.pointYToPanelY(extended.get(0));
-			realPointPosX = extended.get(0).stabilizedTipPosition().getX();
-			realPointPosY = extended.get(0).stabilizedTipPosition().getY();	
-			if(Util.pointXToPanelX(extended.get(0)) > 325 && Util.pointXToPanelX(extended.get(0))< 1325
-				&& Util.pointYToPanelY(extended.get(0)) > 75 && Util.pointYToPanelY(extended.get(0))< 825
-			){
-				
-			for(int i = 0 ; i< blocks.getChildren().size(); i++){
-				Node current = (Node)blocks.getChildren().get(i);
-				if(current.getBoundsInParent().contains(point.getBoundsInParent())){
+			pointPosX = Util.leapXtoPanelX(extended.get(0).stabilizedTipPosition().getX());
+			pointPosY = Util.leapYToPanelY(extended.get(0).stabilizedTipPosition().getY());
+			
+			if(pointPosX > 325 && pointPosX< 1325&& pointPosY > 75 && pointPosY< 825){
+				// USER IS INSIDE BOUNDS 
+			for(int i = 0 ; i< arrayBlocks.size(); i++){
+				Block current = arrayBlocks.get(i);
+				if(current.node.getBoundsInParent().contains(point.getBoundsInParent())){
 						 selected = current;
 						 break;
 				}else{
@@ -477,19 +480,16 @@ public class BlockExperience extends Listener implements Experience {
 			}
 			
 				if(selected != null){
-					Body body = (Body) selected.getUserData();
+					Body body = (Body) selected.node.getUserData();
 					body.setType(BodyType.STATIC);
-					body.setTransform(new Vec2( (float)( pointPosX - ( 25 + selected.getBoundsInLocal().getWidth()/2 ))/100 ,
-											(float)(10-((pointPosY - ( 25 + selected.getBoundsInLocal().getHeight()/2 )))/100)
-											)
-												,body.getAngle());
+					body.setTransform(new Vec2( (float)(pointPosX -25) /100 , (float)((WorldModel.HEIGHT - pointPosY +25 )/100)),body.getAngle());
 					body.setType(BodyType.DYNAMIC);
 				}
 			}
 		}else{
 			
 			if(selected != null){
-				Body body = (Body) selected.getUserData();
+				Body body = (Body) selected.node.getUserData();
 				body.setType(BodyType.DYNAMIC);
 				selected = null;
 			}
@@ -500,32 +500,41 @@ public class BlockExperience extends Listener implements Experience {
 				
 				if (hands.get(i).isRight()) {
 					right = hands.get(i);
-					rightHandPosX = Util.palmXToPanelX(right);
-					rightHandPosY = Util.palmYToPanelY(right);
-					realRightHandPosX = right.palmPosition().getX();
-					realRightHandPosY = right.palmPosition().getY();
+					rightHandPosX = Util.leapXtoPanelX(right.stabilizedPalmPosition().getX());
+					rightHandPosY = Util.leapYToPanelY(right.stabilizedPalmPosition().getY());
 
 				} else if (hands.get(i).isLeft()) {
 					left = hands.get(i);
-					leftHandPosX = Util.palmXToPanelX(left);
-					leftHandPosY = Util.palmYToPanelY(left);
-					realLeftHandPosX = left.palmPosition().getX();
-					realLeftHandPosY = left.palmPosition().getY();
+					leftHandPosX = Util.leapXtoPanelX(left.stabilizedPalmPosition().getX());
+					leftHandPosY = Util.leapYToPanelY(left.stabilizedPalmPosition().getY());
 				}
 			}
 		}
 	}
 	
 	private void createDefaultBlocks(){
-		//create blocks   
+		//Create Blocks at Random   
+		Block block;
 		for(int i = 0 ; i< 10; i++){
-        	block = new Block(8, 9, .9,.9);
+			if(Math.random() < .25){
+        		block = new Block(8, 9, 1.8,.9);
+        	}else{
+        		block = new Block(8, 9, .9,.9);
+        	}
+        	arrayBlocks.add(block);
         	blocks.getChildren().add(block.node);
         }
 	}
 	
-	private void addBlock(){
-        block = new Block(8, 9, .9,.9);
+	private void addSquareBlock(){
+        Block block = new Block(8, 9, .9,.9);
+        arrayBlocks.add(block);
+        blocks.getChildren().add(block.node);
+	}
+	
+	private void addRectBlock(){
+        Block block = new Block(8, 9, 1.8,.9);
+        arrayBlocks.add(block);
         blocks.getChildren().add(block.node);
 	}
 }

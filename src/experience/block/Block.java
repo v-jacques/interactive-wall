@@ -1,13 +1,15 @@
 package experience.block;
-import javafx.scene.*;
+
 import javafx.scene.paint.*;
 import javafx.scene.shape.*;
+
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.dynamics.*;
-import javafx.util.Duration;
+
 
 public class Block {
 	
@@ -28,9 +30,12 @@ public class Block {
 		node = create();
 	}
 	
-	public void setPoints(float x, float y) {
-		this.posX = x;
-		this.posY = y;
+	public double getWidth() {
+		return width;
+	}
+	
+	public double getHeight() {
+		return height;
 	}
 	
 	private Node create() {
@@ -60,8 +65,8 @@ public class Block {
 		block.setStrokeWidth(1.5);
 		
 		//setting block position for JavaFX
-		block.setLayoutX(WorldModel.fromJPosXToSPosX((float)posX));
-		block.setLayoutY(WorldModel.fromJPosYToSPosY((float)posY));
+		block.setLayoutX(WorldModel.fromJPosXToSPosX((float)posX) - width *.5f);
+		block.setLayoutY(WorldModel.fromJPosYToSPosY((float)posY) - height *.5f);
 		
 		block.setCache(true);
 		
