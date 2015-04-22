@@ -89,15 +89,17 @@ public class PondExperience extends Listener implements Experience {
 				true, true);
 		ImageView backView = new ImageView(backImg);
 		backView.setPreserveRatio(true);
+		backView.setLayoutY(300); // DO NOT LIKE THIS
 		pane.getChildren().add(backView);
 
-		Image exitImg = new Image("media/Exit180_180.png", 180, 180, true, true);
-		Image exitHoveredImg = new Image("media/ExitHovered180_180.png", 180,
-				180, true, true);
+		Image exitImg = new Image("media/Exit180_180.png", 150, 150, true, true);
+		Image exitHoveredImg = new Image("media/ExitHovered180_180.png", 150,
+				150, true, true);
 		ImageView exitView = new ImageView(exitImg);
+		exitView.setOpacity(0.3);
 		exitView.setPreserveRatio(true);
-		exitView.setLayoutX(1420);
-		exitView.setLayoutY(820);
+		exitView.setLayoutX(1335);
+		exitView.setLayoutY(710);
 		canvas.getChildren().add(exitView);
 
 		width = (int) backView.getImage().getWidth();
@@ -125,7 +127,7 @@ public class PondExperience extends Listener implements Experience {
 			}
 		};
 
-		sleepTimer = new Timeline(new KeyFrame(Duration.millis(15000),
+		sleepTimer = new Timeline(new KeyFrame(Duration.millis(30000),
 				ae -> goToMainMenu()));
 
 		Image palmRightNormal = new Image("media/palmRight.png", 100, 100,
@@ -156,24 +158,16 @@ public class PondExperience extends Listener implements Experience {
 		confirmComplete = new MediaPlayer(confirmMedia);
 		confirmComplete.setVolume(.25);
 
-		rightHandChange = new Timeline(new KeyFrame(Duration.seconds(2),
+		rightHandChange = new Timeline(new KeyFrame(Duration.seconds(.5),
 				ae -> {
-					countPing.stop();
-					countPing.play();
-				}, new KeyValue(rightHand.imageProperty(), rightHand2)),
-				new KeyFrame(Duration.seconds(3), ae -> {
-					countPing.stop();
-					countPing.play();
-				}, new KeyValue(rightHand.imageProperty(), rightHand1)),
-				new KeyFrame(Duration.seconds(4), ae -> {
-					countPing.stop();
-					countPing.play();
-				}, new KeyValue(rightHand.imageProperty(), rightHand0)),
-				new KeyFrame(Duration.seconds(5), ae -> {
-					confirmComplete.stop();
+					rightHand.setImage(rightHandFull);
 					confirmComplete.play();
-					goToMainMenu();
-				}, new KeyValue(rightHand.imageProperty(), rightHandFull)));
+				}), new KeyFrame(Duration.seconds(1), ae -> {
+			goToMainMenu();
+		}), new KeyFrame(Duration.seconds(2), ae -> {
+			rightHand.setImage(palmRightNormal);
+
+		}));
 
 		drawHands = new AnimationTimer() {
 			@Override
@@ -183,13 +177,18 @@ public class PondExperience extends Listener implements Experience {
 				leftHand.setTranslateX(leftHandPosX);
 				leftHand.setTranslateY(leftHandPosY);
 
-				if (Util.isBetween(1420, 1600, (int) rightHandPosX)
-						&& Util.isBetween(820, 1000, (int) rightHandPosY)) {
-					exitView.setImage(exitHoveredImg);
+				if (Util.isBetween(1235, 1550, (int) rightHandPosX)
+						&& Util.isBetween(610, 960, (int) rightHandPosY)) {
 					rightHand.setVisible(true);
-					rightHandChange.play();
+					if (Util.isBetween(1335, 1450, (int) rightHandPosX)
+							&& Util.isBetween(710, 860, (int) rightHandPosY)) {
+						exitView.setImage(exitHoveredImg);
+						exitView.setOpacity(1.0);
+						rightHandChange.play();
+					}
 				} else {
 					exitView.setImage(exitImg);
+					exitView.setOpacity(0.3);
 					rightHand.setVisible(false);
 					rightHandChange.stop();
 					rightHand.setImage(palmRightNormal);

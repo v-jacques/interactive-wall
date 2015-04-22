@@ -6,6 +6,10 @@ public class Util {
 		return b > a ? c > a && c < b : c > b && c < a;
 	}
 
+	public static boolean isBetween(double a, double b, double c) {
+		return b > a ? c > a && c < b : c > b && c < a;
+	}
+
 	public static double leapXtoPanelX(double x) {
 		double origStart = -140;
 		double origEnd = 140;

@@ -1,17 +1,26 @@
 package experience.firework;
 
-import javafx.animation.AnimationTimer;
-import javafx.animation.KeyFrame;
+import javafx.application.Application;
+import javafx.scene.*;
+import javafx.stage.Stage;
 import javafx.animation.Timeline;
-import javafx.scene.Node;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.effect.*;
+import javafx.scene.paint.*;
+import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
+import java.util.*;
+import javafx.animation.*;
+import javafx.scene.canvas.*;
+import javafx.scene.effect.Reflection;
+import javafx.scene.image.*;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
+import javafx.scene.paint.*;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.media.AudioClip;
+import java.io.File;
+import javafx.event.EventHandler;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import main.Experience;
 import main.ExperienceController;
@@ -21,44 +30,96 @@ import main.Util;
 import com.leapmotion.leap.Controller;
 import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Hand;
+import com.leapmotion.leap.Finger;
 import com.leapmotion.leap.HandList;
 import com.leapmotion.leap.Listener;
+import com.leapmotion.leap.Gesture;
+import com.leapmotion.leap.GestureList;
+import com.leapmotion.leap.ScreenTapGesture;
 
 public class FireworkExperience extends Listener implements Experience {
+
 	Controller controller;
 	ExperienceController myController;
-	StackPane pane;
-	Pane canvas;
-	Timeline sleepTimer;
+	AnimationTimer timer;
+	AnimationTimer drawHands;
+	Timeline rightHandChange;
+	Timeline fadePlay;
+	Timeline fadeStop;
+	Pane pane;
+	StackPane layer;
+	Canvas canvas;
 	Hand right;
 	Hand left;
 	ImageView rightHand;
 	ImageView leftHand;
-	AnimationTimer drawHands;
+	ImageView background;
+	ImageView foreground;
 
-	double rightHandPosX = -50.0;
-	double rightHandPosY = -50.0;
-	double realRightHandPosX = -50.0;
-	double realRightHandPosY = -50.0;
+	MediaPlayer countPing;
+	MediaPlayer confirmComplete;
+	Media backgroundMusic;
+	MediaPlayer backgroundMusicPlayer;
+	private File count = new File("media/countPing.mp3");
+	private final String COUNT_URL = count.toURI().toString();
+	private File confirm = new File("media/confirmComplete.mp3");
+	private final String CONFIRM_URL = confirm.toURI().toString();
 
-	double leftHandPosX = -50.0;
-	double leftHandPosY = -50.0;
-	double realLeftHandPosX = -50.0;
-	double realLeftHandPosY = -50.0;
+	List<Particle> particles = new ArrayList<Particle>();
+	Paint[] colors;
+
+	private File launch = new File("media/sounds/firework_rocket_launch.mp3");
+	String launchSoundURL = launch.toURI().toString();
+	private File norm = new File(
+			"media/sounds/firework_medium_distant_explosion.mp3");
+	String normalSoundURL = norm.toURI().toString();
+	private File small = new File(
+			"media/sounds/firework_explode_and_crackle.mp3");
+	String smallSoundURL = small.toURI().toString();
+	private File willow = new File(
+			"media/sounds/firework_explosion_with_fizz_005.mp3");
+	String willowSoundURL = willow.toURI().toString();
+	private File rings = new File(
+			"media/sounds/fireworks_multiple_explosions_with_fizz_003.mp3");
+	String ringsSoundURL = rings.toURI().toString();
+
+	AudioClip launchSound = new AudioClip(launchSoundURL);
+	AudioClip normalSound = new AudioClip(normalSoundURL);
+	AudioClip smallSound = new AudioClip(smallSoundURL);
+	AudioClip willowSound = new AudioClip(willowSoundURL);
+	AudioClip ringsSound = new AudioClip(ringsSoundURL);
+
+	double rightHandPosX = -100.0;
+	double rightHandPosY = -100.0;
+	double realRightHandPosX = -100.0;
+	double realRightHandPosY = -100.0;
+
+	double leftHandPosX = -100.0;
+	double leftHandPosY = -100.0;
+	double realLeftHandPosX = -100.0;
+	double realLeftHandPosY = -100.0;
 
 	public FireworkExperience() {
-		pane = new StackPane();
-		canvas = new Pane();
+		pane = new Pane();
+		layer = new StackPane();
+		canvas = new Canvas(1600, 1000);
+		canvas.setBlendMode(BlendMode.ADD);
+		background = new ImageView(new Image("media/firebackground.jpg"));
+		foreground = new ImageView(new Image("media/lighthouse.png"));
 
-		Image backImg = new Image("media/background1600_1000.jpg", 1600, 1000,
-				true, true);
-		ImageView backView = new ImageView(backImg);
-		backView.setPreserveRatio(true);
-		pane.getChildren().add(backView);
-
-		sleepTimer = new Timeline(new KeyFrame(Duration.millis(5000),
-				ae -> goToMainMenu()));
-
+		colors = new Paint[181];
+		colors[0] = new RadialGradient(0, 0, 0.5, 0.5, 0.5, true,
+				CycleMethod.NO_CYCLE, new Stop(0, Color.WHITE), new Stop(0.2,
+						Color.hsb(59, 0.38, 1)), new Stop(0.6, Color.hsb(59,
+						0.38, 1, 0.1)), new Stop(1, Color.hsb(59, 0.38, 1, 0)));
+		for (int h = 0; h < 360; h += 2) {
+			colors[1 + (h / 2)] = new RadialGradient(0, 0, 0.5, 0.5, 0.5, true,
+					CycleMethod.NO_CYCLE, new Stop(0, Color.WHITE), new Stop(
+							0.2, Color.hsb(h, 1, 1)), new Stop(0.6, Color.hsb(
+							h, 1, 1, 0.1)), new Stop(1, Color.hsb(h, 1, 1, 0)));
+		}
+		Image rightHandFull = new Image("media/Hold_fullHand_102_107.png", 100,
+				100, true, true);
 		Image palmRightNormal = new Image("media/palmRight.png", 100, 100,
 				true, true);
 		rightHand = new ImageView(palmRightNormal);
@@ -67,6 +128,53 @@ public class FireworkExperience extends Listener implements Experience {
 				true);
 		leftHand = new ImageView(palmLeftNormal);
 
+		Media countMedia = new Media(COUNT_URL);
+		countPing = new MediaPlayer(countMedia);
+		countPing.setVolume(.25);
+
+		Media confirmMedia = new Media(CONFIRM_URL);
+		confirmComplete = new MediaPlayer(confirmMedia);
+		confirmComplete.setVolume(.25);
+
+		leftHand = new ImageView(palmLeftNormal);
+		leftHand.setVisible(false);
+
+		Image exitImg = new Image("media/Exit180_180.png", 150, 150, true, true);
+		Image exitHoveredImg = new Image("media/ExitHovered180_180.png", 150,
+				150, true, true);
+		ImageView exitView = new ImageView(exitImg);
+		exitView.setOpacity(0.3);
+		exitView.setPreserveRatio(true);
+		exitView.setLayoutX(1335);
+		exitView.setLayoutY(710);
+
+		rightHandChange = new Timeline(new KeyFrame(Duration.seconds(.5),
+				ae -> {
+					rightHand.setImage(rightHandFull);
+					confirmComplete.play();
+				}), new KeyFrame(Duration.seconds(1), ae -> {
+			goToMainMenu();
+		}), new KeyFrame(Duration.seconds(2), ae -> {
+			rightHand.setImage(palmRightNormal);
+
+		}));
+
+		File backgroundMusicFile = new File("media/fireBackgroundLoop.mp3");
+		String BACKGROUND_MUSIC = backgroundMusicFile.toURI().toString();
+		backgroundMusic = new Media(BACKGROUND_MUSIC);
+		backgroundMusicPlayer = new MediaPlayer(backgroundMusic);
+
+		fadePlay = new Timeline(new KeyFrame(Duration.ZERO,
+				ae -> backgroundMusicPlayer.play(), new KeyValue(
+						backgroundMusicPlayer.volumeProperty(), 0.0)),
+				new KeyFrame(new Duration(800), new KeyValue(
+						backgroundMusicPlayer.volumeProperty(), 0.25)));
+
+		fadeStop = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(
+				backgroundMusicPlayer.volumeProperty(), 0.25)), new KeyFrame(
+				new Duration(800), ae -> backgroundMusicPlayer.stop(),
+				new KeyValue(backgroundMusicPlayer.volumeProperty(), 0.0)));
+
 		drawHands = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
@@ -74,69 +182,175 @@ public class FireworkExperience extends Listener implements Experience {
 				rightHand.setTranslateY(rightHandPosY);
 				leftHand.setTranslateX(leftHandPosX);
 				leftHand.setTranslateY(leftHandPosY);
+
+				if (Util.isBetween(1235, 1550, (int) rightHandPosX)
+						&& Util.isBetween(610, 960, (int) rightHandPosY)) {
+					rightHand.setVisible(true);
+					if (Util.isBetween(1335, 1450, (int) rightHandPosX)
+							&& Util.isBetween(710, 860, (int) rightHandPosY)) {
+						exitView.setImage(exitHoveredImg);
+						exitView.setOpacity(1.0);
+						rightHandChange.play();
+					}
+				} else {
+					exitView.setImage(exitImg);
+					exitView.setOpacity(0.3);
+					rightHand.setVisible(false);
+					rightHandChange.stop();
+					rightHand.setImage(palmRightNormal);
+				}
 			}
 		};
 
-		/* PLACE HOLDER STUFF */
+		timer = new AnimationTimer() {
+			@Override
+			public void handle(long now) {
+				GraphicsContext gc = canvas.getGraphicsContext2D();
+				// clear area with transparent black
+				gc.setFill(Color.rgb(0, 0, 0, 0.2));
+				gc.fillRect(0, 0, 1600, 1000);
+				// draw fireworks
+				drawFireworks(gc);
+			}
+		};
 
-		Text t = new Text("FIREWORK EXPERIENCE");
-
-		t.setFont(Font.font("Avenir Next", 30));
-		t.setFill(Color.WHITE);
-
-		BorderPane p = new BorderPane();
-		p.setCenter(t);
-		pane.getChildren().add(p);
-
-		/* PLACE HOLDER STUFF DONE */
-
-		canvas.getChildren().addAll(rightHand, leftHand);
+		layer.getChildren().addAll(background, canvas, foreground);
 
 		rightHand.relocate(rightHandPosX, rightHandPosY);
 		leftHand.relocate(leftHandPosX, leftHandPosY);
-
-		pane.getChildren().add(canvas);
+		pane.getChildren().addAll(layer, exitView, rightHand, leftHand);
 	}
 
-	@Override
-	public void setParent(ExperienceController controller) {
-		myController = controller;
+	private void drawFireworks(GraphicsContext gc) {
+		Iterator<Particle> iter = particles.iterator();
+		List<Particle> newParticles = new ArrayList<Particle>();
+		while (iter.hasNext()) {
+			Particle firework = iter.next();
+			// if the update returns true then particle has expired
+			if (firework.update()) {
+				// remove particle from those drawn
+				iter.remove();
+				// check if it should be exploded
+				if (firework.shouldExplodeChildren) {
+					if (firework.size == 9) {
+						double type = Math.random() * 3;
+						if (type < 1) {
+							explodeCircle(firework, newParticles);
+						} else if (type < 2) {
+							explodeWillow(firework, newParticles);
+						} else {
+							explodeRing(firework, newParticles);
+						}
+					} else if (firework.size == 8) {
+						explodeSmallCircle(firework, newParticles);
+					}
+				}
+			}
+			firework.draw(gc);
+		}
+		particles.addAll(newParticles);
 	}
 
-	@Override
-	public void startExperience() {
-		drawHands.start();
-		sleepTimer.play();
-		controller = new Controller(this);
+	private void fireParticle(double x, double y) {
+		particles.add(new Particle(canvas.getWidth() * 0.5, canvas.getHeight(),
+				0, 0, x, y, colors[0], 9, false, true, true, "normal"));
+		launchSound.play();
 	}
 
-	@Override
-	public void stopExperience() {
-		right = null;
-		left = null;
-
-		rightHandPosX = -50.0;
-		rightHandPosY = -50.0;
-
-		leftHandPosX = -50.0;
-		leftHandPosY = -50.0;
-		drawHands.stop();
-		sleepTimer.stop();
+	private void explodeCircle(Particle firework, List<Particle> newParticles) {
+		final int count = 20 + (int) (60 * Math.random());
+		final boolean shouldExplodeChildren = Math.random() > 0.8;
+		final double angle = (Math.PI * 2) / count;
+		final int color = (int) (Math.random() * colors.length);
+		for (int i = count; i > 0; i--) {
+			double randomVelocity = 4 + Math.random() * 4;
+			double particleAngle = i * angle;
+			newParticles.add(new Particle(firework.posX, firework.posY, Math
+					.cos(particleAngle) * randomVelocity, Math
+					.sin(particleAngle) * randomVelocity, 0, 0, colors[color],
+					8, true, shouldExplodeChildren, true, "normal"));
+		}
+		normalSound.play();
 	}
 
-	@Override
-	public Node getNode() {
-		return pane;
+	private void explodeWillow(Particle firework, List<Particle> newParticles) {
+		final int count = 30 + (int) (60 * Math.random());
+		final boolean shouldExplodeChildren = false;
+		final double angle = (Math.PI * 2) / count;
+		final int color = (int) (Math.random() * colors.length);
+		for (int i = count; i > 0; i--) {
+			double randomVelocity = 2 + Math.random() * 2;
+			double particleAngle = i * angle;
+			newParticles.add(new Particle(firework.posX, firework.posY, Math
+					.cos(particleAngle) * randomVelocity, Math
+					.sin(particleAngle) * randomVelocity, 0, 0, colors[color],
+					8, true, shouldExplodeChildren, true, "willow"));
+		}
+		willowSound.play();
 	}
 
-	private void goToSleepMode() {
-		controller.removeListener(this);
-		myController.setExperience(InteractiveWall.SLEEP_MODE);
+	private void explodeRing(Particle firework, List<Particle> newParticles) {
+		final int count = 60 + (int) (30 * Math.random());
+		final boolean shouldExplodeChildren = false;
+		final double angle = (Math.PI * 2) / count;
+		final int color = (int) (Math.random() * colors.length);
+		for (int i = count; i > 0; i--) {
+			double randomVelocity = 2 + Math.random() * 2;
+			double particleAngle = i * angle;
+			double small_dist = 50; // distance away from center when explode
+			double med_dist = 100;
+			double large_dist = 150;
+			if (i % 3 == 0) {
+				newParticles.add(new Particle(firework.posX
+						+ Math.cos(particleAngle) * small_dist, firework.posY
+						+ Math.sin(particleAngle) * small_dist, Math
+						.cos(particleAngle) * randomVelocity, Math
+						.sin(particleAngle) * randomVelocity, 0, 0,
+						colors[color], 8, true, shouldExplodeChildren, true,
+						"ring"));
+			} else if (i % 3 == 1) {
+				newParticles.add(new Particle(firework.posX
+						+ Math.cos(particleAngle) * med_dist, firework.posY
+						+ Math.sin(particleAngle) * med_dist, Math
+						.cos(particleAngle) * randomVelocity, Math
+						.sin(particleAngle) * randomVelocity, 0, 0,
+						colors[color], 8, true, shouldExplodeChildren, true,
+						"ring"));
+			} else {
+				newParticles.add(new Particle(firework.posX
+						+ Math.cos(particleAngle) * large_dist, firework.posY
+						+ Math.sin(particleAngle) * large_dist, Math
+						.cos(particleAngle) * randomVelocity, Math
+						.sin(particleAngle) * randomVelocity, 0, 0,
+						colors[color], 8, true, shouldExplodeChildren, true,
+						"ring"));
+			}
+		}
+		newParticles.add(new Particle(firework.posX, firework.posY, 0, 0, 0, 0,
+				colors[color], 8, true, shouldExplodeChildren, true, "ring"));
+		ringsSound.play();
 	}
 
-	private void goToMainMenu() {
-		controller.removeListener(this);
-		myController.setExperience(InteractiveWall.MAIN_MENU);
+	private void explodeSmallCircle(Particle firework,
+			List<Particle> newParticles) {
+		final double angle = (Math.PI * 2) / 12;
+		for (int count = 12; count > 0; count--) {
+			double randomVelocity = 2 + Math.random() * 2;
+			double particleAngle = count * angle;
+			newParticles.add(new Particle(firework.posX, firework.posY, Math
+					.cos(particleAngle) * randomVelocity, Math
+					.sin(particleAngle) * randomVelocity, 0, 0, firework.color,
+					4, true, false, false, "normal"));
+		}
+		smallSound.play();
+	}
+
+	public void onConnect(Controller controller) {
+		controller.enableGesture(Gesture.Type.TYPE_SCREEN_TAP);
+		controller.config().setFloat("Gestures.ScreenTap.MinDistance", 0.0f);
+		controller.config().setFloat("Gestures.ScreenTap.MinForwardVelocity",
+				10.0f);
+		controller.config().save();
 	}
 
 	public void onFrame(Controller controller) {
@@ -144,20 +358,20 @@ public class FireworkExperience extends Listener implements Experience {
 
 		HandList hands = frame.hands();
 
-		rightHandPosX = -50.0;
-		rightHandPosY = -50.0;
-		realRightHandPosX = -50.0;
-		realRightHandPosY = -50.0;
+		rightHandPosX = -100.0;
+		rightHandPosY = -100.0;
+		realRightHandPosX = -100.0;
+		realRightHandPosY = -100.0;
 
-		leftHandPosX = -50.0;
-		leftHandPosY = -50.0;
-		realLeftHandPosX = -50.0;
-		realLeftHandPosY = -50.0;
+		leftHandPosX = -100.0;
+		leftHandPosY = -100.0;
+		realLeftHandPosX = -100.0;
+		realLeftHandPosY = -100.0;
 
-		sleepTimer.play();
+		// sleepTimer.play();
 
 		for (int i = 0; i < hands.count(); i++) {
-			sleepTimer.stop();
+			// sleepTimer.stop();
 
 			if (hands.get(i).isRight()) {
 				right = hands.get(i);
@@ -178,5 +392,54 @@ public class FireworkExperience extends Listener implements Experience {
 				realLeftHandPosY = left.palmPosition().getY();
 			}
 		}
+
+		GestureList gestures = frame.gestures();
+		for (int i = 0; i < gestures.count(); i++) {
+			Gesture gesture = gestures.get(i);
+			switch (gesture.type()) {
+			case TYPE_SCREEN_TAP:
+				ScreenTapGesture tap = new ScreenTapGesture(gesture);
+				fireParticle(
+						Util.leapXtoPanelX(tap.pointable()
+								.stabilizedTipPosition().getX()),
+						Util.leapYToPanelY(tap.pointable()
+								.stabilizedTipPosition().getY()) + 100);
+				break;
+			}
+		}
 	}
+
+	@Override
+	public void startExperience() {
+		timer.start();
+		drawHands.start();
+		fadePlay.play();
+		controller = new Controller(this);
+	}
+
+	@Override
+	public void stopExperience() {
+		timer.stop();
+		drawHands.stop();
+		fadeStop.play();
+
+	}
+
+	@Override
+	public Node getNode() {
+		return pane;
+	}
+
+	private void goToMainMenu() {
+		stopExperience();
+		controller.removeListener(this);
+		myController.setExperience(InteractiveWall.MAIN_MENU);
+	}
+
+	@Override
+	public void setParent(ExperienceController controller) {
+		myController = controller;
+
+	}
+
 }

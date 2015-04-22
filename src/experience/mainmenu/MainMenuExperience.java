@@ -44,10 +44,10 @@ public class MainMenuExperience extends Listener implements Experience {
 
 	MediaPlayer countPing;
 	MediaPlayer confirmComplete;
-	private File count = new File("src/media/countPing.mp3");
+	private File count = new File("media/countPing.mp3");
 	private final String COUNT_URL = count.toURI().toString();
 
-	private File confirm = new File("src/media/confirmComplete.mp3");
+	private File confirm = new File("media/confirmComplete.mp3");
 	private final String CONFIRM_URL = confirm.toURI().toString();
 
 	double rightHandPosX = -100.0;
@@ -125,6 +125,7 @@ public class MainMenuExperience extends Listener implements Experience {
 				true, true);
 		Image rightHand2 = new Image("media/Hold_2s_102_107.png", 100, 100,
 				true, true);
+
 		Image rightHandFull = new Image("media/Hold_fullHand_102_107.png", 100,
 				100, true, true);
 
@@ -156,7 +157,6 @@ public class MainMenuExperience extends Listener implements Experience {
 				leftHand.setTranslateY(leftHandPosY);
 			}
 		};
-
 		/*
 		 * Text t = new Text ("screenX" + leftHandPosX); t.setX(150.0);
 		 * t.setY(289.0); Text t2 = new Text ("screenY" + leftHandPosY);
@@ -187,6 +187,7 @@ public class MainMenuExperience extends Listener implements Experience {
 		drawIcons = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
+
 				boolean inABox = false;
 
 				if (Util.isBetween(270, 270 + 486, (int) rightHandPosX)
@@ -327,8 +328,8 @@ public class MainMenuExperience extends Listener implements Experience {
 						.stabilizedPalmPosition().getX());
 				rightHandPosY = Util.leapYToPanelY(right
 						.stabilizedPalmPosition().getY());
-				realRightHandPosX = right.palmPosition().getX();
-				realRightHandPosY = right.palmPosition().getY();
+				realRightHandPosX = right.stabilizedPalmPosition().getX();
+				realRightHandPosY = right.stabilizedPalmPosition().getY();
 
 			} else if (hands.get(i).isLeft()) {
 				left = hands.get(i);
@@ -336,8 +337,8 @@ public class MainMenuExperience extends Listener implements Experience {
 						.getX());
 				leftHandPosY = Util.leapYToPanelY(left.stabilizedPalmPosition()
 						.getY());
-				realLeftHandPosX = left.palmPosition().getX();
-				realLeftHandPosY = left.palmPosition().getY();
+				realLeftHandPosX = left.stabilizedPalmPosition().getX();
+				realLeftHandPosY = left.stabilizedPalmPosition().getY();
 			}
 		}
 	}
