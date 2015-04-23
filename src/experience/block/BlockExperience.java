@@ -139,18 +139,18 @@ public class BlockExperience extends Listener implements Experience {
 		Image exitImageHovered = new Image("media/ExitHovered180_180.png", 150,150,
 				true, true);
 		
-		Image addSquareBlockNormal = new Image("media/BlockPlus60_60.png", 125,125,
+		Image addSquareBlockNormal = new Image("media/BlockPlus.png", 125,125,
 				true, true);
 		addSquareBlockImage = new ImageView(addSquareBlockNormal);
 		
 		Image addSquareBlockHovered = new Image("media/BlockPlusHovered.png", 125,125,
 				true, true);
 				
-		Image addRectBlockNormal = new Image("media/BlockPlus60_60.png", 125,125,
+		Image addRectBlockNormal = new Image("media/BlockRectPlus.png", 250,125,
 				true, true);
 		addRectBlockImage = new ImageView(addSquareBlockNormal);
 		
-		Image addRectBlockHovered = new Image("media/BlockPlusHovered.png", 125,125,
+		Image addRectBlockHovered = new Image("media/BlockRectPlusHovered.png", 250,125,
 				true, true);
 		
 		palmRightNormal = new Image("media/palmRight.png", 100, 100,
@@ -373,10 +373,10 @@ public class BlockExperience extends Listener implements Experience {
 		
 		buttons.setBottomAnchor(exitImage, 100.0); 
 		buttons.setRightAnchor(exitImage, 115.0);
-		buttons.setBottomAnchor(addSquareBlockImage, 105.0);
-		buttons.setLeftAnchor(addSquareBlockImage, 140.0);
-		buttons.setBottomAnchor(addRectBlockImage, 250.0);
-		buttons.setLeftAnchor(addRectBlockImage, 140.0);
+		buttons.setBottomAnchor(addSquareBlockImage, 250.0);
+		buttons.setLeftAnchor(addSquareBlockImage, 87.0);
+		buttons.setBottomAnchor(addRectBlockImage, 105.0);
+		buttons.setLeftAnchor(addRectBlockImage, 25.0);
 		
 		pane.getChildren().add(blocks);
 		pane.getChildren().addAll(buttons,canvas);
