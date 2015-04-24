@@ -5,7 +5,7 @@ import java.util.Date;
 import javafx.scene.image.Image;
 
 public class ExperienceImage extends Image {
-        String path;
+	String path;
 	String title;
 	String author;
 	String medium;
@@ -15,18 +15,19 @@ public class ExperienceImage extends Image {
 			boolean preserveRatio, boolean smooth) {
 		super(path, width, height, preserveRatio, smooth);
 	}
-	
+
 	public ExperienceImage(String path, double width, double height,
-			boolean preserveRatio, boolean smooth, String title, String author, String medium, String date) {
+			boolean preserveRatio, boolean smooth, String title, String author,
+			String medium, String date) {
 		super(path, width, height, preserveRatio, smooth);
-                this.path = path;
+		this.path = path;
 		this.title = title;
 		this.author = author;
 		this.medium = medium;
 		this.date = date;
 	}
-        
-        public String getPath() {
+
+	public String getPath() {
 		return path;
 	}
 

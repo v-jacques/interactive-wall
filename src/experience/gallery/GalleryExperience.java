@@ -94,55 +94,65 @@ public class GalleryExperience extends Listener implements Experience {
 						"media/Classical Landscape with Figures and Sculpture.jpg",
 						800, 500, true, true,
 						"Classical Landscape with Figures and Sculpture",
-						"Pierre-Henri de Valenciennes", "Oil on panel",
-						"1788"),
-                                new ExperienceImage("media/Irises.jpg",
-						800, 500, true, true, "Irises",
-						"Vincent van Gogh", "Oil on canvas", "1889"),
-                                new ExperienceImage("media/Mountain Landscape with road to Naples.jpg",
-						800, 500, true, true, "Mountain Landscape with Road to Naples",
+						"Pierre-Henri de Valenciennes", "Oil on panel", "1788"),
+				new ExperienceImage("media/Irises.jpg", 800, 500, true, true,
+						"Irises", "Vincent van Gogh", "Oil on canvas", "1889"),
+				new ExperienceImage(
+						"media/Mountain Landscape with road to Naples.jpg",
+						800, 500, true, true,
+						"Mountain Landscape with Road to Naples",
 						"Claude-Joseph Vernet", "Oil on canvas", "1821-1825"),
-                                new ExperienceImage("media/Italian Landscape (Site d'Italie, Soleil Levant).jpg",
-						800, 500, true, true, "Italian Landscape (Site d'Italie, Soleil Levant)",
+				new ExperienceImage(
+						"media/Italian Landscape (Site d'Italie, Soleil Levant).jpg",
+						800, 500, true, true,
+						"Italian Landscape (Site d'Italie, Soleil Levant)",
 						"Jean-Baptiste-Camille Corot", "Oil on canvas", "1835"),
-                                new ExperienceImage("media/Landscape with Lake and Boatman.jpg",
-						800, 500, true, true, "Landscape with Lake and Boatman",
+				new ExperienceImage(
+						"media/Landscape with Lake and Boatman.jpg", 800, 500,
+						true, true, "Landscape with Lake and Boatman",
 						"Jean-Baptiste-Camille Corot", "Oil on canvas", "1839"),
-                                new ExperienceImage("media/O.T. 2013.jpg",
-						800, 500, true, true, "Portico",
-						"CAROL ES", "Mixed media on panel", "2014"),
-                                new ExperienceImage("media/Renee Levi 640_341.jpg",
-						800, 500, true, true, "Tohu-Bohu",
-						"RENÉE LEVI", "Aquarell on Paper on Aludibond", "2012"),
-                                new ExperienceImage("media/Starry Night.jpg",
-						800, 500, true, true, "Starry Night",
-						"Edvard Munch", "Oil on canvas", "1893"),
-                                new ExperienceImage("media/The Wounded Foot.jpg",
-						800, 500, true, true, "The Wounded Foot",
+				new ExperienceImage("media/O.T. 2013.jpg", 800, 500, true,
+						true, "Portico", "CAROL ES", "Mixed media on panel",
+						"2014"),
+				new ExperienceImage("media/Renee Levi 640_341.jpg", 800, 500,
+						true, true, "Tohu-Bohu", "RENÉE LEVI",
+						"Aquarell on Paper on Aludibond", "2012"),
+				new ExperienceImage("media/Starry Night.jpg", 800, 500, true,
+						true, "Starry Night", "Edvard Munch", "Oil on canvas",
+						"1893"),
+				new ExperienceImage("media/The Wounded Foot.jpg", 800, 500,
+						true, true, "The Wounded Foot",
 						"Joaquin Sorolla y Bastida", "Oil on canvas", "1909"),
-                                new ExperienceImage("media/View of the Bridge and Part of the Town of Cava, Kingdom of Naples.jpg",
-						800, 500, true, true, "View of the Bridge and Part of the Town of Cava, Kingdom of Naples",
-						"Jean-Joseph-Xavier Bidauld", "Oil on paper laid down on canvas", 
-                                                "1785-1790"),
-                                new ExperienceImage("media/Water Lilies.jpg",
-						800, 500, true, true, "Water Lilies",
-						"Eugène Atget", "Albumen silver print", "1890-1910"),
-                                new ExperienceImage("media/Wooded River Landscape in the Alps.jpg",
-						800, 500, true, true, "Wooded River Landscape in the Alps",
-						"Wooded River Landscape in the Alps", "Watercolor, gouache and graphite", 
-                                                "1850-1870"),
-                                new ExperienceImage("media/Allison_Steel_-_Seeking_Solace.jpg",
+				new ExperienceImage(
+						"media/View of the Bridge and Part of the Town of Cava, Kingdom of Naples.jpg",
+						800,
+						500,
+						true,
+						true,
+						"View of the Bridge and Part of the Town of Cava, Kingdom of Naples",
+						"Jean-Joseph-Xavier Bidauld",
+						"Oil on paper laid down on canvas", "1785-1790"),
+				new ExperienceImage("media/Water Lilies.jpg", 800, 500, true,
+						true, "Water Lilies", "Eugène Atget",
+						"Albumen silver print", "1890-1910"),
+				new ExperienceImage(
+						"media/Wooded River Landscape in the Alps.jpg", 800,
+						500, true, true, "Wooded River Landscape in the Alps",
+						"Wooded River Landscape in the Alps",
+						"Watercolor, gouache and graphite", "1850-1870"),
+				new ExperienceImage("media/Allison_Steel_-_Seeking_Solace.jpg",
 						800, 500, true, true, "Seeking Solace",
-						"Allison Steel", "Digital Photography", "October 12th, 2009"),
-                                new ExperienceImage("media/ontario.jpg",
-						800, 500, true, true, "Lake Ontario",
-						"Mackenzie Gillett", "Digital Photo", "Unknown"),
-                                new ExperienceImage("media/infinite.jpg",
-						800, 500, true, true, "Water Lilies",
-						"Mackenzie Gillett", "Digital Photo", "Unknown"),
-                                new ExperienceImage("media/clangone.jpg",
-						800, 500, true, true, "Calm Before the Storm",
-						"Cassandra Langone", "Digital Photography", "Unknown")};
+						"Allison Steel", "Digital Photography",
+						"October 12th, 2009"),
+				new ExperienceImage("media/ontario.jpg", 800, 500, true, true,
+						"Lake Ontario", "Mackenzie Gillett", "Digital Photo",
+						"Unknown"),
+				new ExperienceImage("media/infinite.jpg", 800, 500, true, true,
+						"Water Lilies", "Mackenzie Gillett", "Digital Photo",
+						"Unknown"),
+				new ExperienceImage("media/clangone.jpg", 800, 500, true, true,
+						"Calm Before the Storm", "Cassandra Langone",
+						"Digital Photography", "Unknown") };
 
 		pane = new StackPane();
 		canvas = new Pane();
@@ -198,16 +208,19 @@ public class GalleryExperience extends Listener implements Experience {
 		information = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				if (Util.isBetween( (int) (1600 - mainImg.getWidth()) / 2,
+				if (Util.isBetween(
+						(int) (1600 - mainImg.getWidth()) / 2,
 						(int) (1600 - mainImg.getWidth()) / 2
-						+ (int) mainImg.getWidth(), (int) rightHandPosX)
-						&& Util.isBetween((int) (1000 - mainImg.getHeight()) / 2,
-						(int) (1000 - mainImg.getHeight()) / 2 + (int) mainImg.getHeight(),
-						(int) rightHandPosY)) {
+								+ (int) mainImg.getWidth(), (int) rightHandPosX)
+						&& Util.isBetween(
+								(int) (1000 - mainImg.getHeight()) / 2,
+								(int) (1000 - mainImg.getHeight()) / 2
+										+ (int) mainImg.getHeight(),
+								(int) rightHandPosY)) {
 					System.out.println(imageList[imageHolder].getTitle());
-                                        System.out.println(imageList[imageHolder].getAuthor());
-                                        System.out.println(imageList[imageHolder].getMedium());
-                                        System.out.println(imageList[imageHolder].getDate());
+					System.out.println(imageList[imageHolder].getAuthor());
+					System.out.println(imageList[imageHolder].getMedium());
+					System.out.println(imageList[imageHolder].getDate());
 				} else {
 					mainView.setImage(mainImg);
 				}
@@ -231,6 +244,7 @@ public class GalleryExperience extends Listener implements Experience {
 	public void startExperience() {
 		drawHands.start();
 		sleepTimer.play();
+		information.start();
 		controller = new Controller(this);
 	}
 
@@ -262,11 +276,12 @@ public class GalleryExperience extends Listener implements Experience {
 	public void changeImg() {
 		if (direction) {
 			if (imageHolder == (imageList.length - 2)) {
-				Image newLeft = new Image(imageList[imageHolder].getPath(), 800, 500, false,
-						false);
-				Image newMain = new Image(imageList[imageHolder + 1].getPath(), 900, 600,
-						true, true);
-				Image newRight = new Image(imageList[0].getPath(), 800, 500, false, false);
+				Image newLeft = new Image(imageList[imageHolder].getPath(),
+						800, 500, false, false);
+				Image newMain = new Image(imageList[imageHolder + 1].getPath(),
+						900, 600, true, true);
+				Image newRight = new Image(imageList[0].getPath(), 800, 500,
+						false, false);
 				leftView.setImage(newLeft);
 				mainView.setImage(newMain);
 				mainView.setLayoutX((1600 - newMain.getWidth()) / 2);
@@ -274,10 +289,12 @@ public class GalleryExperience extends Listener implements Experience {
 				rightView.setImage(newRight);
 				imageHolder++;
 			} else if (imageHolder == (imageList.length - 1)) {
-				Image newLeft = new Image(imageList[imageHolder].getPath(), 800, 500, false,
-						false);
-				Image newMain = new Image(imageList[0].getPath(), 900, 600, true, true);
-				Image newRight = new Image(imageList[1].getPath(), 800, 500, false, false);
+				Image newLeft = new Image(imageList[imageHolder].getPath(),
+						800, 500, false, false);
+				Image newMain = new Image(imageList[0].getPath(), 900, 600,
+						true, true);
+				Image newRight = new Image(imageList[1].getPath(), 800, 500,
+						false, false);
 				leftView.setImage(newLeft);
 				mainView.setImage(newMain);
 				mainView.setLayoutX((1600 - newMain.getWidth()) / 2);
@@ -285,12 +302,13 @@ public class GalleryExperience extends Listener implements Experience {
 				rightView.setImage(newRight);
 				imageHolder = 0;
 			} else {
-				Image newLeft = new Image(imageList[imageHolder].getPath(), 800, 500, false,
+				Image newLeft = new Image(imageList[imageHolder].getPath(),
+						800, 500, false, false);
+				Image newMain = new Image(imageList[imageHolder + 1].getPath(),
+						900, 600, true, true);
+				Image newRight = new Image(
+						imageList[imageHolder + 2].getPath(), 800, 500, false,
 						false);
-				Image newMain = new Image(imageList[imageHolder + 1].getPath(), 900, 600,
-						true, true);
-				Image newRight = new Image(imageList[imageHolder + 2].getPath(), 800, 500,
-						false, false);
 				leftView.setImage(newLeft);
 				mainView.setImage(newMain);
 				mainView.setLayoutX((1600 - newMain.getWidth()) / 2);
@@ -300,12 +318,13 @@ public class GalleryExperience extends Listener implements Experience {
 			}
 		} else {
 			if (imageHolder == 1) {
-				Image newLeft = new Image(imageList[imageList.length - 1].getPath(), 800, 500,
+				Image newLeft = new Image(
+						imageList[imageList.length - 1].getPath(), 800, 500,
 						false, false);
-				Image newMain = new Image(imageList[imageHolder - 1].getPath(), 900, 600,
-						true, true);
-				Image newRight = new Image(imageList[imageHolder].getPath(), 800, 500, false,
-						false);
+				Image newMain = new Image(imageList[imageHolder - 1].getPath(),
+						900, 600, true, true);
+				Image newRight = new Image(imageList[imageHolder].getPath(),
+						800, 500, false, false);
 				leftView.setImage(newLeft);
 				mainView.setImage(newMain);
 				mainView.setLayoutX((1600 - newMain.getWidth()) / 2);
@@ -313,12 +332,14 @@ public class GalleryExperience extends Listener implements Experience {
 				rightView.setImage(newRight);
 				imageHolder--;
 			} else if (imageHolder == 0) {
-				Image newLeft = new Image(imageList[imageList.length - 2].getPath(), 800, 500,
+				Image newLeft = new Image(
+						imageList[imageList.length - 2].getPath(), 800, 500,
 						false, false);
-				Image newMain = new Image(imageList[imageList.length - 1].getPath(), 900, 600,
+				Image newMain = new Image(
+						imageList[imageList.length - 1].getPath(), 900, 600,
 						true, true);
-				Image newRight = new Image(imageList[imageHolder].getPath(), 800, 500, false,
-						false);
+				Image newRight = new Image(imageList[imageHolder].getPath(),
+						800, 500, false, false);
 				leftView.setImage(newLeft);
 				mainView.setImage(newMain);
 				mainView.setLayoutX((1600 - newMain.getWidth()) / 2);
@@ -326,12 +347,12 @@ public class GalleryExperience extends Listener implements Experience {
 				rightView.setImage(newRight);
 				imageHolder = imageList.length - 1;
 			} else {
-				Image newLeft = new Image(imageList[imageHolder - 2].getPath(), 800, 500,
-						false, false);
-				Image newMain = new Image(imageList[imageHolder - 1].getPath(), 900, 600,
-						true, true);
-				Image newRight = new Image(imageList[imageHolder].getPath(), 800, 500, false,
-						false);
+				Image newLeft = new Image(imageList[imageHolder - 2].getPath(),
+						800, 500, false, false);
+				Image newMain = new Image(imageList[imageHolder - 1].getPath(),
+						900, 600, true, true);
+				Image newRight = new Image(imageList[imageHolder].getPath(),
+						800, 500, false, false);
 				leftView.setImage(newLeft);
 				mainView.setImage(newMain);
 				mainView.setLayoutX((1600 - newMain.getWidth()) / 2);
