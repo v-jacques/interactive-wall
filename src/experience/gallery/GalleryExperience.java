@@ -30,16 +30,27 @@ public class GalleryExperience extends Listener implements Experience {
 	Controller controller;
 	ExperienceController myController;
 	StackPane pane;
-	Pane canvas;
+	
+        Pane canvas;
 	Pane quote;
-	Timeline sleepTimer;
-	Hand right;
+	
+        Timeline sleepTimer;
+        
+        Timeline changeGallery;
+	
+        Hand right;
 	Hand left;
-	ImageView rightHand;
+	
+        ImageView rightHand;
 	ImageView leftHand;
-	AnimationTimer drawHands;
+        ImageView artWork;
+        ImageView quoteWall;
+	
+        AnimationTimer drawHands;
 	AnimationTimer changeImgs;
+        AnimationTimer changeQuotes;
 	AnimationTimer information;
+        
 
 	double rightHandPosX = -50.0;
 	double rightHandPosY = -50.0;
@@ -55,7 +66,23 @@ public class GalleryExperience extends Listener implements Experience {
 
 	boolean change = false;
 	int imageHolder = 1;
+        int quoteHolder = 1;
 	boolean direction;
+        boolean art = true;
+        boolean quot = false;
+        
+        Image artButton = new Image("media/galleryButton-selected 270_63 px.png", 270, 63,
+				true, true);
+                
+        Image notArt = new Image("media/galleryButton 270_63 px.png", 270,
+                        63, true, true);
+
+        Image quoteButton = new Image("media/quoteButton-selected 270_63 px.png", 270, 63,
+                        true, true);
+
+
+        Image notQuote = new Image("media/quoteButton270_63 px.png", 270,
+                        63, true, true);
 
 	String[] imgs = {
 			"media/A Calm at a Mediterranean Port.jpg",
@@ -75,7 +102,8 @@ public class GalleryExperience extends Listener implements Experience {
 			"media/infinite.jpg", "media/clangone.jpg" };
 
 	ExperienceImage[] imageList;
-
+           
+        //Art Work
 	Image leftImg = new Image(imgs[imageHolder - 1], 800, 500, false, false);
 	ImageView leftView = new ImageView(leftImg);
 
@@ -84,6 +112,16 @@ public class GalleryExperience extends Listener implements Experience {
 
 	Image rightImg = new Image(imgs[imageHolder + 1], 800, 500, false, false);
 	ImageView rightView = new ImageView(rightImg);
+        
+        //Quotes
+        Image topQ = new Image(imgs[quoteHolder - 1], 800, 500, false, false);
+	ImageView topView = new ImageView(topQ);
+
+	Image mainQ = new Image(imgs[quoteHolder], 900, 600, true, true);
+	ImageView centerView = new ImageView(mainQ);
+
+	Image bottomQ = new Image(imgs[quoteHolder + 1], 800, 500, false, false);
+	ImageView bottomView = new ImageView(bottomQ);
 
 	public GalleryExperience() {
 		imageList = new ExperienceImage[] {
@@ -158,6 +196,13 @@ public class GalleryExperience extends Listener implements Experience {
 		canvas = new Pane();
 		quote = new Pane();
 		quote.setVisible(false);
+                
+                artWork = new ImageView(notArt);
+		quoteWall = new ImageView(quoteButton);
+                artWork.setLayoutX(650);
+                artWork.setLayoutY(890);
+                quoteWall.setLayoutX(945);
+                quoteWall.setLayoutY(890);
 
 		Image backImg = new Image("media/background1600_1000.jpg", 1600, 1000,
 				true, true);
@@ -195,7 +240,16 @@ public class GalleryExperience extends Listener implements Experience {
 				rightHand.setTranslateY(rightHandPosY);
 				leftHand.setTranslateX(leftHandPosX);
 				leftHand.setTranslateY(leftHandPosY);
-			}
+                                
+                                if (Util.isBetween(650, 650+270, (int) rightHandPosX)
+						&& Util.isBetween(890, 890+63, (int) rightHandPosY) && art == false) {
+                                        changeGallery.play();
+                                }
+                                else if (Util.isBetween(945, 945+270, (int) rightHandPosX)
+						&& Util.isBetween(890, 890+63, (int) rightHandPosY) && quot == false){
+                                        changeGallery.play();
+                                }
+                        }
 		};
 
 		changeImgs = new AnimationTimer() {
@@ -204,6 +258,22 @@ public class GalleryExperience extends Listener implements Experience {
 				changeImg();
 			}
 		};
+                
+                changeQuotes = new AnimationTimer() {
+			@Override
+			public void handle(long now) {
+				changeQuotes();
+			}
+		};
+                
+                Image rightHandFull = new Image("media/Hold_fullHand_102_107.png", 100,
+				100, true, true);
+                
+                changeGallery = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
+			rightHand.setImage(rightHandFull);
+		}), new KeyFrame(Duration.seconds(1), ae -> {
+			switchGallery();
+                }));
 
 		information = new AnimationTimer() {
 			@Override
@@ -226,7 +296,7 @@ public class GalleryExperience extends Listener implements Experience {
 				}
 			}
 		};
-
+                
 		canvas.getChildren().addAll(rightHand, leftHand);
 
 		rightHand.relocate(rightHandPosX, rightHandPosY);
@@ -272,6 +342,21 @@ public class GalleryExperience extends Listener implements Experience {
 		controller.removeListener(this);
 		myController.setExperience(InteractiveWall.MAIN_MENU);
 	}
+        
+        public void switchGallery() {
+                if(art == false){
+                        canvas.setVisible(true);
+                        quote.setVisible(false);
+                        artWork.setImage(artButton);
+                        quoteWall.setImage(notQuote);
+                }
+                else{
+                        canvas.setVisible(false);
+                        quote.setVisible(true);
+                        artWork.setImage(notArt);
+                        quoteWall.setImage(quoteButton);
+                }
+        }
 
 	public void changeImg() {
 		if (direction) {
@@ -362,9 +447,100 @@ public class GalleryExperience extends Listener implements Experience {
 			}
 
 		}
-		System.out.print(imageHolder + " ");
 		changeImgs.stop();
 	}
+        
+        public void changeQuotes(){
+                if (direction) {
+			if (quoteHolder == (imageList.length - 2)) {
+				Image newTop = new Image(imageList[quoteHolder].getPath(),
+						800, 500, false, false);
+				Image newMain = new Image(imageList[quoteHolder + 1].getPath(),
+						900, 600, true, true);
+				Image newBottom = new Image(imageList[0].getPath(), 800, 500,
+						false, false);
+				topView.setImage(newTop);
+				centerView.setImage(newMain);
+				centerView.setLayoutX((1600 - newMain.getWidth()) / 2);
+				centerView.setLayoutY((1000 - newMain.getHeight()) / 2);
+				bottomView.setImage(newBottom);
+				quoteHolder++;
+			} else if (quoteHolder == (imageList.length - 1)) {
+				Image newTop = new Image(imageList[quoteHolder].getPath(),
+						800, 500, false, false);
+				Image newMain = new Image(imageList[0].getPath(), 900, 600,
+						true, true);
+				Image newBottom = new Image(imageList[1].getPath(), 800, 500,
+						false, false);
+				topView.setImage(newTop);
+				centerView.setImage(newMain);
+				centerView.setLayoutX((1600 - newMain.getWidth()) / 2);
+				centerView.setLayoutY((1000 - newMain.getHeight()) / 2);
+				bottomView.setImage(newBottom);
+				quoteHolder = 0;
+			} else {
+				Image newTop = new Image(imageList[quoteHolder].getPath(),
+						800, 500, false, false);
+				Image newMain = new Image(imageList[quoteHolder + 1].getPath(),
+						900, 600, true, true);
+				Image newBottom = new Image(
+						imageList[quoteHolder + 2].getPath(), 800, 500, false,
+						false);
+				topView.setImage(newTop);
+				centerView.setImage(newMain);
+				centerView.setLayoutX((1600 - newMain.getWidth()) / 2);
+				centerView.setLayoutY((1000 - newMain.getHeight()) / 2);
+				bottomView.setImage(newBottom);
+				quoteHolder++;
+			}
+		} else {
+			if (quoteHolder == 1) {
+				Image newTop = new Image(
+						imageList[imageList.length - 1].getPath(), 800, 500,
+						false, false);
+				Image newMain = new Image(imageList[quoteHolder - 1].getPath(),
+						900, 600, true, true);
+				Image newBottom = new Image(imageList[quoteHolder].getPath(),
+						800, 500, false, false);
+				topView.setImage(newTop);
+				centerView.setImage(newMain);
+				centerView.setLayoutX((1600 - newMain.getWidth()) / 2);
+				centerView.setLayoutY((1000 - newMain.getHeight()) / 2);
+				bottomView.setImage(newBottom);
+				quoteHolder--;
+			} else if (quoteHolder == 0) {
+				Image newTop = new Image(
+						imageList[imageList.length - 2].getPath(), 800, 500,
+						false, false);
+				Image newMain = new Image(
+						imageList[imageList.length - 1].getPath(), 900, 600,
+						true, true);
+				Image newBottom = new Image(imageList[quoteHolder].getPath(),
+						800, 500, false, false);
+				topView.setImage(newTop);
+				centerView.setImage(newMain);
+				centerView.setLayoutX((1600 - newMain.getWidth()) / 2);
+				centerView.setLayoutY((1000 - newMain.getHeight()) / 2);
+				bottomView.setImage(newBottom);
+				imageHolder = imageList.length - 1;
+			} else {
+				Image newTop = new Image(imageList[quoteHolder - 2].getPath(),
+						800, 500, false, false);
+				Image newMain = new Image(imageList[quoteHolder - 1].getPath(),
+						900, 600, true, true);
+				Image newBottom = new Image(imageList[quoteHolder].getPath(),
+						800, 500, false, false);
+				topView.setImage(newTop);
+				centerView.setImage(newMain);
+				centerView.setLayoutX((1600 - newMain.getWidth()) / 2);
+				centerView.setLayoutY((1000 - newMain.getHeight()) / 2);
+				bottomView.setImage(newBottom);
+				quoteHolder--;
+			}
+
+		}
+		changeQuotes.stop();
+        }
 
 	public void onConnect(Controller controller) {
 		controller.enableGesture(Gesture.Type.TYPE_SWIPE);
@@ -446,7 +622,7 @@ public class GalleryExperience extends Listener implements Experience {
 				direction = true;
 				switch (swipe.state()) {
 				case STATE_STOP:
-					changeImgs.start();
+					changeQuotes.start();
 				}
 				System.out.println(swipe.state());
 			}
@@ -456,7 +632,7 @@ public class GalleryExperience extends Listener implements Experience {
 				direction = false;
 				switch (swipe.state()) {
 				case STATE_STOP:
-					changeImgs.start();
+					changeQuotes.start();
 				}
 				System.out.println(swipe.state());
 			}
