@@ -1,6 +1,4 @@
-package experience.gallery;
-
-import java.util.Date;
+package experience.gallery.art;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
@@ -26,31 +24,25 @@ import com.leapmotion.leap.Listener;
 import com.leapmotion.leap.SwipeGesture;
 import com.leapmotion.leap.Vector;
 
-public class GalleryExperience extends Listener implements Experience {
+public class ArtGalleryExperience extends Listener implements Experience {
 	Controller controller;
 	ExperienceController myController;
 	StackPane pane;
-	
-        Pane canvas;
-	Pane quote;
-	
-        Timeline sleepTimer;
-        
-        Timeline changeGallery;
-	
-        Hand right;
+
+	Pane canvas;
+	Timeline sleepTimer;
+	Timeline changeGallery;
+
+	Hand right;
 	Hand left;
-	
-        ImageView rightHand;
+
+	ImageView rightHand;
 	ImageView leftHand;
-        ImageView artWork;
-        ImageView quoteWall;
-	
-        AnimationTimer drawHands;
+	ImageView quoteWall;
+
+	AnimationTimer drawHands;
 	AnimationTimer changeImgs;
-        AnimationTimer changeQuotes;
 	AnimationTimer information;
-        
 
 	double rightHandPosX = -50.0;
 	double rightHandPosY = -50.0;
@@ -62,68 +54,25 @@ public class GalleryExperience extends Listener implements Experience {
 	double realLeftHandPosX = -50.0;
 	double realLeftHandPosY = -50.0;
 
-	long lastSwipe = 0;
-
-	boolean change = false;
 	int imageHolder = 1;
-        int quoteHolder = 1;
 	boolean direction;
-        boolean art = true;
-        boolean quot = false;
-        
-        Image artButton = new Image("media/galleryButton-selected 270_63 px.png", 270, 63,
-				true, true);
-                
-        Image notArt = new Image("media/galleryButton 270_63 px.png", 270,
-                        63, true, true);
 
-        Image quoteButton = new Image("media/quoteButton-selected 270_63 px.png", 270, 63,
-                        true, true);
+	Image quoteButton = new Image("media/quoteButton-selected 270_63 px.png",
+			270, 63, true, true);
 
-
-        Image notQuote = new Image("media/quoteButton270_63 px.png", 270,
-                        63, true, true);
-
-	String[] imgs = {
-			"media/A Calm at a Mediterranean Port.jpg",
-			"media/Classical Landscape with Figures and Sculpture.jpg",
-			"media/Irises.jpg",
-			"media/Mountain Landscape with road to Naples.jpg",
-			"media/Italian Landscape (Site d'Italie, Soleil Levant).jpg",
-			"media/Landscape with Lake and Boatman.jpg",
-			"media/O.T. 2013.jpg",
-			"media/Renee Levi 640_341.jpg",
-			"media/Starry Night.jpg",
-			"media/The Wounded Foot.jpg",
-			"media/View of the Bridge and Part of the Town of Cava, Kingdom of Naples.jpg",
-			"media/Water Lilies.jpg",
-			"media/Wooded River Landscape in the Alps.jpg",
-			"media/Allison_Steel_-_Seeking_Solace.jpg", "media/ontario.jpg",
-			"media/infinite.jpg", "media/clangone.jpg" };
+	Image notQuote = new Image("media/quoteButton270_63 px.png", 270, 63, true,
+			true);
 
 	ExperienceImage[] imageList;
-           
-        //Art Work
-	Image leftImg = new Image(imgs[imageHolder - 1], 800, 500, false, false);
-	ImageView leftView = new ImageView(leftImg);
 
-	Image mainImg = new Image(imgs[imageHolder], 900, 600, true, true);
-	ImageView mainView = new ImageView(mainImg);
+	Image leftImg;
+	ImageView leftView;
+	Image mainImg;
+	ImageView mainView;
+	Image rightImg;
+	ImageView rightView;
 
-	Image rightImg = new Image(imgs[imageHolder + 1], 800, 500, false, false);
-	ImageView rightView = new ImageView(rightImg);
-        
-        //Quotes
-        Image topQ = new Image(imgs[quoteHolder - 1], 800, 500, false, false);
-	ImageView topView = new ImageView(topQ);
-
-	Image mainQ = new Image(imgs[quoteHolder], 900, 600, true, true);
-	ImageView centerView = new ImageView(mainQ);
-
-	Image bottomQ = new Image(imgs[quoteHolder + 1], 800, 500, false, false);
-	ImageView bottomView = new ImageView(bottomQ);
-
-	public GalleryExperience() {
+	public ArtGalleryExperience() {
 		imageList = new ExperienceImage[] {
 				new ExperienceImage("media/A Calm at a Mediterranean Port.jpg",
 						800, 500, true, true, "A Calm at a Mediterranean Port",
@@ -194,21 +143,28 @@ public class GalleryExperience extends Listener implements Experience {
 
 		pane = new StackPane();
 		canvas = new Pane();
-		quote = new Pane();
-		quote.setVisible(false);
-                
-                artWork = new ImageView(notArt);
+
 		quoteWall = new ImageView(quoteButton);
-                artWork.setLayoutX(650);
-                artWork.setLayoutY(890);
-                quoteWall.setLayoutX(945);
-                quoteWall.setLayoutY(890);
+		quoteWall.setLayoutX(945);
+		quoteWall.setLayoutY(890);
 
 		Image backImg = new Image("media/background1600_1000.jpg", 1600, 1000,
 				true, true);
 		ImageView backView = new ImageView(backImg);
 		backView.setPreserveRatio(true);
 		pane.getChildren().add(backView);
+
+		Image leftImg = new Image(imageList[imageHolder].getPath(), 800, 500,
+				false, false);
+		leftView = new ImageView(leftImg);
+
+		Image mainImg = new Image(imageList[imageHolder + 1].getPath(), 900,
+				600, true, true);
+		mainView = new ImageView(mainImg);
+
+		Image rightImg = new Image(imageList[0].getPath(), 800, 500, false,
+				false);
+		rightView = new ImageView(rightImg);
 
 		leftView.setLayoutX(-600);
 		leftView.setLayoutY(250);
@@ -240,16 +196,12 @@ public class GalleryExperience extends Listener implements Experience {
 				rightHand.setTranslateY(rightHandPosY);
 				leftHand.setTranslateX(leftHandPosX);
 				leftHand.setTranslateY(leftHandPosY);
-                                
-                                if (Util.isBetween(650, 650+270, (int) rightHandPosX)
-						&& Util.isBetween(890, 890+63, (int) rightHandPosY) && art == false) {
-                                        changeGallery.play();
-                                }
-                                else if (Util.isBetween(945, 945+270, (int) rightHandPosX)
-						&& Util.isBetween(890, 890+63, (int) rightHandPosY) && quot == false){
-                                        changeGallery.play();
-                                }
-                        }
+
+				if (Util.isBetween(945, 945 + 270, (int) rightHandPosX)
+						&& Util.isBetween(890, 890 + 63, (int) rightHandPosY)) {
+					changeGallery.play();
+				}
+			}
 		};
 
 		changeImgs = new AnimationTimer() {
@@ -258,22 +210,15 @@ public class GalleryExperience extends Listener implements Experience {
 				changeImg();
 			}
 		};
-                
-                changeQuotes = new AnimationTimer() {
-			@Override
-			public void handle(long now) {
-				changeQuotes();
-			}
-		};
-                
-                Image rightHandFull = new Image("media/Hold_fullHand_102_107.png", 100,
+
+		Image rightHandFull = new Image("media/Hold_fullHand_102_107.png", 100,
 				100, true, true);
-                
-                changeGallery = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
+
+		changeGallery = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
 			rightHand.setImage(rightHandFull);
 		}), new KeyFrame(Duration.seconds(1), ae -> {
 			switchGallery();
-                }));
+		}));
 
 		information = new AnimationTimer() {
 			@Override
@@ -287,18 +232,17 @@ public class GalleryExperience extends Listener implements Experience {
 								(int) (1000 - mainImg.getHeight()) / 2
 										+ (int) mainImg.getHeight(),
 								(int) rightHandPosY)) {
-					System.out.println(imageList[imageHolder].getTitle());
-					System.out.println(imageList[imageHolder].getAuthor());
-					System.out.println(imageList[imageHolder].getMedium());
-					System.out.println(imageList[imageHolder].getDate());
+					// System.out.println(imageList[imageHolder].getTitle());
+					// System.out.println(imageList[imageHolder].getAuthor());
+					// System.out.println(imageList[imageHolder].getMedium());
+					// System.out.println(imageList[imageHolder].getDate());
 				} else {
-					mainView.setImage(mainImg);
+					// mainView.setImage(mainImg);
 				}
 			}
 		};
-                
-		canvas.getChildren().addAll(rightHand, leftHand);
 
+		canvas.getChildren().addAll(rightHand, leftHand);
 		rightHand.relocate(rightHandPosX, rightHandPosY);
 		leftHand.relocate(leftHandPosX, leftHandPosY);
 
@@ -342,21 +286,13 @@ public class GalleryExperience extends Listener implements Experience {
 		controller.removeListener(this);
 		myController.setExperience(InteractiveWall.MAIN_MENU);
 	}
-        
-        public void switchGallery() {
-                if(art == false){
-                        canvas.setVisible(true);
-                        quote.setVisible(false);
-                        artWork.setImage(artButton);
-                        quoteWall.setImage(notQuote);
-                }
-                else{
-                        canvas.setVisible(false);
-                        quote.setVisible(true);
-                        artWork.setImage(notArt);
-                        quoteWall.setImage(quoteButton);
-                }
-        }
+
+	public void switchGallery() {
+		// canvas.setVisible(false);
+		// quote.setVisible(true);
+		// artWork.setImage(notArt);
+		// quoteWall.setImage(quoteButton);
+	}
 
 	public void changeImg() {
 		if (direction) {
@@ -449,98 +385,6 @@ public class GalleryExperience extends Listener implements Experience {
 		}
 		changeImgs.stop();
 	}
-        
-        public void changeQuotes(){
-                if (direction) {
-			if (quoteHolder == (imageList.length - 2)) {
-				Image newTop = new Image(imageList[quoteHolder].getPath(),
-						800, 500, false, false);
-				Image newMain = new Image(imageList[quoteHolder + 1].getPath(),
-						900, 600, true, true);
-				Image newBottom = new Image(imageList[0].getPath(), 800, 500,
-						false, false);
-				topView.setImage(newTop);
-				centerView.setImage(newMain);
-				centerView.setLayoutX((1600 - newMain.getWidth()) / 2);
-				centerView.setLayoutY((1000 - newMain.getHeight()) / 2);
-				bottomView.setImage(newBottom);
-				quoteHolder++;
-			} else if (quoteHolder == (imageList.length - 1)) {
-				Image newTop = new Image(imageList[quoteHolder].getPath(),
-						800, 500, false, false);
-				Image newMain = new Image(imageList[0].getPath(), 900, 600,
-						true, true);
-				Image newBottom = new Image(imageList[1].getPath(), 800, 500,
-						false, false);
-				topView.setImage(newTop);
-				centerView.setImage(newMain);
-				centerView.setLayoutX((1600 - newMain.getWidth()) / 2);
-				centerView.setLayoutY((1000 - newMain.getHeight()) / 2);
-				bottomView.setImage(newBottom);
-				quoteHolder = 0;
-			} else {
-				Image newTop = new Image(imageList[quoteHolder].getPath(),
-						800, 500, false, false);
-				Image newMain = new Image(imageList[quoteHolder + 1].getPath(),
-						900, 600, true, true);
-				Image newBottom = new Image(
-						imageList[quoteHolder + 2].getPath(), 800, 500, false,
-						false);
-				topView.setImage(newTop);
-				centerView.setImage(newMain);
-				centerView.setLayoutX((1600 - newMain.getWidth()) / 2);
-				centerView.setLayoutY((1000 - newMain.getHeight()) / 2);
-				bottomView.setImage(newBottom);
-				quoteHolder++;
-			}
-		} else {
-			if (quoteHolder == 1) {
-				Image newTop = new Image(
-						imageList[imageList.length - 1].getPath(), 800, 500,
-						false, false);
-				Image newMain = new Image(imageList[quoteHolder - 1].getPath(),
-						900, 600, true, true);
-				Image newBottom = new Image(imageList[quoteHolder].getPath(),
-						800, 500, false, false);
-				topView.setImage(newTop);
-				centerView.setImage(newMain);
-				centerView.setLayoutX((1600 - newMain.getWidth()) / 2);
-				centerView.setLayoutY((1000 - newMain.getHeight()) / 2);
-				bottomView.setImage(newBottom);
-				quoteHolder--;
-			} else if (quoteHolder == 0) {
-				Image newTop = new Image(
-						imageList[imageList.length - 2].getPath(), 800, 500,
-						false, false);
-				Image newMain = new Image(
-						imageList[imageList.length - 1].getPath(), 900, 600,
-						true, true);
-				Image newBottom = new Image(imageList[quoteHolder].getPath(),
-						800, 500, false, false);
-				topView.setImage(newTop);
-				centerView.setImage(newMain);
-				centerView.setLayoutX((1600 - newMain.getWidth()) / 2);
-				centerView.setLayoutY((1000 - newMain.getHeight()) / 2);
-				bottomView.setImage(newBottom);
-				imageHolder = imageList.length - 1;
-			} else {
-				Image newTop = new Image(imageList[quoteHolder - 2].getPath(),
-						800, 500, false, false);
-				Image newMain = new Image(imageList[quoteHolder - 1].getPath(),
-						900, 600, true, true);
-				Image newBottom = new Image(imageList[quoteHolder].getPath(),
-						800, 500, false, false);
-				topView.setImage(newTop);
-				centerView.setImage(newMain);
-				centerView.setLayoutX((1600 - newMain.getWidth()) / 2);
-				centerView.setLayoutY((1000 - newMain.getHeight()) / 2);
-				bottomView.setImage(newBottom);
-				quoteHolder--;
-			}
-
-		}
-		changeQuotes.stop();
-        }
 
 	public void onConnect(Controller controller) {
 		controller.enableGesture(Gesture.Type.TYPE_SWIPE);
@@ -595,48 +439,27 @@ public class GalleryExperience extends Listener implements Experience {
 		Vector swipeStart = swipe.startPosition();
 		Vector swipeDir = swipe.direction();
 
-		if (canvas.isVisible()) {
-			if (swipe.isValid() && swipeStart.getX() > 130
-					&& swipeDir.getX() < 0) {
-				direction = true;
-				switch (swipe.state()) {
-				case STATE_STOP:
-					changeImgs.start();
-				}
-				System.out.println(swipe.state());
+		if (swipe.isValid() && swipeStart.getX() > 130 && swipeDir.getX() < 0) {
+			direction = true;
+			switch (swipe.state()) {
+			case STATE_STOP:
+				changeImgs.start();
+				break;
+			default:
+				break;
 			}
-
-			else if (swipe.isValid() && swipeStart.getX() < -130
-					&& swipeDir.getX() > 0) {
-				direction = false;
-				switch (swipe.state()) {
-				case STATE_STOP:
-					changeImgs.start();
-				}
-				System.out.println(swipe.state());
+			// System.out.println(swipe.state());
+		} else if (swipe.isValid() && swipeStart.getX() < -130
+				&& swipeDir.getX() > 0) {
+			direction = false;
+			switch (swipe.state()) {
+			case STATE_STOP:
+				changeImgs.start();
+				break;
+			default:
+				break;
 			}
+			// System.out.println(swipe.state());
 		}
-		if (quote.isVisible()) {
-			if (swipe.isValid() && swipeStart.getY() > 130
-					&& swipeDir.getY() < 0) {
-				direction = true;
-				switch (swipe.state()) {
-				case STATE_STOP:
-					changeQuotes.start();
-				}
-				System.out.println(swipe.state());
-			}
-
-			else if (swipe.isValid() && swipeStart.getY() < -130
-					&& swipeDir.getY() > 0) {
-				direction = false;
-				switch (swipe.state()) {
-				case STATE_STOP:
-					changeQuotes.start();
-				}
-				System.out.println(swipe.state());
-			}
-		}
-
 	}
 }

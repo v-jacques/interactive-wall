@@ -1,15 +1,13 @@
-package experience.gallery;
-
-import java.util.Date;
+package experience.gallery.art;
 
 import javafx.scene.image.Image;
 
 public class ExperienceImage extends Image {
-	String path;
-	String title;
-	String author;
-	String medium;
-	String date;
+	private String path;
+	private String title;
+	private String author;
+	private String medium;
+	private String date;
 
 	public ExperienceImage(String path, double width, double height,
 			boolean preserveRatio, boolean smooth) {
