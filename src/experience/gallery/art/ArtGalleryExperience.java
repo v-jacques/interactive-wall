@@ -3,11 +3,16 @@ package experience.gallery.art;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import main.Experience;
 import main.ExperienceController;
@@ -38,7 +43,8 @@ public class ArtGalleryExperience extends Listener implements Experience {
 
 	ImageView rightHand;
 	ImageView leftHand;
-	ImageView quoteWall;
+	ImageView quoteView;
+	ImageView artView;
 
 	AnimationTimer drawHands;
 	AnimationTimer changeImgs;
@@ -56,11 +62,12 @@ public class ArtGalleryExperience extends Listener implements Experience {
 
 	int imageHolder = 1;
 	boolean direction;
-
-	Image quoteButton = new Image("media/quoteButton-selected 270_63 px.png",
+	
+	Image artButton = new Image("media/galleryButton-selected 270_63 px.png",
 			270, 63, true, true);
-
-	Image notQuote = new Image("media/quoteButton270_63 px.png", 270, 63, true,
+	Image quoteButtonHovered = new Image("media/quoteButton-selected 270_63 px.png",
+			270, 63, true, true);
+	Image quoteButton = new Image("media/quoteButton270_63 px.png", 270, 63, true,
 			true);
 
 	ExperienceImage[] imageList;
@@ -143,16 +150,25 @@ public class ArtGalleryExperience extends Listener implements Experience {
 
 		pane = new StackPane();
 		canvas = new Pane();
+		canvas.setBackground(new Background(new BackgroundFill(Color.WHITE,
+				CornerRadii.EMPTY, Insets.EMPTY)));
 
-		quoteWall = new ImageView(quoteButton);
-		quoteWall.setLayoutX(945);
-		quoteWall.setLayoutY(890);
+		artView = new ImageView(artButton);
+		artView.setLayoutX(515);
+		artView.setLayoutY(859);
+		canvas.getChildren().add(artView);
+		
+		quoteView = new ImageView(quoteButton);
+		quoteView.setLayoutX(810);
+		quoteView.setLayoutY(859);
+		canvas.getChildren().add(quoteView);
 
-		Image backImg = new Image("media/background1600_1000.jpg", 1600, 1000,
-				true, true);
-		ImageView backView = new ImageView(backImg);
-		backView.setPreserveRatio(true);
-		pane.getChildren().add(backView);
+		// Image backImg = new Image("media/background1600_1000.jpg", 1600,
+		// 1000,
+		// true, true);
+		// ImageView backView = new ImageView(backImg);
+		// backView.setPreserveRatio(true);
+		// pane.getChildren().add(backView);
 
 		Image leftImg = new Image(imageList[imageHolder].getPath(), 800, 500,
 				false, false);

@@ -3,11 +3,17 @@ package experience.gallery.quote;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -41,7 +47,8 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 
 	ImageView rightHand;
 	ImageView leftHand;
-	ImageView artWork;
+	ImageView quoteView;
+	ImageView artView;
 
 	AnimationTimer drawHands;
 	AnimationTimer changeQuotes;
@@ -59,11 +66,12 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 	int quoteHolder = 1;
 	boolean direction;
 
-	Image artButton = new Image("media/galleryButton-selected 270_63 px.png",
-			270, 63, true, true);
-
-	Image notArt = new Image("media/galleryButton 270_63 px.png", 270, 63,
+	Image artButtonHovered = new Image(
+			"media/galleryButton-selected 270_63 px.png", 270, 63, true, true);
+	Image artButton = new Image("media/galleryButton 270_63 px.png", 270, 63,
 			true, true);
+	Image quoteButton = new Image("media/quoteButton-selected 270_63 px.png",
+			270, 63, true, true);
 
 	ExperienceQuote[] quoteList;
 
@@ -82,16 +90,25 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 
 		pane = new StackPane();
 		canvas = new Pane();
+		canvas.setBackground(new Background(new BackgroundFill(Color.WHITE,
+				CornerRadii.EMPTY, Insets.EMPTY)));
 
-		artWork = new ImageView(notArt);
-		artWork.setLayoutX(650);
-		artWork.setLayoutY(890);
+		artView = new ImageView(artButton);
+		artView.setLayoutX(515);
+		artView.setLayoutY(859);
+		canvas.getChildren().add(artView);
 
-		Image backImg = new Image("media/background1600_1000.jpg", 1600, 1000,
-				true, true);
-		ImageView backView = new ImageView(backImg);
-		backView.setPreserveRatio(true);
-		pane.getChildren().add(backView);
+		quoteView = new ImageView(quoteButton);
+		quoteView.setLayoutX(810);
+		quoteView.setLayoutY(859);
+		canvas.getChildren().add(quoteView);
+
+		// Image backImg = new Image("media/background1600_1000.jpg", 1600,
+		// 1000,
+		// true, true);
+		// ImageView backView = new ImageView(backImg);
+		// backView.setPreserveRatio(true);
+		// pane.getChildren().add(backView);
 
 		topQ = new Text(quoteList[quoteHolder - 1].getQuote() + " - "
 				+ quoteList[quoteHolder - 1].getAuthor());
@@ -104,20 +121,22 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 
 		bottomQ.setLayoutX(700);
 		bottomQ.setLayoutY(250);
-		bottomQ.setFont(Font.font(null, FontWeight.NORMAL, 40));
+		bottomQ.setFont(Font.font(null, FontWeight.NORMAL, 50));
+		bottomQ.setEffect(new GaussianBlur());
 		canvas.getChildren().add(bottomQ);
 
 		mainQ.setLayoutX(700);
 		mainQ.setLayoutY(500);
-		mainQ.setFont(Font.font(null, FontWeight.NORMAL, 40));
+		mainQ.setFont(Font.font(null, FontWeight.NORMAL, 50));
 		canvas.getChildren().add(mainQ);
 
 		topQ.setLayoutX(700);
 		topQ.setLayoutY(750);
-		topQ.setFont(Font.font(null, FontWeight.NORMAL, 40));
+		topQ.setFont(Font.font(null, FontWeight.NORMAL, 50));
+		topQ.setEffect(new GaussianBlur());
 		canvas.getChildren().add(topQ);
 
-		sleepTimer = new Timeline(new KeyFrame(Duration.millis(5000),
+		sleepTimer = new Timeline(new KeyFrame(Duration.millis(20000),
 				ae -> goToMainMenu()));
 
 		Image palmRightNormal = new Image("media/palmRight.png", 100, 100,
