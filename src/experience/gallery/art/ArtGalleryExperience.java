@@ -1,5 +1,7 @@
 package experience.gallery.art;
 
+import java.io.File;
+
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -12,7 +14,12 @@ import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import javafx.util.Duration;
 import main.Experience;
 import main.ExperienceController;
@@ -28,9 +35,6 @@ import com.leapmotion.leap.HandList;
 import com.leapmotion.leap.Listener;
 import com.leapmotion.leap.SwipeGesture;
 import com.leapmotion.leap.Vector;
-import java.io.File;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 
 public class ArtGalleryExperience extends Listener implements Experience {
 	Controller controller;
@@ -40,7 +44,7 @@ public class ArtGalleryExperience extends Listener implements Experience {
 	Pane canvas;
 	Timeline sleepTimer;
 	Timeline changeGallery;
-        Timeline rightHandChange;
+	Timeline rightHandChange;
 
 	Hand right;
 	Hand left;
@@ -54,6 +58,8 @@ public class ArtGalleryExperience extends Listener implements Experience {
 	AnimationTimer changeImgs;
 	AnimationTimer information;
 
+	Text textInformation;
+
 	double rightHandPosX = -50.0;
 	double rightHandPosY = -50.0;
 	double realRightHandPosX = -50.0;
@@ -66,10 +72,8 @@ public class ArtGalleryExperience extends Listener implements Experience {
 
 	int imageHolder = 1;
 	boolean direction;
-        
-        MediaPlayer confirmComplete;
-	private File count = new File("src/media/countPing.mp3");
-	private final String COUNT_URL = count.toURI().toString();
+
+	MediaPlayer confirmComplete;
 	private File confirm = new File("src/media/confirmComplete.mp3");
 	private final String CONFIRM_URL = confirm.toURI().toString();
 
@@ -154,70 +158,79 @@ public class ArtGalleryExperience extends Listener implements Experience {
 				new ExperienceImage("media/infinite.jpg", 800, 500, true, true,
 						"Infinite", "Mackenzie Gillett", "Digital Photo",
 						"Unknown"),
-                                new ExperienceImage("media/Benicase_Roses.jpg", 800, 500, true, true,
-						"Roses", "Kristy Benicase", "Digital Photo",
+				new ExperienceImage("media/Benicase_Roses.jpg", 800, 500, true,
+						true, "Roses", "Kristy Benicase", "Digital Photo",
 						"2013"),
-                                new ExperienceImage("media/JordanFarrell_EyeoftheTiger.jpg", 800, 500, true, true,
-						"Eye of the Tiger", "Jordan Farrell", "Digital Photograph",
+				new ExperienceImage("media/JordanFarrell_EyeoftheTiger.jpg",
+						800, 500, true, true, "Eye of the Tiger",
+						"Jordan Farrell", "Digital Photograph", "Unknown"),
+				new ExperienceImage("media/Kwon_ArtisticSelfies_1.jpg", 800,
+						500, true, true, "Artistic Selfies 1", "NK Kwon",
+						"Photography", "2014"),
+				new ExperienceImage("media/Kwon_ArtisticSelfies_2.jpg", 800,
+						500, true, true, "Artistic Selfies 2", "NK Kwon",
+						"Photography", "2014"),
+				new ExperienceImage("media/Kwon_ArtisticSelfies_3.jpg", 800,
+						500, true, true, "Artistic Selfies 3", "NK Kwon",
+						"Photography", "2014"),
+				new ExperienceImage("media/Kwon_ArtisticSelfies_4.jpg", 800,
+						500, true, true, "Artistic Selfies 4", "NK Kwon",
+						"Photography", "2014"),
+				new ExperienceImage("media/Powers_heirloom.tif", 800, 500,
+						true, true, "Heirloom", "Tianna Powers",
+						"Digital Illustration", "2013"),
+				new ExperienceImage("media/Rhode_Deer.jpg", 800, 500, true,
+						true, "Deer", "Allison Rhode", "Digital Photography",
 						"Unknown"),
-                                new ExperienceImage("media/Kwon_ArtisticSelfies_1.jpg", 800, 500, true, true,
-						"Artistic Selfies 1", "NK Kwon", "Photography",
-						"2014"),
-                                new ExperienceImage("media/Kwon_ArtisticSelfies_2.jpg", 800, 500, true, true,
-						"Artistic Selfies 2", "NK Kwon", "Photography",
-						"2014"),
-                                new ExperienceImage("media/Kwon_ArtisticSelfies_3.jpg", 800, 500, true, true,
-						"Artistic Selfies 3", "NK Kwon", "Photography",
-						"2014"),
-                                new ExperienceImage("media/Kwon_ArtisticSelfies_4.jpg", 800, 500, true, true,
-						"Artistic Selfies 4", "NK Kwon", "Photography",
-						"2014"),
-                                new ExperienceImage("media/Powers_heirloom.tif", 800, 500, true, true,
-						"Heirloom", "Tianna Powers", "Digital Illustration",
-						"2013"),
-                                new ExperienceImage("media/Rhode_Deer.jpg", 800, 500, true, true,
-						"Deer", "Allison Rhode", "Digital Photography",
+				new ExperienceImage("media/Rhode_LionsTigersBears.jpg", 800,
+						500, true, true, "Lions, Tigers & Bears",
+						"Allison Rhode", "Digital Illustration", "Unknown"),
+				new ExperienceImage("media/Rhode_Pitcher.jpg", 800, 500, true,
+						true, "Pitcher", "Allison Rhode",
+						"Digital Photography", "Unknown"),
+				new ExperienceImage(
+						"media/The_Magic_Mandala_childrensbook_pg1.jpg", 800,
+						500, true, true,
+						"The Magic of the Mandala Children's book pg1",
+						"Suzanne Zajic", "Pastel on Coffee Soaked Paper",
 						"Unknown"),
-                                new ExperienceImage("media/Rhode_LionsTigersBears.jpg", 800, 500, true, true,
-						"Lions, Tigers & Bears", "Allison Rhode", "Digital Illustration",
+				new ExperienceImage(
+						"media/The_Magic_Mandala_childrensbook_pg2.jpg", 800,
+						500, true, true,
+						"The Magic of the Mandala Children's book pg2",
+						"Suzanne Zajic", "Pastel on Coffee Soaked Paper",
 						"Unknown"),
-                                new ExperienceImage("media/Rhode_Pitcher.jpg", 800, 500, true, true,
-						"Pitcher", "Allison Rhode", "Digital Photography",
+				new ExperienceImage(
+						"media/The_Magic_Mandala_childrensbook_pg3.jpg", 800,
+						500, true, true,
+						"The Magic of the Mandala Children's book pg3",
+						"Suzanne Zajic", "Pastel on Coffee Soaked Paper",
 						"Unknown"),
-                                new ExperienceImage("media/The_Magic_Mandala_childrensbook_pg1.jpg", 800, 500, true, true,
-						"The Magic of the Mandala Children's book pg1", "Suzanne Zajic", "Pastel on Coffee Soaked Paper",
+				new ExperienceImage("media/Wills_313_final3 .jpg", 800, 500,
+						true, true, "All Alone", "Michael Wills",
+						"Digital Illustration", "Unknown"),
+				new ExperienceImage("media/Wills_final 2.jpg", 800, 500, true,
+						true, "LumberJack", "Michael Wills",
+						"Digital Illustration", "Unknown"),
+				new ExperienceImage("media/Ye_Olde_Tree.jpg", 800, 500, true,
+						true, "Ye Olde Tree", "Brandon Wilcox", "Photography",
 						"Unknown"),
-                                new ExperienceImage("media/The_Magic_Mandala_childrensbook_pg2.jpg", 800, 500, true, true,
-						"The Magic of the Mandala Children's book pg2", "Suzanne Zajic", "Pastel on Coffee Soaked Paper",
-						"Unknown"),
-                                new ExperienceImage("media/The_Magic_Mandala_childrensbook_pg3.jpg", 800, 500, true, true,
-						"The Magic of the Mandala Children's book pg3", "Suzanne Zajic", "Pastel on Coffee Soaked Paper",
-						"Unknown"),
-                                new ExperienceImage("media/Wills_313_final3 .jpg", 800, 500, true, true,
-						"All Alone", "Michael Wills", "Digital Illustration",
-						"Unknown"),
-                                new ExperienceImage("media/Wills_final 2.jpg", 800, 500, true, true,
-						"LumberJack", "Michael Wills", "Digital Illustration",
-						"Unknown"),
-                                new ExperienceImage("media/Ye_Olde_Tree.jpg", 800, 500, true, true,
-						"Ye Olde Tree", "Brandon Wilcox", "Photography",
-						"Unknown"),
-                                new ExperienceImage("media/birdhouse.jpg", 800, 500, true, true,
-						"Birdhouse", "Mackenzie Gillett", "Digital Photo",
-						"Unknown"),
-                                new ExperienceImage("media/caretakerofwonder_HCI.jpg", 800, 500, true, true,
-						"Caretakers of Wonder", "Suzanne Zajic", "Pastel on Bristol Vellum",
-						"Unknown"),
-                                new ExperienceImage("media/clangone2.jpg", 800, 500, true, true,
-						"Lonely Eyes", "Cassandra Langone", "Digital Photography",
-						"Unknown"),
-                                new ExperienceImage("media/daydream.jpg", 800, 500, true, true,
+				new ExperienceImage("media/birdhouse.jpg", 800, 500, true,
+						true, "Birdhouse", "Mackenzie Gillett",
+						"Digital Photo", "Unknown"),
+				new ExperienceImage("media/caretakerofwonder_HCI.jpg", 800,
+						500, true, true, "Caretakers of Wonder",
+						"Suzanne Zajic", "Pastel on Bristol Vellum", "Unknown"),
+				new ExperienceImage("media/clangone2.jpg", 800, 500, true,
+						true, "Lonely Eyes", "Cassandra Langone",
+						"Digital Photography", "Unknown"),
+				new ExperienceImage("media/daydream.jpg", 800, 500, true, true,
 						"Daydream", "Mackenzie Gillett", "Digital Photo",
 						"Unknown"),
-                                new ExperienceImage("media/reflection.jpg", 800, 500, true, true,
-						"Reflection", "Mackenzie Gillett", "Digital Photo",
-						"Unknown"),
-                                new ExperienceImage("media/rose.jpg", 800, 500, true, true,
+				new ExperienceImage("media/reflection.jpg", 800, 500, true,
+						true, "Reflection", "Mackenzie Gillett",
+						"Digital Photo", "Unknown"),
+				new ExperienceImage("media/rose.jpg", 800, 500, true, true,
 						"White Rose", "Mackenzie Gillett", "Digital Photo",
 						"Unknown"),
 				new ExperienceImage("media/clangone.jpg", 800, 500, true, true,
@@ -269,8 +282,8 @@ public class ArtGalleryExperience extends Listener implements Experience {
 		rightView.setLayoutX(1400);
 		rightView.setLayoutY(250);
 		canvas.getChildren().add(rightView);
-                
-                Image exitImg = new Image("media/Exit180_180.png", 150, 150, true, true);
+
+		Image exitImg = new Image("media/Exit180_180.png", 150, 150, true, true);
 		Image exitHoveredImg = new Image("media/ExitHovered180_180.png", 150,
 				150, true, true);
 		ImageView exitView = new ImageView(exitImg);
@@ -290,15 +303,15 @@ public class ArtGalleryExperience extends Listener implements Experience {
 		Image palmLeftNormal = new Image("media/palmLeft.png", 100, 100, true,
 				true);
 		leftHand = new ImageView(palmLeftNormal);
-                
-                Image rightHandFull = new Image("media/Hold_fullHand_102_107.png", 100,
+
+		Image rightHandFull = new Image("media/Hold_fullHand_102_107.png", 100,
 				100, true, true);
-                
-                Media confirmMedia = new Media(CONFIRM_URL);
+
+		Media confirmMedia = new Media(CONFIRM_URL);
 		confirmComplete = new MediaPlayer(confirmMedia);
 		confirmComplete.setVolume(.25);
-                
-                rightHandChange = new Timeline(new KeyFrame(Duration.seconds(.5),
+
+		rightHandChange = new Timeline(new KeyFrame(Duration.seconds(.5),
 				ae -> {
 					rightHand.setImage(rightHandFull);
 					confirmComplete.play();
@@ -306,7 +319,6 @@ public class ArtGalleryExperience extends Listener implements Experience {
 			goToMainMenu();
 		}), new KeyFrame(Duration.seconds(2), ae -> {
 			rightHand.setImage(palmRightNormal);
-
 		}));
 
 		drawHands = new AnimationTimer() {
@@ -320,11 +332,13 @@ public class ArtGalleryExperience extends Listener implements Experience {
 				if (Util.isBetween(810, 810 + 270, (int) rightHandPosX)
 						&& Util.isBetween(859, 859 + 63, (int) rightHandPosY)) {
 					changeGallery.play();
+				} else {
+					changeGallery.stop();
+					rightHand.setImage(palmRightNormal);
 				}
-                                
-                                if (Util.isBetween(1235, 1550, (int) rightHandPosX)
+
+				if (Util.isBetween(1235, 1550, (int) rightHandPosX)
 						&& Util.isBetween(610, 960, (int) rightHandPosY)) {
-					rightHand.setVisible(true);
 					if (Util.isBetween(1335, 1450, (int) rightHandPosX)
 							&& Util.isBetween(710, 860, (int) rightHandPosY)) {
 						exitView.setImage(exitHoveredImg);
@@ -334,7 +348,6 @@ public class ArtGalleryExperience extends Listener implements Experience {
 				} else {
 					exitView.setImage(exitImg);
 					exitView.setOpacity(0.3);
-					rightHand.setVisible(false);
 					rightHandChange.stop();
 					rightHand.setImage(palmRightNormal);
 				}
@@ -350,9 +363,18 @@ public class ArtGalleryExperience extends Listener implements Experience {
 
 		changeGallery = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
 			rightHand.setImage(rightHandFull);
+			confirmComplete.play();
 		}), new KeyFrame(Duration.seconds(1), ae -> {
 			switchGallery();
+		}), new KeyFrame(Duration.seconds(2), ae -> {
+			rightHand.setImage(palmRightNormal);
 		}));
+
+		textInformation = new Text();
+		textInformation.setLayoutX(400);
+		textInformation.setLayoutY(400);
+		textInformation.setFont(Font.font(null, FontWeight.NORMAL, 40));
+		canvas.getChildren().add(textInformation);
 
 		information = new AnimationTimer() {
 			@Override
@@ -366,12 +388,16 @@ public class ArtGalleryExperience extends Listener implements Experience {
 								(int) (1000 - mainImg.getHeight()) / 2
 										+ (int) mainImg.getHeight(),
 								(int) rightHandPosY)) {
-					// System.out.println(imageList[imageHolder].getTitle());
-					// System.out.println(imageList[imageHolder].getAuthor());
-					// System.out.println(imageList[imageHolder].getMedium());
-					// System.out.println(imageList[imageHolder].getDate());
+					mainView.setOpacity(0.3);
+					textInformation.setText("Title: "
+							+ imageList[imageHolder].getTitle() + "\n"
+							+ "Author: " + imageList[imageHolder].getAuthor()
+							+ "\n" + "Medium: "
+							+ imageList[imageHolder].getMedium() + "\n"
+							+ "Date: " + imageList[imageHolder].getDate());
 				} else {
-					// mainView.setImage(mainImg);
+					mainView.setOpacity(1);
+					textInformation.setText("");
 				}
 			}
 		};
@@ -409,6 +435,9 @@ public class ArtGalleryExperience extends Listener implements Experience {
 
 		drawHands.stop();
 		sleepTimer.stop();
+		rightHandChange.stop();
+		changeGallery.stop();
+		changeImgs.stop();
 	}
 
 	@Override
@@ -422,13 +451,13 @@ public class ArtGalleryExperience extends Listener implements Experience {
 	}
 
 	private void goToQuoteGallery() {
-            	controller.removeListener(this);
+		controller.removeListener(this);
 		myController.setExperience(InteractiveWall.GALLERY_QUOTE);
-        }
+	}
 
 	public void switchGallery() {
-		stopExperience();
-                goToQuoteGallery();
+		// stopExperience();
+		goToQuoteGallery();
 	}
 
 	public void changeImg() {
@@ -585,7 +614,6 @@ public class ArtGalleryExperience extends Listener implements Experience {
 			default:
 				break;
 			}
-			// System.out.println(swipe.state());
 		} else if (swipe.isValid() && swipeStart.getX() < -130
 				&& swipeDir.getX() > 0) {
 			direction = false;
@@ -596,7 +624,6 @@ public class ArtGalleryExperience extends Listener implements Experience {
 			default:
 				break;
 			}
-			// System.out.println(swipe.state());
 		}
 	}
 }
