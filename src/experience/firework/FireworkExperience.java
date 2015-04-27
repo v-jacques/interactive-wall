@@ -33,6 +33,7 @@ import com.leapmotion.leap.Frame;
 import com.leapmotion.leap.Hand;
 import com.leapmotion.leap.Finger;
 import com.leapmotion.leap.HandList;
+import com.leapmotion.leap.FingerList;
 import com.leapmotion.leap.Listener;
 import com.leapmotion.leap.Gesture;
 import com.leapmotion.leap.GestureList;
@@ -56,7 +57,10 @@ public class FireworkExperience extends Listener implements Experience {
 	ImageView leftHand;
 	ImageView background;
 	ImageView foreground;
+    ImageView[] fingerTips = new ImageView[10];
+    FingerPoint[] fingerTipLocation = new FingerPoint[10];
     
+    GraphicsContext gc;
     MediaPlayer countPing;
 	MediaPlayer confirmComplete;
     Media backgroundMusic;
@@ -103,7 +107,14 @@ public class FireworkExperience extends Listener implements Experience {
         canvas.setBlendMode(BlendMode.ADD);
 		background = new ImageView(new Image("media/firebackground.jpg"));
 		foreground = new ImageView(new Image("media/lighthouse.png"));
-        
+		
+		for(int i = 0; i<fingerTips.length ; i++){
+			fingerTips[i] = new ImageView(new Image("media/tap.png", 50, 50,
+				true, true));
+			fingerTips[i].setVisible(true);
+			fingerTips[i].relocate(i*10,100);
+		}
+		
 		colors = new Paint[181];
         colors[0] = new RadialGradient(0, 0, 0.5, 0.5, 0.5, true, CycleMethod.NO_CYCLE,
             new Stop(0, Color.WHITE),
@@ -152,6 +163,7 @@ public class FireworkExperience extends Listener implements Experience {
         rightHandChange = new Timeline(new KeyFrame(Duration.seconds(.5),
 								 ae -> {
 								 	rightHand.setImage(rightHandFull);
+								 	confirmComplete.stop();
 									confirmComplete.play();
 							}),
 							new KeyFrame(Duration.seconds(1),
@@ -161,6 +173,7 @@ public class FireworkExperience extends Listener implements Experience {
 							new KeyFrame(Duration.seconds(2),
 								 ae -> {
 									rightHand.setImage(palmRightNormal);
+									 gc.clearRect(0, 0, 1600, 1000);
 
 							}));
         
@@ -187,9 +200,23 @@ public class FireworkExperience extends Listener implements Experience {
 				rightHand.setTranslateY(rightHandPosY);
 				leftHand.setTranslateX(leftHandPosX);
 				leftHand.setTranslateY(leftHandPosY);
+                  
+                for (int i = 0; i<fingerTipLocation.length ; i++) {
+					if(fingerTipLocation[i] != null){
+						fingerTips[i].setVisible(true);
+						fingerTips[i].relocate(fingerTipLocation[i].x,fingerTipLocation[i].y);
+					}else{
+						fingerTips[i].setVisible(false);
+					}
+				}
                     
 				if (Util.isBetween(1235, 1550, (int) rightHandPosX)
 						&& Util.isBetween(610, 960, (int) rightHandPosY)){
+					for (int i = 0; i<fingerTipLocation.length ; i++) {
+					
+						fingerTips[i].setVisible(false);
+					
+				}
                     rightHand.setVisible(true);
                     if(Util.isBetween(1335, 1450, (int) rightHandPosX)
 						&& Util.isBetween(710, 860, (int) rightHandPosY)) {
@@ -209,9 +236,9 @@ public class FireworkExperience extends Listener implements Experience {
 		
 		timer = new AnimationTimer() {
 			@Override public void handle(long now) {
-                GraphicsContext gc = canvas.getGraphicsContext2D();
+                 gc = canvas.getGraphicsContext2D();
                 // clear area with transparent black
-                gc.setFill(Color.rgb(0, 0, 0, 0.2));
+                gc.setFill(Color.rgb(0, 0, 0, .2));
                 gc.fillRect(0, 0, 1600, 1000);
                 // draw fireworks
                 drawFireworks(gc); 
@@ -222,7 +249,13 @@ public class FireworkExperience extends Listener implements Experience {
 
 		rightHand.relocate(rightHandPosX, rightHandPosY);
 		leftHand.relocate(leftHandPosX, leftHandPosY);
-		pane.getChildren().addAll(layer,exitView,rightHand, leftHand);
+		
+		pane.getChildren().addAll(layer,exitView);
+		for(int i = 0; i<fingerTips.length ; i++){
+			pane.getChildren().add(	fingerTips[i]);
+		}
+		
+		pane.getChildren().addAll(rightHand, leftHand);
 	}
 		
 	private void drawFireworks(GraphicsContext gc) {
@@ -375,8 +408,9 @@ public class FireworkExperience extends Listener implements Experience {
 	
 	public void onConnect(Controller controller) {
         controller.enableGesture(Gesture.Type.TYPE_SCREEN_TAP);
-        controller.config().setFloat("Gestures.ScreenTap.MinDistance",0.0f);
-        controller.config().setFloat("Gestures.ScreenTap.MinForwardVelocity",10.0f);
+        controller.config().setFloat("Gestures.ScreenTap.MinDistance",-3f);
+        controller.config().setFloat("Gestures.ScreenTap.MinForwardVelocity",1.0f);
+        controller.config().setFloat("Gestures.ScreenTap.HistorySeconds",.25f);
          controller.config().save();
     }
 	
@@ -384,6 +418,8 @@ public class FireworkExperience extends Listener implements Experience {
 		Frame frame = controller.frame();
 
 		HandList hands = frame.hands();
+
+		FingerList fingers = frame.fingers().extended();
 
 		rightHandPosX = -100.0;
 		rightHandPosY = -100.0;
@@ -396,6 +432,18 @@ public class FireworkExperience extends Listener implements Experience {
 		realLeftHandPosY = -100.0;
 
 		//sleepTimer.play();
+		for (int i = 0; i<fingerTipLocation.length ; i++) {
+			if(i<fingers.count()){
+				Finger current = fingers.get(i);
+				if(current.isExtended()){
+					
+					fingerTipLocation[i] = new FingerPoint(Util.leapXtoPanelX(current.stabilizedTipPosition().getX()),Util.leapYToPanelY(current.stabilizedTipPosition().getY()));
+				
+				}
+			}else{
+				fingerTipLocation[i] = null;
+			}
+		}
 
 		for (int i = 0; i < hands.count(); i++) {
 			//sleepTimer.stop();
@@ -406,7 +454,6 @@ public class FireworkExperience extends Listener implements Experience {
 				rightHandPosY = Util.palmYToPanelY(right);
 				realRightHandPosX = right.palmPosition().getX();
 				realRightHandPosY = right.palmPosition().getY();
-
 			} else if (hands.get(i).isLeft()) {
 				left = hands.get(i);
 				leftHandPosX = Util.palmXToPanelX(left);
@@ -419,11 +466,9 @@ public class FireworkExperience extends Listener implements Experience {
 		GestureList gestures = frame.gestures();
 		for(int i=0;i<gestures.count();i++) {
 			Gesture gesture = gestures.get(i);
-			switch(gesture.type()) {
-				case TYPE_SCREEN_TAP:
-					ScreenTapGesture tap = new ScreenTapGesture(gesture);
-					fireParticle(Util.leapXtoPanelX(tap.pointable().stabilizedTipPosition().getX()), Util.leapYToPanelY(tap.pointable().stabilizedTipPosition().getY())+100);
-					break;
+			if(gesture.type() == Gesture.Type.TYPE_SCREEN_TAP){
+				ScreenTapGesture tap = new ScreenTapGesture(gesture);
+				fireParticle(Util.leapXtoPanelX(tap.pointable().stabilizedTipPosition().getX()), Util.leapYToPanelY(tap.pointable().stabilizedTipPosition().getY()));
 			}
 		}
 	}
@@ -441,7 +486,7 @@ public class FireworkExperience extends Listener implements Experience {
 		timer.stop();
         drawHands.stop();
         fadeStop.play();
-
+        particles.clear();
 	}
     
     @Override
@@ -460,6 +505,17 @@ public class FireworkExperience extends Listener implements Experience {
 		myController = controller;
 		
 	}
+	
+	private class FingerPoint{
+		double x;
+		double y;
+		
+		FingerPoint(double x, double y){
+			this.x = x;
+			this.y = y;
+		}
+	}	
+	
 	
 }
 
