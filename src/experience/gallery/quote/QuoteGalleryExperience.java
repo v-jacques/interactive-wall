@@ -32,6 +32,11 @@ import com.leapmotion.leap.HandList;
 import com.leapmotion.leap.Listener;
 import com.leapmotion.leap.SwipeGesture;
 import com.leapmotion.leap.Vector;
+import java.io.File;
+import javafx.scene.control.TextArea;
+import javafx.scene.layout.Border;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 
 public class QuoteGalleryExperience extends Listener implements Experience {
 	Controller controller;
@@ -41,6 +46,7 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 	Pane canvas;
 	Timeline sleepTimer;
 	Timeline changeGallery;
+        Timeline rightHandChange;
 
 	Hand right;
 	Hand left;
@@ -65,6 +71,12 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 
 	int quoteHolder = 1;
 	boolean direction;
+        
+        MediaPlayer confirmComplete;
+	private File count = new File("src/media/countPing.mp3");
+	private final String COUNT_URL = count.toURI().toString();
+	private File confirm = new File("src/media/confirmComplete.mp3");
+	private final String CONFIRM_URL = confirm.toURI().toString();
 
 	Image artButtonHovered = new Image(
 			"media/galleryButton-selected 270_63 px.png", 270, 63, true, true);
@@ -75,18 +87,34 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 
 	ExperienceQuote[] quoteList;
 
-	Text topQ;
-	Text mainQ;
-	Text bottomQ;
+	   TextArea topQ;
+	TextArea mainQ;
+	TextArea bottomQ;
 
 	public QuoteGalleryExperience() {
 		quoteList = new ExperienceQuote[] {
-				new ExperienceQuote("a", "author a"),
-				new ExperienceQuote("b", "author b"),
-				new ExperienceQuote("c", "author c"),
-				new ExperienceQuote("d", "author d"),
-				new ExperienceQuote("e", "author e"),
-				new ExperienceQuote("f", "author f") };
+				new ExperienceQuote("Life isn't about finding yourself. Life is about creating yourself.", 
+                                        "George Bernard Shaw"),
+				new ExperienceQuote("In the end, it's not the years in your life that count. It's the life in your years.", 
+                                        "Abraham Lincoln"),
+				new ExperienceQuote("You have succeeded in life when all you really want is only what you really need.", 
+                                        "Vernon Howard"),
+				new ExperienceQuote("Open your eyes, look within. Are you satisfied with the life you're living?", 
+                                        "Bob Marley"),
+				new ExperienceQuote("It is often said that before you die your life passes before your eyes. It is in fact true. It's called living.", 
+                                        "Terry Pratchett"),
+				new ExperienceQuote("Success is not final, failure is not fatal: it is the courage to continue that counts.", 
+                                        "Winston Churchill"),
+                                new ExperienceQuote("The starting point of all achievement is desire.", 
+                                        "Napoleon Hill"),
+                                new ExperienceQuote("A successful man is one who can lay a firm foundation with the bricks others have thrown at him.", 
+                                        "David Brinkley"),
+                                new ExperienceQuote("Immature love says: 'I love you because I need you.' Mature love says 'I need you because I love you.", 
+                                        "Erich Fromm"),
+                                new ExperienceQuote("The most powerful weapon on earth is the human soul on fire.", 
+                                        "Ferdinand Foch"),
+                                new ExperienceQuote("Love doesn't make the world go 'round. Love is what makes the ride worthwhile.", 
+                                        "Franklin P. Jones") };
 
 		pane = new StackPane();
 		canvas = new Pane();
@@ -109,29 +137,54 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 		// ImageView backView = new ImageView(backImg);
 		// backView.setPreserveRatio(true);
 		// pane.getChildren().add(backView);
+                
+                Image exitImg = new Image("media/Exit180_180.png", 150, 150, true, true);
+		Image exitHoveredImg = new Image("media/ExitHovered180_180.png", 150,
+				150, true, true);
+		ImageView exitView = new ImageView(exitImg);
+		exitView.setOpacity(0.3);
+		exitView.setPreserveRatio(true);
+		exitView.setLayoutX(1335);
+		exitView.setLayoutY(710);
+		canvas.getChildren().add(exitView);
 
-		topQ = new Text(quoteList[quoteHolder - 1].getQuote() + " - "
+		topQ = new TextArea(quoteList[quoteHolder - 1].getQuote() + " - "
 				+ quoteList[quoteHolder - 1].getAuthor());
 
-		mainQ = new Text(quoteList[quoteHolder].getQuote() + " - "
+		mainQ = new TextArea(quoteList[quoteHolder].getQuote() + " - "
 				+ quoteList[quoteHolder].getAuthor());
 
-		bottomQ = new Text(quoteList[quoteHolder + 1].getQuote() + " - "
+		bottomQ = new TextArea(quoteList[quoteHolder + 1].getQuote() + " - "
 				+ quoteList[quoteHolder + 1].getAuthor());
 
 		bottomQ.setLayoutX(700);
-		bottomQ.setLayoutY(250);
+		bottomQ.setLayoutY(750);
+                bottomQ.setMaxSize(800, 300);
+                bottomQ.setMinSize(800, 300);
+                
+                bottomQ.setStyle("-fx-background-color: #fff, #fff; -fx-background-color: #fff; -fx-background-color: #fff;");
+//                bottomQ.setBorder(Border.EMPTY);
+//                bottomQ.setBackground(Background.EMPTY);
+//                bottomQ.setFocusTraversable(false);
 		bottomQ.setFont(Font.font(null, FontWeight.NORMAL, 50));
 		bottomQ.setEffect(new GaussianBlur());
 		canvas.getChildren().add(bottomQ);
 
 		mainQ.setLayoutX(700);
-		mainQ.setLayoutY(500);
+		mainQ.setLayoutY(350);
+                mainQ.setMaxSize(800, 300);
+                mainQ.setMinSize(800, 300);
+                mainQ.setBorder(Border.EMPTY);
 		mainQ.setFont(Font.font(null, FontWeight.NORMAL, 50));
 		canvas.getChildren().add(mainQ);
 
 		topQ.setLayoutX(700);
-		topQ.setLayoutY(750);
+		topQ.setLayoutY(250);
+                topQ.setMaxSize(800, 300);
+                topQ.setMinSize(800, 300);
+                topQ.setBorder(Border.EMPTY);
+                topQ.setBackground(Background.EMPTY);
+                topQ.setFocusTraversable(false);
 		topQ.setFont(Font.font(null, FontWeight.NORMAL, 50));
 		topQ.setEffect(new GaussianBlur());
 		canvas.getChildren().add(topQ);
@@ -146,6 +199,25 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 		Image palmLeftNormal = new Image("media/palmLeft.png", 100, 100, true,
 				true);
 		leftHand = new ImageView(palmLeftNormal);
+                
+                Image rightHandFull = new Image("media/Hold_fullHand_102_107.png", 100,
+				100, true, true);
+                
+                Media confirmMedia = new Media(CONFIRM_URL);
+		confirmComplete = new MediaPlayer(confirmMedia);
+		confirmComplete.setVolume(.25);
+                
+                rightHandChange = new Timeline(new KeyFrame(Duration.seconds(.5),
+				ae -> {
+					rightHand.setImage(rightHandFull);
+					confirmComplete.play();
+				}), new KeyFrame(Duration.seconds(1), ae -> {
+			goToMainMenu();
+		}), new KeyFrame(Duration.seconds(2), ae -> {
+			rightHand.setImage(palmRightNormal);
+
+		}));
+
 
 		drawHands = new AnimationTimer() {
 			@Override
@@ -155,8 +227,8 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 				leftHand.setTranslateX(leftHandPosX);
 				leftHand.setTranslateY(leftHandPosY);
 
-				if (Util.isBetween(650, 650 + 270, (int) rightHandPosX)
-						&& Util.isBetween(890, 890 + 63, (int) rightHandPosY)) {
+				if (Util.isBetween(515, 515 + 270, (int) rightHandPosX)
+						&& Util.isBetween(859, 859 + 63, (int) rightHandPosY)) {
 					changeGallery.play();
 				}
 			}
@@ -168,9 +240,6 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 				changeQuotes();
 			}
 		};
-
-		Image rightHandFull = new Image("media/Hold_fullHand_102_107.png", 100,
-				100, true, true);
 
 		changeGallery = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
 			rightHand.setImage(rightHandFull);
@@ -221,12 +290,15 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 		controller.removeListener(this);
 		myController.setExperience(InteractiveWall.MAIN_MENU);
 	}
+        
+        private void goToArtGallery() {
+            	controller.removeListener(this);
+		myController.setExperience(InteractiveWall.GALLERY);
+        }
 
 	public void switchGallery() {
-		// canvas.setVisible(true);
-		// quote.setVisible(false);
-		// artWork.setImage(artButton);
-		// quoteWall.setImage(notQuote);
+		stopExperience();
+                goToArtGallery();
 	}
 
 	public void changeQuotes() {

@@ -136,12 +136,7 @@ public class PondExperience extends Listener implements Experience {
 		rightHand.setVisible(false);
 
 		// RIGHT Hand 2 1 0 Images
-		Image rightHand0 = new Image("media/Hold_0s_102_107.png", 100, 100,
-				true, true);
-		Image rightHand1 = new Image("media/Hold_1s_102_107.png", 100, 100,
-				true, true);
-		Image rightHand2 = new Image("media/Hold_2s_102_107.png", 100, 100,
-				true, true);
+		
 		Image rightHandFull = new Image("media/Hold_fullHand_102_107.png", 100,
 				100, true, true);
 
