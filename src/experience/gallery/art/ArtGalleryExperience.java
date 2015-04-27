@@ -62,13 +62,13 @@ public class ArtGalleryExperience extends Listener implements Experience {
 
 	int imageHolder = 1;
 	boolean direction;
-	
+
 	Image artButton = new Image("media/galleryButton-selected 270_63 px.png",
 			270, 63, true, true);
-	Image quoteButtonHovered = new Image("media/quoteButton-selected 270_63 px.png",
-			270, 63, true, true);
-	Image quoteButton = new Image("media/quoteButton270_63 px.png", 270, 63, true,
-			true);
+	Image quoteButtonHovered = new Image(
+			"media/quoteButton-selected 270_63 px.png", 270, 63, true, true);
+	Image quoteButton = new Image("media/quoteButton270_63 px.png", 270, 63,
+			true, true);
 
 	ExperienceImage[] imageList;
 
@@ -157,7 +157,7 @@ public class ArtGalleryExperience extends Listener implements Experience {
 		artView.setLayoutX(515);
 		artView.setLayoutY(859);
 		canvas.getChildren().add(artView);
-		
+
 		quoteView = new ImageView(quoteButton);
 		quoteView.setLayoutX(810);
 		quoteView.setLayoutY(859);
