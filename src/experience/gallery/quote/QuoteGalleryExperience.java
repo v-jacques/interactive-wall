@@ -37,6 +37,8 @@ import com.leapmotion.leap.Listener;
 import com.leapmotion.leap.SwipeGesture;
 import com.leapmotion.leap.Vector;
 
+import experience.gallery.GalleryMusic;
+
 public class QuoteGalleryExperience extends Listener implements Experience {
 	Controller controller;
 	ExperienceController myController;
@@ -294,6 +296,14 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 		drawHands.start();
 		sleepTimer.play();
 		controller = new Controller(this);
+		
+		switch (GalleryMusic.getMusicStatus()) {
+		case PLAYING:
+			break;
+		default:
+			GalleryMusic.playBackgroundMusic();
+			break;
+		}
 	}
 
 	@Override
@@ -320,6 +330,7 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 	}
 
 	private void goToMainMenu() {
+		stopExperience();
 		controller.removeListener(this);
 		myController.setExperience(InteractiveWall.MAIN_MENU);
 	}

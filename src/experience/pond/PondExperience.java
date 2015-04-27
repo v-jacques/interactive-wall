@@ -127,7 +127,7 @@ public class PondExperience extends Listener implements Experience {
 			}
 		};
 
-		sleepTimer = new Timeline(new KeyFrame(Duration.millis(30000),
+		sleepTimer = new Timeline(new KeyFrame(Duration.millis(20000),
 				ae -> goToMainMenu()));
 
 		Image palmRightNormal = new Image("media/palmRight.png", 100, 100,

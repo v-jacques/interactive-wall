@@ -36,6 +36,9 @@ import com.leapmotion.leap.Listener;
 import com.leapmotion.leap.SwipeGesture;
 import com.leapmotion.leap.Vector;
 
+import experience.gallery.GalleryMusic;
+import experience.pond.PondMusic;
+
 public class ArtGalleryExperience extends Listener implements Experience {
 	Controller controller;
 	ExperienceController myController;
@@ -293,7 +296,7 @@ public class ArtGalleryExperience extends Listener implements Experience {
 		exitView.setLayoutY(710);
 		canvas.getChildren().add(exitView);
 
-		sleepTimer = new Timeline(new KeyFrame(Duration.millis(5000),
+		sleepTimer = new Timeline(new KeyFrame(Duration.millis(20000),
 				ae -> goToMainMenu()));
 
 		Image palmRightNormal = new Image("media/palmRight.png", 100, 100,
@@ -420,6 +423,14 @@ public class ArtGalleryExperience extends Listener implements Experience {
 		sleepTimer.play();
 		information.start();
 		controller = new Controller(this);
+		
+		switch (GalleryMusic.getMusicStatus()) {
+		case PLAYING:
+			break;
+		default:
+			GalleryMusic.playBackgroundMusic();
+			break;
+		}
 	}
 
 	@Override
@@ -438,6 +449,7 @@ public class ArtGalleryExperience extends Listener implements Experience {
 		rightHandChange.stop();
 		changeGallery.stop();
 		changeImgs.stop();
+		PondMusic.pauseBackgroundMusic();
 	}
 
 	@Override
@@ -446,6 +458,7 @@ public class ArtGalleryExperience extends Listener implements Experience {
 	}
 
 	private void goToMainMenu() {
+		stopExperience();
 		controller.removeListener(this);
 		myController.setExperience(InteractiveWall.MAIN_MENU);
 	}
