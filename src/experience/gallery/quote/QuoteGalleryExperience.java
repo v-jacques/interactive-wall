@@ -21,6 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import main.Experience;
 import main.ExperienceController;
@@ -167,39 +168,33 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 		bottomQ = new Text(quoteList[quoteHolder + 1].getQuote() + "\n- "
 				+ quoteList[quoteHolder + 1].getAuthor());
 
-		bottomQ.setLayoutX(200);
-		bottomQ.setLayoutY(750);
-
-		bottomQ.autosize();
-		// bottomQ.setMaxSize(800, 300);
-		// bottomQ.setMinSize(800, 300);
-
-		// bottomQ.setStyle("-fx-background-color: #fff, #fff; -fx-background-color: #fff; -fx-background-color: #fff;");
-		// bottomQ.setBorder(Border.EMPTY);
-		// bottomQ.setBackground(Background.EMPTY);
-		// bottomQ.setFocusTraversable(false);
 		bottomQ.setFont(Font.font(null, FontWeight.NORMAL, 40));
 		bottomQ.setEffect(new GaussianBlur());
-		canvas.getChildren().add(bottomQ);
 
-		mainQ.setLayoutX(200);
-		mainQ.setLayoutY(400);
-		// mainQ.setMaxSize(800, 300);
-		// mainQ.setMinSize(800, 300);
-		// mainQ.setBorder(Border.EMPTY);
 		mainQ.setFont(Font.font(null, FontWeight.NORMAL, 40));
-		canvas.getChildren().add(mainQ);
 
-		topQ.setLayoutX(200);
-		topQ.setLayoutY(50);
-		// topQ.setMaxSize(800, 300);
-		// topQ.setMinSize(800, 300);
-		// topQ.setBorder(Border.EMPTY);
-		// topQ.setBackground(Background.EMPTY);
-		// topQ.setFocusTraversable(false);
 		topQ.setFont(Font.font(null, FontWeight.NORMAL, 40));
 		topQ.setEffect(new GaussianBlur());
-		canvas.getChildren().add(topQ);
+
+		TextFlow bottomFlow = new TextFlow();
+		bottomFlow.setMaxSize(800, 400);
+		bottomFlow.getChildren().addAll(bottomQ);
+		bottomFlow.setLayoutX(400);
+		bottomFlow.setLayoutY(650);
+
+		TextFlow mainFlow = new TextFlow();
+		mainFlow.setMaxSize(800, 400);
+		mainFlow.getChildren().addAll(mainQ);
+		mainFlow.setLayoutX(400);
+		mainFlow.setLayoutY(350);
+
+		TextFlow topFlow = new TextFlow();
+		topFlow.setMaxSize(800, 400);
+		topFlow.getChildren().addAll(topQ);
+		topFlow.setLayoutX(400);
+		topFlow.setLayoutY(50);
+
+		canvas.getChildren().addAll(bottomFlow, mainFlow, topFlow);
 
 		sleepTimer = new Timeline(new KeyFrame(Duration.millis(20000),
 				ae -> goToMainMenu()));
@@ -296,7 +291,7 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 		drawHands.start();
 		sleepTimer.play();
 		controller = new Controller(this);
-		
+
 		switch (GalleryMusic.getMusicStatus()) {
 		case PLAYING:
 			break;

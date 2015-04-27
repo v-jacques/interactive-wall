@@ -20,6 +20,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import main.Experience;
 import main.ExperienceController;
@@ -377,7 +378,13 @@ public class ArtGalleryExperience extends Listener implements Experience {
 		textInformation.setLayoutX(400);
 		textInformation.setLayoutY(400);
 		textInformation.setFont(Font.font(null, FontWeight.NORMAL, 40));
-		canvas.getChildren().add(textInformation);
+
+		TextFlow textFlow = new TextFlow();
+		textFlow.setLayoutX(400);
+		textFlow.setLayoutY(350);
+		textFlow.getChildren().add(textInformation);
+
+		canvas.getChildren().add(textFlow);
 
 		information = new AnimationTimer() {
 			@Override
@@ -398,6 +405,11 @@ public class ArtGalleryExperience extends Listener implements Experience {
 							+ "\n" + "Medium: "
 							+ imageList[imageHolder].getMedium() + "\n"
 							+ "Date: " + imageList[imageHolder].getDate());
+					textFlow.setMaxSize(imageList[imageHolder].getWidth(),
+							imageList[imageHolder].getHeight());
+					textFlow.setLayoutX(mainView.getLayoutX());
+					textFlow.setLayoutY(mainImg.getHeight() / 4
+							+ mainView.getLayoutY());
 				} else {
 					mainView.setOpacity(1);
 					textInformation.setText("");
@@ -423,7 +435,7 @@ public class ArtGalleryExperience extends Listener implements Experience {
 		sleepTimer.play();
 		information.start();
 		controller = new Controller(this);
-		
+
 		switch (GalleryMusic.getMusicStatus()) {
 		case PLAYING:
 			break;

@@ -4,7 +4,6 @@ import java.io.File;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -136,7 +135,7 @@ public class PondExperience extends Listener implements Experience {
 		rightHand.setVisible(false);
 
 		// RIGHT Hand 2 1 0 Images
-		
+
 		Image rightHandFull = new Image("media/Hold_fullHand_102_107.png", 100,
 				100, true, true);
 
