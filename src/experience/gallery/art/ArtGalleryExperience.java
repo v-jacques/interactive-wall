@@ -39,6 +39,7 @@ import com.leapmotion.leap.Vector;
 
 import experience.gallery.GalleryMusic;
 import experience.pond.PondMusic;
+import javafx.animation.KeyValue;
 
 public class ArtGalleryExperience extends Listener implements Experience {
 	Controller controller;
@@ -46,9 +47,18 @@ public class ArtGalleryExperience extends Listener implements Experience {
 	StackPane pane;
 
 	Pane canvas;
+        
 	Timeline sleepTimer;
-	Timeline changeGallery;
-	Timeline rightHandChange;
+	Timeline changeGalleryR;
+        Timeline changeGalleryL;
+	Timeline rightMainExit;
+        Timeline leftMainExit;
+        Timeline rightArrowR;
+        Timeline rightArrowL;
+        Timeline leftArrowR;
+        Timeline leftArrowL;
+        Timeline fadePlay;
+	Timeline fadeStop;
 
 	Hand right;
 	Hand left;
@@ -57,10 +67,16 @@ public class ArtGalleryExperience extends Listener implements Experience {
 	ImageView leftHand;
 	ImageView quoteView;
 	ImageView artView;
+        ImageView leftA;
+        ImageView rightA;
 
 	AnimationTimer drawHands;
 	AnimationTimer changeImgs;
 	AnimationTimer information;
+        AnimationTimer changeArrows;
+        
+        Media backgroundMusic;
+	MediaPlayer backgroundMusicPlayer;
 
 	Text textInformation;
 
@@ -80,6 +96,9 @@ public class ArtGalleryExperience extends Listener implements Experience {
 	MediaPlayer confirmComplete;
 	private File confirm = new File("src/media/confirmComplete.mp3");
 	private final String CONFIRM_URL = confirm.toURI().toString();
+        
+        File backgroundMusicFile = new File("src/media/John_Lewis_Grant_-_10_-_Bach_Prelude___Fugue_10.mp3");
+	String BACKGROUND_MUSIC = backgroundMusicFile.toURI().toString();
 
 	Image artButton = new Image("media/galleryButton-selected 270_63 px.png",
 			270, 63, true, true);
@@ -87,6 +106,15 @@ public class ArtGalleryExperience extends Listener implements Experience {
 			"media/quoteButton-selected 270_63 px.png", 270, 63, true, true);
 	Image quoteButton = new Image("media/quoteButton270_63 px.png", 270, 63,
 			true, true);
+        
+        Image leftArrow = new Image("media/left arrow 100_200.png",
+			100, 200, true, true);
+        Image leftArrowHovered = new Image("media/left arrow_hover.png",
+			100, 200, true, true);
+        Image rightArrow = new Image("media/right arrow 100_200.png",
+			100, 200, true, true);
+        Image rightArrowHovered = new Image("media/right arrow_hover.png",
+			100, 200, true, true);
 
 	ExperienceImage[] imageList;
 
@@ -180,9 +208,6 @@ public class ArtGalleryExperience extends Listener implements Experience {
 				new ExperienceImage("media/Kwon_ArtisticSelfies_4.jpg", 800,
 						500, true, true, "Artistic Selfies 4", "NK Kwon",
 						"Photography", "2014"),
-				new ExperienceImage("media/Powers_heirloom.tif", 800, 500,
-						true, true, "Heirloom", "Tianna Powers",
-						"Digital Illustration", "2013"),
 				new ExperienceImage("media/Rhode_Deer.jpg", 800, 500, true,
 						true, "Deer", "Allison Rhode", "Digital Photography",
 						"Unknown"),
@@ -243,25 +268,35 @@ public class ArtGalleryExperience extends Listener implements Experience {
 
 		pane = new StackPane();
 		canvas = new Pane();
-		canvas.setBackground(new Background(new BackgroundFill(Color.WHITE,
-				CornerRadii.EMPTY, Insets.EMPTY)));
+		//canvas.setBackground(new Background(new BackgroundFill(Color.WHITE,
+		//		CornerRadii.EMPTY, Insets.EMPTY)));
 
 		artView = new ImageView(artButton);
-		artView.setLayoutX(515);
-		artView.setLayoutY(859);
+		artView.setLayoutX(425);
+		artView.setLayoutY(843.5);
 		canvas.getChildren().add(artView);
 
 		quoteView = new ImageView(quoteButton);
 		quoteView.setLayoutX(810);
-		quoteView.setLayoutY(859);
+		quoteView.setLayoutY(843.5);
 		canvas.getChildren().add(quoteView);
-
-		// Image backImg = new Image("media/background1600_1000.jpg", 1600,
-		// 1000,
-		// true, true);
-		// ImageView backView = new ImageView(backImg);
-		// backView.setPreserveRatio(true);
-		// pane.getChildren().add(backView);
+                
+		Image backImg = new Image("media/background_gallery.png", 1600,
+                        1000,
+                        true, true);
+		ImageView backView = new ImageView(backImg);
+		backView.setPreserveRatio(true);
+		pane.getChildren().add(backView);
+                
+                Image exitImg = new Image("media/Exit180_180.png", 150, 150, true, true);
+		Image exitHoveredImg = new Image("media/ExitHovered180_180.png", 150,
+				150, true, true);
+		ImageView exitView = new ImageView(exitImg);
+		exitView.setOpacity(0.3);
+		exitView.setPreserveRatio(true);
+		exitView.setLayoutX(1370);
+		exitView.setLayoutY(800);
+		canvas.getChildren().add(exitView);
 
 		Image leftImg = new Image(imageList[imageHolder].getPath(), 800, 500,
 				false, false);
@@ -275,7 +310,7 @@ public class ArtGalleryExperience extends Listener implements Experience {
 				false);
 		rightView = new ImageView(rightImg);
 
-		leftView.setLayoutX(-600);
+		leftView.setLayoutX(-700);
 		leftView.setLayoutY(250);
 		canvas.getChildren().add(leftView);
 
@@ -283,20 +318,20 @@ public class ArtGalleryExperience extends Listener implements Experience {
 		mainView.setLayoutY((1000 - mainImg.getHeight()) / 2);
 		canvas.getChildren().add(mainView);
 
-		rightView.setLayoutX(1400);
+		rightView.setLayoutX(1500);
 		rightView.setLayoutY(250);
 		canvas.getChildren().add(rightView);
-
-		Image exitImg = new Image("media/Exit180_180.png", 150, 150, true, true);
-		Image exitHoveredImg = new Image("media/ExitHovered180_180.png", 150,
-				150, true, true);
-		ImageView exitView = new ImageView(exitImg);
-		exitView.setOpacity(0.3);
-		exitView.setPreserveRatio(true);
-		exitView.setLayoutX(1335);
-		exitView.setLayoutY(710);
-		canvas.getChildren().add(exitView);
-
+                
+                leftA = new ImageView(leftArrow);
+                leftA.setLayoutX(0);
+                leftA.setLayoutY(340);
+                canvas.getChildren().add(leftA);
+                
+                rightA = new ImageView(rightArrow);
+                rightA.setLayoutX(1500);
+                rightA.setLayoutY(340);
+                canvas.getChildren().add(rightA);
+                
 		sleepTimer = new Timeline(new KeyFrame(Duration.millis(20000),
 				ae -> goToMainMenu()));
 
@@ -310,12 +345,15 @@ public class ArtGalleryExperience extends Listener implements Experience {
 
 		Image rightHandFull = new Image("media/Hold_fullHand_102_107.png", 100,
 				100, true, true);
+                
+                Image leftHandFull = new Image("media/HoldLeft_fullHand_102_107.png", 100,
+				100, true, true);
 
 		Media confirmMedia = new Media(CONFIRM_URL);
 		confirmComplete = new MediaPlayer(confirmMedia);
 		confirmComplete.setVolume(.25);
 
-		rightHandChange = new Timeline(new KeyFrame(Duration.seconds(.5),
+		rightMainExit = new Timeline(new KeyFrame(Duration.seconds(.5),
 				ae -> {
 					rightHand.setImage(rightHandFull);
 					confirmComplete.play();
@@ -323,6 +361,49 @@ public class ArtGalleryExperience extends Listener implements Experience {
 			goToMainMenu();
 		}), new KeyFrame(Duration.seconds(2), ae -> {
 			rightHand.setImage(palmRightNormal);
+		}));
+                
+                leftMainExit = new Timeline(new KeyFrame(Duration.seconds(.5),
+				ae -> {
+					leftHand.setImage(leftHandFull);
+					confirmComplete.play();
+				}), new KeyFrame(Duration.seconds(1), ae -> {
+			goToMainMenu();
+		}), new KeyFrame(Duration.seconds(2), ae -> {
+			leftHand.setImage(palmLeftNormal);
+		}));
+                
+                //Music
+                backgroundMusic = new Media(BACKGROUND_MUSIC);
+		backgroundMusicPlayer = new MediaPlayer(backgroundMusic);
+
+		fadePlay = new Timeline(new KeyFrame(Duration.ZERO,
+				ae -> backgroundMusicPlayer.play(), new KeyValue(
+						backgroundMusicPlayer.volumeProperty(), 0.0)),
+				new KeyFrame(new Duration(800), new KeyValue(
+						backgroundMusicPlayer.volumeProperty(), 0.25)));
+
+		fadeStop = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(
+				backgroundMusicPlayer.volumeProperty(), 0.25)), new KeyFrame(
+				new Duration(800), ae -> backgroundMusicPlayer.stop(),
+				new KeyValue(backgroundMusicPlayer.volumeProperty(), 0.0)));
+                
+                changeGalleryR = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
+			rightHand.setImage(rightHandFull);
+			confirmComplete.play();
+		}), new KeyFrame(Duration.seconds(1), ae -> {
+			switchGallery();
+		}), new KeyFrame(Duration.seconds(2), ae -> {
+			rightHand.setImage(palmRightNormal);
+		}));
+                
+                changeGalleryL = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
+			leftHand.setImage(leftHandFull);
+			confirmComplete.play();
+		}), new KeyFrame(Duration.seconds(1), ae -> {
+			switchGallery();
+		}), new KeyFrame(Duration.seconds(2), ae -> {
+			leftHand.setImage(palmLeftNormal);
 		}));
 
 		drawHands = new AnimationTimer() {
@@ -334,26 +415,44 @@ public class ArtGalleryExperience extends Listener implements Experience {
 				leftHand.setTranslateY(leftHandPosY);
 
 				if (Util.isBetween(810, 810 + 270, (int) rightHandPosX)
-						&& Util.isBetween(859, 859 + 63, (int) rightHandPosY)) {
-					changeGallery.play();
+						&& Util.isBetween(843.5, 843.5 + 63, (int) rightHandPosY)) {
+					changeGalleryR.play();
+				} 
+                                else if (Util.isBetween(810, 810 + 270, (int) leftHandPosX)
+						&& Util.isBetween(843.5, 843.5 + 63, (int) leftHandPosY)) {
+					changeGalleryL.play();
 				} else {
-					changeGallery.stop();
+					changeGalleryR.stop();
+                                        changeGalleryL.stop();
 					rightHand.setImage(palmRightNormal);
+                                        leftHand.setImage(palmLeftNormal);
 				}
 
-				if (Util.isBetween(1235, 1550, (int) rightHandPosX)
-						&& Util.isBetween(610, 960, (int) rightHandPosY)) {
-					if (Util.isBetween(1335, 1450, (int) rightHandPosX)
-							&& Util.isBetween(710, 860, (int) rightHandPosY)) {
+				if (Util.isBetween(1370, 1685, (int) rightHandPosX)
+						&& Util.isBetween(800, 1150, (int) rightHandPosY)) {
+					if (Util.isBetween(1470, 1585, (int) rightHandPosX)
+							&& Util.isBetween(900, 1050, (int) rightHandPosY)) {
 						exitView.setImage(exitHoveredImg);
 						exitView.setOpacity(1.0);
-						rightHandChange.play();
+                                                rightMainExit.play();
 					}
-				} else {
+				} 
+                                else if (Util.isBetween(1370, 1685, (int) leftHandPosX)
+						&& Util.isBetween(800, 1150, (int) leftHandPosY)){
+                                        if (Util.isBetween(1470, 1585, (int) leftHandPosX)
+							&& Util.isBetween(900, 1050, (int) leftHandPosY)) {
+                                                exitView.setImage(exitHoveredImg);
+						exitView.setOpacity(1.0);
+                                                leftMainExit.play();
+                                        }
+                                    
+                                } else {
 					exitView.setImage(exitImg);
 					exitView.setOpacity(0.3);
-					rightHandChange.stop();
+					rightMainExit.stop();
 					rightHand.setImage(palmRightNormal);
+                                        leftMainExit.stop();
+					leftHand.setImage(palmLeftNormal);
 				}
 			}
 		};
@@ -364,16 +463,78 @@ public class ArtGalleryExperience extends Listener implements Experience {
 				changeImg();
 			}
 		};
-
-		changeGallery = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
+                
+                rightArrowR = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
 			rightHand.setImage(rightHandFull);
 			confirmComplete.play();
 		}), new KeyFrame(Duration.seconds(1), ae -> {
-			switchGallery();
+			changeImgs.start();
 		}), new KeyFrame(Duration.seconds(2), ae -> {
 			rightHand.setImage(palmRightNormal);
 		}));
-
+                
+                rightArrowL = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
+			leftHand.setImage(leftHandFull);
+			confirmComplete.play();
+		}), new KeyFrame(Duration.seconds(1), ae -> {
+			changeImgs.start();
+		}), new KeyFrame(Duration.seconds(2), ae -> {
+			leftHand.setImage(palmLeftNormal);
+		}));
+                
+                leftArrowR = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
+			rightHand.setImage(rightHandFull);
+			confirmComplete.play();
+		}), new KeyFrame(Duration.seconds(1), ae -> {
+			changeImgs.start();
+		}), new KeyFrame(Duration.seconds(2), ae -> {
+			rightHand.setImage(palmRightNormal);
+		}));
+                
+                leftArrowL = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
+			leftHand.setImage(leftHandFull);
+			confirmComplete.play();
+		}), new KeyFrame(Duration.seconds(1), ae -> {
+			changeImgs.start();
+		}), new KeyFrame(Duration.seconds(2), ae -> {
+			leftHand.setImage(palmLeftNormal);
+		}));
+                
+                changeArrows = new AnimationTimer(){
+                        @Override
+                        public void handle(long now) {
+                               if (Util.isBetween(1500, 1500 + 100, (int) rightHandPosX)
+						&& Util.isBetween(340, 340 + 200, (int) rightHandPosY)) {
+					rightArrowR.play();
+                                        rightA.setImage(rightArrowHovered);
+				} 
+                                else if (Util.isBetween(1500, 1500 + 100, (int) leftHandPosX)
+						&& Util.isBetween(340, 340 + 200, (int) leftHandPosY)) {
+					rightArrowL.play();
+                                        rightA.setImage(rightArrowHovered);
+				} 
+                                else if (Util.isBetween(0, 0 + 100, (int) rightHandPosX)
+						&& Util.isBetween(340, 340 + 200, (int) rightHandPosY)) {
+					leftArrowR.play();
+                                        leftA.setImage(leftArrowHovered);
+				} 
+                                else if (Util.isBetween(0, 0 + 100, (int) leftHandPosX)
+						&& Util.isBetween(340, 340 + 200, (int) leftHandPosY)) {
+					leftArrowL.play();
+                                        leftA.setImage(leftArrowHovered);
+				} else {
+					rightArrowR.stop();
+                                        rightArrowL.stop();
+                                        leftArrowR.stop();
+                                        leftArrowL.stop();
+					rightHand.setImage(palmRightNormal);
+                                        leftHand.setImage(palmLeftNormal);
+                                        rightA.setImage(rightArrow);
+                                        leftA.setImage(leftArrow);
+				} 
+                        }
+                };
+                
 		textInformation = new Text();
 		textInformation.setLayoutX(400);
 		textInformation.setLayoutY(400);
@@ -401,7 +562,7 @@ public class ArtGalleryExperience extends Listener implements Experience {
 					mainView.setOpacity(0.3);
 					textInformation.setText("Title: "
 							+ imageList[imageHolder].getTitle() + "\n"
-							+ "Author: " + imageList[imageHolder].getAuthor()
+							+ "Artist: " + imageList[imageHolder].getAuthor()
 							+ "\n" + "Medium: "
 							+ imageList[imageHolder].getMedium() + "\n"
 							+ "Date: " + imageList[imageHolder].getDate());
@@ -434,15 +595,16 @@ public class ArtGalleryExperience extends Listener implements Experience {
 		drawHands.start();
 		sleepTimer.play();
 		information.start();
+                changeArrows.start();
 		controller = new Controller(this);
 
-		switch (GalleryMusic.getMusicStatus()) {
+		/*switch (GalleryMusic.getMusicStatus()) {
 		case PLAYING:
 			break;
 		default:
 			GalleryMusic.playBackgroundMusic();
 			break;
-		}
+		}*/
 	}
 
 	@Override
@@ -458,9 +620,12 @@ public class ArtGalleryExperience extends Listener implements Experience {
 
 		drawHands.stop();
 		sleepTimer.stop();
-		rightHandChange.stop();
-		changeGallery.stop();
+		rightMainExit.stop();
+                leftMainExit.stop();
+		changeGalleryR.stop();
+                changeGalleryL.stop();
 		changeImgs.stop();
+                changeArrows.stop();
 		PondMusic.pauseBackgroundMusic();
 	}
 
