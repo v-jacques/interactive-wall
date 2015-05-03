@@ -96,20 +96,20 @@ public class ArtGalleryExperience extends Listener implements Experience {
 	String BACKGROUND_MUSIC = backgroundMusicFile.toURI().toString();
 
 	Image artButton = new Image("media/galleryButton-selected 270_63 px.png",
-			270, 63, true, true);
+			270, 63, false, true);
 	Image quoteButtonHovered = new Image(
-			"media/quoteButton-selected 270_63 px.png", 270, 63, true, true);
+			"media/quoteButton-selected 270_63 px.png", 270, 63, false, true);
 	Image quoteButton = new Image("media/quoteButton270_63 px.png", 270, 63,
-			true, true);
+			false, true);
 
-	Image leftArrow = new Image("media/left arrow 100_200.png", 100, 200, true,
+	Image leftArrow = new Image("media/left arrow 100_200.png", 100, 200, false,
 			true);
 	Image leftArrowHovered = new Image("media/left arrow_hover.png", 100, 200,
-			true, true);
+			false, true);
 	Image rightArrow = new Image("media/right arrow 100_200.png", 100, 200,
-			true, true);
+			false, true);
 	Image rightArrowHovered = new Image("media/right arrow_hover.png", 100,
-			200, true, true);
+			200, false, true);
 
 	ExperienceImage[] imageList;
 
@@ -263,8 +263,6 @@ public class ArtGalleryExperience extends Listener implements Experience {
 
 		pane = new StackPane();
 		canvas = new Pane();
-		// canvas.setBackground(new Background(new BackgroundFill(Color.WHITE,
-		// CornerRadii.EMPTY, Insets.EMPTY)));
 
 		artView = new ImageView(artButton);
 		artView.setLayoutX(425);

@@ -4,20 +4,16 @@ import java.io.File;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -37,9 +33,6 @@ import com.leapmotion.leap.HandList;
 import com.leapmotion.leap.Listener;
 import com.leapmotion.leap.SwipeGesture;
 import com.leapmotion.leap.Vector;
-
-import experience.gallery.GalleryMusic;
-import javafx.animation.KeyValue;
 
 public class QuoteGalleryExperience extends Listener implements Experience {
 	Controller controller;
@@ -99,19 +92,19 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 	String BACKGROUND_MUSIC = backgroundMusicFile.toURI().toString();
 
 	Image artButtonHovered = new Image(
-			"media/galleryButton-selected 270_63 px.png", 270, 63, true, true);
+			"media/galleryButton-selected 270_63 px.png", 270, 63, false, true);
 	Image artButton = new Image("media/galleryButton 270_63 px.png", 270, 63,
-			true, true);
+			false, true);
 	Image quoteButton = new Image("media/quoteButton-selected 270_63 px.png",
-			270, 63, true, true);
+			270, 63, false, true);
 
-	Image upArrow = new Image("media/up arrow 200_80.png", 200, 80, true, true);
-	Image upArrowHovered = new Image("media/up arrow_hover.png", 200, 80, true,
+	Image upArrow = new Image("media/up arrow 200_80.png", 200, 80, false, true);
+	Image upArrowHovered = new Image("media/up arrow_hover.png", 200, 80, false,
 			true);
-	Image downArrow = new Image("media/down arrow 200_80.png", 200, 80, true,
+	Image downArrow = new Image("media/down arrow 200_80.png", 200, 80, false,
 			true);
 	Image downArrowHovered = new Image("media/down arrow_hover.png", 200, 80,
-			true, true);
+			false, true);
 
 	ExperienceQuote[] quoteList;
 
