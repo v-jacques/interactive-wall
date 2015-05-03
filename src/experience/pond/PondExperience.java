@@ -74,10 +74,7 @@ public class PondExperience extends Listener implements Experience {
 
 	Timeline rightHandChange;
 	Timeline leftHandChange;
-	MediaPlayer countPing;
 	MediaPlayer confirmComplete;
-	private File count = new File("src/media/countPing.mp3");
-	private final String COUNT_URL = count.toURI().toString();
 	private File confirm = new File("src/media/confirmComplete.mp3");
 	private final String CONFIRM_URL = confirm.toURI().toString();
 
@@ -146,10 +143,6 @@ public class PondExperience extends Listener implements Experience {
 		Image leftHandFull = new Image("media/HoldLeft_fullHand_102_107.png",
 				100, 100, true, true);
 
-		Media countMedia = new Media(COUNT_URL);
-		countPing = new MediaPlayer(countMedia);
-		countPing.setVolume(.25);
-
 		Media confirmMedia = new Media(CONFIRM_URL);
 		confirmComplete = new MediaPlayer(confirmMedia);
 		confirmComplete.setVolume(.25);
@@ -157,6 +150,7 @@ public class PondExperience extends Listener implements Experience {
 		rightHandChange = new Timeline(new KeyFrame(Duration.seconds(.5),
 				ae -> {
 					rightHand.setImage(rightHandFull);
+					confirmComplete.stop();
 					confirmComplete.play();
 				}), new KeyFrame(Duration.seconds(1), ae -> {
 			goToMainMenu();
@@ -167,6 +161,7 @@ public class PondExperience extends Listener implements Experience {
 		leftHandChange = new Timeline(new KeyFrame(Duration.seconds(.5),
 				ae -> {
 					leftHand.setImage(leftHandFull);
+					confirmComplete.stop();
 					confirmComplete.play();
 				}), new KeyFrame(Duration.seconds(1), ae -> {
 			goToMainMenu();
