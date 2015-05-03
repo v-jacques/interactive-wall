@@ -89,6 +89,8 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 			false, true);
 	Image quoteButton = new Image("media/quoteButton-selected 270_63 px.png",
 			270, 63, false, true);
+	Image quoteButtonUnselected = new Image("media/quoteButton270_63 px.png", 270, 63,
+			false, true);
 
 	Image upArrow = new Image("media/up arrow 200_80.png", 200, 80, false, true);
 	Image upArrowHovered = new Image("media/up arrow_hover.png", 200, 80,
@@ -237,6 +239,7 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 
 		Media confirmMedia = new Media(CONFIRM_URL);
 		confirmComplete = new MediaPlayer(confirmMedia);
+		confirmComplete.setCycleCount(1);
 		confirmComplete.setVolume(.25);
 
 		rightMainExit = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
@@ -260,21 +263,29 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 		changeGalleryR = new Timeline(new KeyFrame(Duration.seconds(.5),
 				ae -> {
 					rightHand.setImage(rightHandFull);
+					quoteView.setImage(quoteButtonUnselected);
+					artView.setImage(artButtonHovered);
 					confirmComplete.play();
 				}), new KeyFrame(Duration.seconds(1), ae -> {
 			switchGallery();
 		}), new KeyFrame(Duration.seconds(2), ae -> {
 			rightHand.setImage(palmRightNormal);
+			artView.setImage(artButton);
+			quoteView.setImage(quoteButton);
 		}));
 
 		changeGalleryL = new Timeline(new KeyFrame(Duration.seconds(.5),
 				ae -> {
 					leftHand.setImage(leftHandFull);
+					quoteView.setImage(quoteButtonUnselected);
+					artView.setImage(artButtonHovered);
 					confirmComplete.play();
 				}), new KeyFrame(Duration.seconds(1), ae -> {
 			switchGallery();
 		}), new KeyFrame(Duration.seconds(2), ae -> {
 			leftHand.setImage(palmLeftNormal);
+			artView.setImage(artButton);
+			quoteView.setImage(quoteButton);
 		}));
 
 		drawHands = new AnimationTimer() {
@@ -285,37 +296,32 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 				leftHand.setTranslateX(leftHandPosX);
 				leftHand.setTranslateY(leftHandPosY);
 
-				if (Util.isBetween(810, 810 + 270, (int) rightHandPosX)
-						&& Util.isBetween(843.5, 843.5 + 63,
+				if (Util.isBetween(425, 425 + 270, (int) rightHandPosX)
+						&& Util.isBetween(843, 843 + 63,
 								(int) rightHandPosY)) {
 					changeGalleryR.play();
-				} else if (Util.isBetween(810, 810 + 270, (int) leftHandPosX)
-						&& Util.isBetween(843.5, 843.5 + 63, (int) leftHandPosY)) {
+				} else if (Util.isBetween(425, 425 + 270, (int) leftHandPosX)
+						&& Util.isBetween(843, 843 + 63, (int) leftHandPosY)) {
 					changeGalleryL.play();
 				} else {
 					changeGalleryR.stop();
 					changeGalleryL.stop();
+					artView.setImage(artButton);
+					quoteView.setImage(quoteButton);
 					rightHand.setImage(palmRightNormal);
 					leftHand.setImage(palmLeftNormal);
 				}
 
-				if (Util.isBetween(1370, 1685, (int) rightHandPosX)
+				if (Util.isBetween(1370, 1500, (int) rightHandPosX)
 						&& Util.isBetween(800, 1150, (int) rightHandPosY)) {
-					if (Util.isBetween(1470, 1585, (int) rightHandPosX)
-							&& Util.isBetween(900, 1050, (int) rightHandPosY)) {
-						exitView.setImage(exitHoveredImg);
-						exitView.setOpacity(1.0);
-						rightMainExit.play();
-					}
-				} else if (Util.isBetween(1370, 1685, (int) leftHandPosX)
+					exitView.setImage(exitHoveredImg);
+					exitView.setOpacity(1.0);
+					rightMainExit.play();
+				} else if (Util.isBetween(1370, 1500, (int) leftHandPosX)
 						&& Util.isBetween(800, 1150, (int) leftHandPosY)) {
-					if (Util.isBetween(1470, 1585, (int) leftHandPosX)
-							&& Util.isBetween(900, 1050, (int) leftHandPosY)) {
-						exitView.setImage(exitHoveredImg);
-						exitView.setOpacity(1.0);
-						leftMainExit.play();
-					}
-
+					exitView.setImage(exitHoveredImg);
+					exitView.setOpacity(1.0);
+					leftMainExit.play();
 				} else {
 					exitView.setImage(exitImg);
 					exitView.setOpacity(0.3);
