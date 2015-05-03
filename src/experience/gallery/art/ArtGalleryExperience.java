@@ -4,19 +4,15 @@ import java.io.File;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -37,9 +33,7 @@ import com.leapmotion.leap.Listener;
 import com.leapmotion.leap.SwipeGesture;
 import com.leapmotion.leap.Vector;
 
-import experience.gallery.GalleryMusic;
 import experience.pond.PondMusic;
-import javafx.animation.KeyValue;
 
 public class ArtGalleryExperience extends Listener implements Experience {
 	Controller controller;
@@ -532,13 +526,9 @@ public class ArtGalleryExperience extends Listener implements Experience {
 		};
 
 		textInformation = new Text();
-		textInformation.setLayoutX(400);
-		textInformation.setLayoutY(400);
 		textInformation.setFont(Font.font(null, FontWeight.NORMAL, 40));
 
 		TextFlow textFlow = new TextFlow();
-		textFlow.setLayoutX(400);
-		textFlow.setLayoutY(350);
 		textFlow.getChildren().add(textInformation);
 
 		canvas.getChildren().add(textFlow);
@@ -562,9 +552,9 @@ public class ArtGalleryExperience extends Listener implements Experience {
 							+ "\n" + "Medium: "
 							+ imageList[imageHolder].getMedium() + "\n"
 							+ "Date: " + imageList[imageHolder].getDate());
-					textFlow.setMaxSize(imageList[imageHolder].getWidth(),
-							imageList[imageHolder].getHeight());
-					textFlow.setLayoutX(mainView.getLayoutX());
+					textFlow.setMaxSize(imageList[imageHolder].getWidth() - 80,
+							imageList[imageHolder].getHeight() / 2);
+					textFlow.setLayoutX(mainView.getLayoutX() + 40);
 					textFlow.setLayoutY(mainImg.getHeight() / 4
 							+ mainView.getLayoutY());
 				} else {
