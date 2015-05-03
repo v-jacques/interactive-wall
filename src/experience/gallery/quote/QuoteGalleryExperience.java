@@ -239,11 +239,11 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 
 		Media confirmMedia = new Media(CONFIRM_URL);
 		confirmComplete = new MediaPlayer(confirmMedia);
-		confirmComplete.setCycleCount(1);
 		confirmComplete.setVolume(.25);
 
 		rightMainExit = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
 			rightHand.setImage(rightHandFull);
+			confirmComplete.stop();
 			confirmComplete.play();
 		}), new KeyFrame(Duration.seconds(1), ae -> {
 			goToMainMenu();
@@ -253,6 +253,7 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 
 		leftMainExit = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
 			leftHand.setImage(leftHandFull);
+			confirmComplete.stop();
 			confirmComplete.play();
 		}), new KeyFrame(Duration.seconds(1), ae -> {
 			goToMainMenu();
@@ -265,6 +266,7 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 					rightHand.setImage(rightHandFull);
 					quoteView.setImage(quoteButtonUnselected);
 					artView.setImage(artButtonHovered);
+					confirmComplete.stop();
 					confirmComplete.play();
 				}), new KeyFrame(Duration.seconds(1), ae -> {
 			switchGallery();
@@ -279,6 +281,7 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 					leftHand.setImage(leftHandFull);
 					quoteView.setImage(quoteButtonUnselected);
 					artView.setImage(artButtonHovered);
+					confirmComplete.stop();
 					confirmComplete.play();
 				}), new KeyFrame(Duration.seconds(1), ae -> {
 			switchGallery();
@@ -342,6 +345,7 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 
 		upArrowR = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
 			rightHand.setImage(rightHandFull);
+			confirmComplete.stop();
 			confirmComplete.play();
 		}), new KeyFrame(Duration.seconds(1), ae -> {
 			changeQuotes.start();
@@ -351,6 +355,7 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 
 		upArrowL = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
 			leftHand.setImage(leftHandFull);
+			confirmComplete.stop();
 			confirmComplete.play();
 		}), new KeyFrame(Duration.seconds(1), ae -> {
 			changeQuotes.start();
@@ -360,6 +365,7 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 
 		downArrowR = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
 			rightHand.setImage(rightHandFull);
+			confirmComplete.stop();
 			confirmComplete.play();
 		}), new KeyFrame(Duration.seconds(1), ae -> {
 			changeQuotes.start();
@@ -369,6 +375,7 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 
 		downArrowL = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
 			leftHand.setImage(leftHandFull);
+			confirmComplete.stop();
 			confirmComplete.play();
 		}), new KeyFrame(Duration.seconds(1), ae -> {
 			changeQuotes.start();
