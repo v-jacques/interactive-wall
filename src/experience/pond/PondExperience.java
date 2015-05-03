@@ -73,6 +73,7 @@ public class PondExperience extends Listener implements Experience {
 			.observableArrayList();
 
 	Timeline rightHandChange;
+	Timeline leftHandChange;
 	MediaPlayer countPing;
 	MediaPlayer confirmComplete;
 	private File count = new File("src/media/countPing.mp3");
@@ -134,8 +135,6 @@ public class PondExperience extends Listener implements Experience {
 		rightHand = new ImageView(palmRightNormal);
 		rightHand.setVisible(false);
 
-		// RIGHT Hand 2 1 0 Images
-
 		Image rightHandFull = new Image("media/Hold_fullHand_102_107.png", 100,
 				100, true, true);
 
@@ -143,6 +142,9 @@ public class PondExperience extends Listener implements Experience {
 				true);
 		leftHand = new ImageView(palmLeftNormal);
 		leftHand.setVisible(false);
+
+		Image leftHandFull = new Image("media/HoldLeft_fullHand_102_107.png",
+				100, 100, true, true);
 
 		Media countMedia = new Media(COUNT_URL);
 		countPing = new MediaPlayer(countMedia);
@@ -160,7 +162,16 @@ public class PondExperience extends Listener implements Experience {
 			goToMainMenu();
 		}), new KeyFrame(Duration.seconds(2), ae -> {
 			rightHand.setImage(palmRightNormal);
+		}));
 
+		leftHandChange = new Timeline(new KeyFrame(Duration.seconds(.5),
+				ae -> {
+					leftHand.setImage(leftHandFull);
+					confirmComplete.play();
+				}), new KeyFrame(Duration.seconds(1), ae -> {
+			goToMainMenu();
+		}), new KeyFrame(Duration.seconds(2), ae -> {
+			leftHand.setImage(palmLeftNormal);
 		}));
 
 		drawHands = new AnimationTimer() {
@@ -180,12 +191,26 @@ public class PondExperience extends Listener implements Experience {
 						exitView.setOpacity(1.0);
 						rightHandChange.play();
 					}
+				} else if (Util.isBetween(1235, 1550, (int) leftHandPosX)
+						&& Util.isBetween(610, 960, (int) leftHandPosY)) {
+					leftHand.setVisible(true);
+					if (Util.isBetween(1335, 1450, (int) leftHandPosX)
+							&& Util.isBetween(710, 860, (int) leftHandPosY)) {
+						exitView.setImage(exitHoveredImg);
+						exitView.setOpacity(1.0);
+						leftHandChange.play();
+					}
 				} else {
 					exitView.setImage(exitImg);
 					exitView.setOpacity(0.3);
+
 					rightHand.setVisible(false);
 					rightHandChange.stop();
 					rightHand.setImage(palmRightNormal);
+
+					leftHand.setVisible(false);
+					leftHandChange.stop();
+					leftHand.setImage(palmLeftNormal);
 				}
 			}
 		};
@@ -206,8 +231,6 @@ public class PondExperience extends Listener implements Experience {
 								Point2D d = canvas.sceneToLocal(t1.getX(),
 										t1.getY());
 								double dx = d.getX(), dy = d.getY();
-								// System.out.println("x " + dx);
-								// System.out.println("h " + rightHandPosX);
 
 								if (dx >= 0d && dx <= canvas.getWidth()
 										&& dy >= 0d && dy <= canvas.getHeight()) {
