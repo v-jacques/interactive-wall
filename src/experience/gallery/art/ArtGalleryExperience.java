@@ -314,11 +314,13 @@ public class ArtGalleryExperience extends Listener implements Experience {
 
 		rightView.setLayoutX(1500);
 		rightView.setLayoutY(250);
+		rightView.setOpacity(0.5);
 		canvas.getChildren().add(rightView);
 
 		leftA = new ImageView(leftArrow);
 		leftA.setLayoutX(0);
 		leftA.setLayoutY(340);
+		leftView.setOpacity(0.5);
 		canvas.getChildren().add(leftA);
 
 		rightA = new ImageView(rightArrow);
