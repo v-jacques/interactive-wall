@@ -91,8 +91,8 @@ public class ArtGalleryExperience extends Listener implements Experience {
 			"media/quoteButton-selected 270_63 px.png", 270, 63, false, true);
 	Image quoteButton = new Image("media/quoteButton270_63 px.png", 270, 63,
 			false, true);
-	Image artButtonUnselected = new Image("media/galleryButton 270_63 px.png", 270, 63,
-			false, true);
+	Image artButtonUnselected = new Image("media/galleryButton 270_63 px.png",
+			270, 63, false, true);
 
 	Image leftArrow = new Image("media/left arrow 100_200.png", 100, 200,
 			false, true);
@@ -443,9 +443,10 @@ public class ArtGalleryExperience extends Listener implements Experience {
 
 		rightArrowR = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
 			rightHand.setImage(rightHandFull);
+		}), new KeyFrame(Duration.seconds(1), ae -> {
 			confirmComplete.stop();
 			confirmComplete.play();
-		}), new KeyFrame(Duration.seconds(1), ae -> {
+			direction = true;
 			changeImgs.start();
 		}), new KeyFrame(Duration.seconds(2), ae -> {
 			rightHand.setImage(palmRightNormal);
@@ -453,9 +454,10 @@ public class ArtGalleryExperience extends Listener implements Experience {
 
 		rightArrowL = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
 			leftHand.setImage(leftHandFull);
+		}), new KeyFrame(Duration.seconds(1), ae -> {
 			confirmComplete.stop();
 			confirmComplete.play();
-		}), new KeyFrame(Duration.seconds(1), ae -> {
+			direction = true;
 			changeImgs.start();
 		}), new KeyFrame(Duration.seconds(2), ae -> {
 			leftHand.setImage(palmLeftNormal);
@@ -463,9 +465,10 @@ public class ArtGalleryExperience extends Listener implements Experience {
 
 		leftArrowR = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
 			rightHand.setImage(rightHandFull);
+		}), new KeyFrame(Duration.seconds(1), ae -> {
+			direction = false;
 			confirmComplete.stop();
 			confirmComplete.play();
-		}), new KeyFrame(Duration.seconds(1), ae -> {
 			changeImgs.start();
 		}), new KeyFrame(Duration.seconds(2), ae -> {
 			rightHand.setImage(palmRightNormal);
@@ -473,9 +476,10 @@ public class ArtGalleryExperience extends Listener implements Experience {
 
 		leftArrowL = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
 			leftHand.setImage(leftHandFull);
+		}), new KeyFrame(Duration.seconds(1), ae -> {
+			direction = false;
 			confirmComplete.stop();
 			confirmComplete.play();
-		}), new KeyFrame(Duration.seconds(1), ae -> {
 			changeImgs.start();
 		}), new KeyFrame(Duration.seconds(2), ae -> {
 			leftHand.setImage(palmLeftNormal);

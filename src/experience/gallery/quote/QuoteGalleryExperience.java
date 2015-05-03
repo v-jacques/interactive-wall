@@ -89,8 +89,8 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 			false, true);
 	Image quoteButton = new Image("media/quoteButton-selected 270_63 px.png",
 			270, 63, false, true);
-	Image quoteButtonUnselected = new Image("media/quoteButton270_63 px.png", 270, 63,
-			false, true);
+	Image quoteButtonUnselected = new Image("media/quoteButton270_63 px.png",
+			270, 63, false, true);
 
 	Image upArrow = new Image("media/up arrow 200_80.png", 200, 80, false, true);
 	Image upArrowHovered = new Image("media/up arrow_hover.png", 200, 80,
@@ -300,8 +300,7 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 				leftHand.setTranslateY(leftHandPosY);
 
 				if (Util.isBetween(425, 425 + 270, (int) rightHandPosX)
-						&& Util.isBetween(843, 843 + 63,
-								(int) rightHandPosY)) {
+						&& Util.isBetween(843, 843 + 63, (int) rightHandPosY)) {
 					changeGalleryR.play();
 				} else if (Util.isBetween(425, 425 + 270, (int) leftHandPosX)
 						&& Util.isBetween(843, 843 + 63, (int) leftHandPosY)) {
@@ -345,9 +344,10 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 
 		upArrowR = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
 			rightHand.setImage(rightHandFull);
+		}), new KeyFrame(Duration.seconds(1), ae -> {
+			direction = true;
 			confirmComplete.stop();
 			confirmComplete.play();
-		}), new KeyFrame(Duration.seconds(1), ae -> {
 			changeQuotes.start();
 		}), new KeyFrame(Duration.seconds(2), ae -> {
 			rightHand.setImage(palmRightNormal);
@@ -355,9 +355,10 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 
 		upArrowL = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
 			leftHand.setImage(leftHandFull);
+		}), new KeyFrame(Duration.seconds(1), ae -> {
+			direction = true;
 			confirmComplete.stop();
 			confirmComplete.play();
-		}), new KeyFrame(Duration.seconds(1), ae -> {
 			changeQuotes.start();
 		}), new KeyFrame(Duration.seconds(2), ae -> {
 			leftHand.setImage(palmLeftNormal);
@@ -365,9 +366,10 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 
 		downArrowR = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
 			rightHand.setImage(rightHandFull);
+		}), new KeyFrame(Duration.seconds(1), ae -> {
+			direction = false;
 			confirmComplete.stop();
 			confirmComplete.play();
-		}), new KeyFrame(Duration.seconds(1), ae -> {
 			changeQuotes.start();
 		}), new KeyFrame(Duration.seconds(2), ae -> {
 			rightHand.setImage(palmRightNormal);
@@ -375,9 +377,10 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 
 		downArrowL = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
 			leftHand.setImage(leftHandFull);
+		}), new KeyFrame(Duration.seconds(1), ae -> {
+			direction = false;
 			confirmComplete.stop();
 			confirmComplete.play();
-		}), new KeyFrame(Duration.seconds(1), ae -> {
 			changeQuotes.start();
 		}), new KeyFrame(Duration.seconds(2), ae -> {
 			leftHand.setImage(palmLeftNormal);
@@ -386,19 +389,19 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 		changeArrows = new AnimationTimer() {
 			@Override
 			public void handle(long now) {
-				if (Util.isBetween(600, 600 + 200, (int) rightHandPosX)
+				if (Util.isBetween(700, 700 + 200, (int) rightHandPosX)
 						&& Util.isBetween(40, 40 + 80, (int) rightHandPosY)) {
 					upArrowR.play();
 					upA.setImage(upArrowHovered);
-				} else if (Util.isBetween(600, 600 + 200, (int) leftHandPosX)
+				} else if (Util.isBetween(700, 700 + 200, (int) leftHandPosX)
 						&& Util.isBetween(40, 40 + 80, (int) leftHandPosY)) {
 					upArrowL.play();
 					upA.setImage(upArrowHovered);
-				} else if (Util.isBetween(600, 600 + 200, (int) rightHandPosX)
+				} else if (Util.isBetween(700, 700 + 200, (int) rightHandPosX)
 						&& Util.isBetween(650, 650 + 80, (int) rightHandPosY)) {
 					downArrowR.play();
 					downA.setImage(downArrowHovered);
-				} else if (Util.isBetween(600, 600 + 200, (int) leftHandPosX)
+				} else if (Util.isBetween(700, 700 + 200, (int) leftHandPosX)
 						&& Util.isBetween(650, 650 + 80, (int) leftHandPosY)) {
 					downArrowL.play();
 					downA.setImage(downArrowHovered);
