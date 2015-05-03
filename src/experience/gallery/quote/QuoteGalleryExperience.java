@@ -224,12 +224,12 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 		canvas.getChildren().addAll(bottomFlow, mainFlow, topFlow);
 
 		upA = new ImageView(upArrow);
-		upA.setLayoutX(600);
+		upA.setLayoutX(700);
 		upA.setLayoutY(40);
 		canvas.getChildren().add(upA);
 
 		downA = new ImageView(downArrow);
-		downA.setLayoutX(600);
+		downA.setLayoutX(700);
 		downA.setLayoutY(650);
 		canvas.getChildren().add(downA);
 
