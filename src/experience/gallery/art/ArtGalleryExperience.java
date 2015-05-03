@@ -4,7 +4,6 @@ import java.io.File;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -32,8 +31,6 @@ import com.leapmotion.leap.HandList;
 import com.leapmotion.leap.Listener;
 import com.leapmotion.leap.SwipeGesture;
 import com.leapmotion.leap.Vector;
-
-import experience.pond.PondMusic;
 
 public class ArtGalleryExperience extends Listener implements Experience {
 	Controller controller;
@@ -69,9 +66,6 @@ public class ArtGalleryExperience extends Listener implements Experience {
 	AnimationTimer information;
 	AnimationTimer changeArrows;
 
-	Media backgroundMusic;
-	MediaPlayer backgroundMusicPlayer;
-
 	Text textInformation;
 
 	double rightHandPosX = -50.0;
@@ -91,10 +85,6 @@ public class ArtGalleryExperience extends Listener implements Experience {
 	private File confirm = new File("src/media/confirmComplete.mp3");
 	private final String CONFIRM_URL = confirm.toURI().toString();
 
-	File backgroundMusicFile = new File(
-			"src/media/John_Lewis_Grant_-_10_-_Bach_Prelude___Fugue_10.mp3");
-	String BACKGROUND_MUSIC = backgroundMusicFile.toURI().toString();
-
 	Image artButton = new Image("media/galleryButton-selected 270_63 px.png",
 			270, 63, false, true);
 	Image quoteButtonHovered = new Image(
@@ -102,8 +92,8 @@ public class ArtGalleryExperience extends Listener implements Experience {
 	Image quoteButton = new Image("media/quoteButton270_63 px.png", 270, 63,
 			false, true);
 
-	Image leftArrow = new Image("media/left arrow 100_200.png", 100, 200, false,
-			true);
+	Image leftArrow = new Image("media/left arrow 100_200.png", 100, 200,
+			false, true);
 	Image leftArrowHovered = new Image("media/left arrow_hover.png", 100, 200,
 			false, true);
 	Image rightArrow = new Image("media/right arrow 100_200.png", 100, 200,
@@ -365,21 +355,6 @@ public class ArtGalleryExperience extends Listener implements Experience {
 			leftHand.setImage(palmLeftNormal);
 		}));
 
-		// Music
-		backgroundMusic = new Media(BACKGROUND_MUSIC);
-		backgroundMusicPlayer = new MediaPlayer(backgroundMusic);
-
-		fadePlay = new Timeline(new KeyFrame(Duration.ZERO,
-				ae -> backgroundMusicPlayer.play(), new KeyValue(
-						backgroundMusicPlayer.volumeProperty(), 0.0)),
-				new KeyFrame(new Duration(800), new KeyValue(
-						backgroundMusicPlayer.volumeProperty(), 0.25)));
-
-		fadeStop = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(
-				backgroundMusicPlayer.volumeProperty(), 0.25)), new KeyFrame(
-				new Duration(800), ae -> backgroundMusicPlayer.stop(),
-				new KeyValue(backgroundMusicPlayer.volumeProperty(), 0.0)));
-
 		changeGalleryR = new Timeline(new KeyFrame(Duration.seconds(.5),
 				ae -> {
 					rightHand.setImage(rightHandFull);
@@ -583,11 +558,7 @@ public class ArtGalleryExperience extends Listener implements Experience {
 		information.start();
 		changeArrows.start();
 		controller = new Controller(this);
-
-		/*
-		 * switch (GalleryMusic.getMusicStatus()) { case PLAYING: break;
-		 * default: GalleryMusic.playBackgroundMusic(); break; }
-		 */
+		ArtGalleryMusic.playBackgroundMusic();
 	}
 
 	@Override
@@ -609,7 +580,7 @@ public class ArtGalleryExperience extends Listener implements Experience {
 		changeGalleryL.stop();
 		changeImgs.stop();
 		changeArrows.stop();
-		PondMusic.pauseBackgroundMusic();
+		ArtGalleryMusic.pauseBackgroundMusic();
 	}
 
 	@Override

@@ -4,7 +4,6 @@ import java.io.File;
 
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.scene.Node;
 import javafx.scene.effect.GaussianBlur;
@@ -67,9 +66,6 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 	AnimationTimer changeQuotes;
 	AnimationTimer changeArrows;
 
-	Media backgroundMusic;
-	MediaPlayer backgroundMusicPlayer;
-
 	double rightHandPosX = -50.0;
 	double rightHandPosY = -50.0;
 	double realRightHandPosX = -50.0;
@@ -87,10 +83,6 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 	private File confirm = new File("src/media/confirmComplete.mp3");
 	private final String CONFIRM_URL = confirm.toURI().toString();
 
-	File backgroundMusicFile = new File(
-			"src/media/John_Lewis_Grant_-_22_-_Bach_Prelude___Fugue_22.mp3");
-	String BACKGROUND_MUSIC = backgroundMusicFile.toURI().toString();
-
 	Image artButtonHovered = new Image(
 			"media/galleryButton-selected 270_63 px.png", 270, 63, false, true);
 	Image artButton = new Image("media/galleryButton 270_63 px.png", 270, 63,
@@ -99,8 +91,8 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 			270, 63, false, true);
 
 	Image upArrow = new Image("media/up arrow 200_80.png", 200, 80, false, true);
-	Image upArrowHovered = new Image("media/up arrow_hover.png", 200, 80, false,
-			true);
+	Image upArrowHovered = new Image("media/up arrow_hover.png", 200, 80,
+			false, true);
 	Image downArrow = new Image("media/down arrow 200_80.png", 200, 80, false,
 			true);
 	Image downArrowHovered = new Image("media/down arrow_hover.png", 200, 80,
@@ -265,20 +257,6 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 			leftHand.setImage(palmLeftNormal);
 		}));
 
-		backgroundMusic = new Media(BACKGROUND_MUSIC);
-		backgroundMusicPlayer = new MediaPlayer(backgroundMusic);
-
-		fadePlay = new Timeline(new KeyFrame(Duration.ZERO,
-				ae -> backgroundMusicPlayer.play(), new KeyValue(
-						backgroundMusicPlayer.volumeProperty(), 0.0)),
-				new KeyFrame(new Duration(800), new KeyValue(
-						backgroundMusicPlayer.volumeProperty(), 0.25)));
-
-		fadeStop = new Timeline(new KeyFrame(Duration.ZERO, new KeyValue(
-				backgroundMusicPlayer.volumeProperty(), 0.25)), new KeyFrame(
-				new Duration(800), ae -> backgroundMusicPlayer.stop(),
-				new KeyValue(backgroundMusicPlayer.volumeProperty(), 0.0)));
-
 		changeGalleryR = new Timeline(new KeyFrame(Duration.seconds(.5),
 				ae -> {
 					rightHand.setImage(rightHandFull);
@@ -442,11 +420,7 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 		sleepTimer.play();
 		changeArrows.start();
 		controller = new Controller(this);
-
-		/*
-		 * switch (GalleryMusic.getMusicStatus()) { case PLAYING: break;
-		 * default: GalleryMusic.playBackgroundMusic(); break; }
-		 */
+		QuoteGalleryMusic.playBackgroundMusic();
 	}
 
 	@Override
@@ -468,6 +442,7 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 		changeGalleryL.stop();
 		changeQuotes.stop();
 		changeArrows.stop();
+		QuoteGalleryMusic.pauseBackgroundMusic();
 	}
 
 	@Override

@@ -1,4 +1,4 @@
-package experience.gallery;
+package experience.gallery.quote;
 
 import java.io.File;
 
@@ -10,10 +10,10 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer.Status;
 import javafx.util.Duration;
 
-public class GalleryMusic {
+public class QuoteGalleryMusic {
 
 	private static File background = new File(
-			"src/media/John_Lewis_Grant_-_22_-_Bach_Prelude___Fugue_22.mp3");
+			"src/media/John_Lewis_Grant_-_10_-_Bach_Prelude___Fugue_10.mp3");
 	private static final String BACKGROUND_MUSIC = background.toURI()
 			.toString();
 	private static Media backgroundMusic = new Media(BACKGROUND_MUSIC);
