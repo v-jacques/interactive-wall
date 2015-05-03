@@ -190,7 +190,7 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 		bottomQ.setEffect(new GaussianBlur());
 		bottomQ.setOpacity(0.3);
 
-		mainQ.setFont(Font.font(null, FontWeight.NORMAL, 40));
+		mainQ.setFont(Font.font(null, FontWeight.NORMAL, 50));
 
 		topQ.setFont(Font.font(null, FontWeight.NORMAL, 40));
 		topQ.setEffect(new GaussianBlur());
@@ -203,9 +203,9 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 		bottomFlow.setLayoutY(650);
 
 		TextFlow mainFlow = new TextFlow();
-		mainFlow.setMaxSize(800, 400);
+		mainFlow.setMaxSize(1200, 400);
 		mainFlow.getChildren().addAll(mainQ);
-		mainFlow.setLayoutX(400);
+		mainFlow.setLayoutX(200);
 		mainFlow.setLayoutY(350);
 
 		TextFlow topFlow = new TextFlow();

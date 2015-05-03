@@ -65,7 +65,7 @@ public class InteractiveWall extends Application {
 		// mainContainer.setExperience(SLEEP_MODE);
 		// mainContainer.setExperience(POND);
 		// mainContainer.setExperience(FIREWORK);
-		mainContainer.setExperience(GALLERY);
+		mainContainer.setExperience(GALLERY_QUOTE);
 
 		Scene main = new Scene(mainContainer, 1600, 1000);
 		main.setFill(Color.BLACK);
