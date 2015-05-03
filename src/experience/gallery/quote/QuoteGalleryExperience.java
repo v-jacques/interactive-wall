@@ -157,8 +157,6 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 
 		pane = new StackPane();
 		canvas = new Pane();
-		// canvas.setBackground(new Background(new BackgroundFill(Color.WHITE,
-		// CornerRadii.EMPTY, Insets.EMPTY)));
 
 		artView = new ImageView(artButton);
 		artView.setLayoutX(425);
@@ -197,11 +195,13 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 
 		bottomQ.setFont(Font.font(null, FontWeight.NORMAL, 40));
 		bottomQ.setEffect(new GaussianBlur());
+		bottomQ.setOpacity(0.3);
 
 		mainQ.setFont(Font.font(null, FontWeight.NORMAL, 40));
 
 		topQ.setFont(Font.font(null, FontWeight.NORMAL, 40));
 		topQ.setEffect(new GaussianBlur());
+		topQ.setOpacity(0.3);
 
 		TextFlow bottomFlow = new TextFlow();
 		bottomFlow.setMaxSize(800, 400);
