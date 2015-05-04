@@ -147,12 +147,12 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 
 		artView = new ImageView(artButton);
 		artView.setLayoutX(425);
-		artView.setLayoutY(843.5);
+		artView.setLayoutY(873);
 		canvas.getChildren().add(artView);
 
 		quoteView = new ImageView(quoteButton);
 		quoteView.setLayoutX(810);
-		quoteView.setLayoutY(843.5);
+		quoteView.setLayoutY(873);
 		canvas.getChildren().add(quoteView);
 
 		Image backImg = new Image("media/background_gallery.png", 1600, 1000,
@@ -217,7 +217,7 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 
 		downA = new ImageView(downArrow);
 		downA.setLayoutX(700);
-		downA.setLayoutY(650);
+		downA.setLayoutY(680);
 		canvas.getChildren().add(downA);
 
 		sleepTimer = new Timeline(new KeyFrame(Duration.millis(20000),

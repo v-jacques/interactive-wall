@@ -258,12 +258,12 @@ public class ArtGalleryExperience extends Listener implements Experience {
 
 		artView = new ImageView(artButton);
 		artView.setLayoutX(425);
-		artView.setLayoutY(843);
+		artView.setLayoutY(873);
 		canvas.getChildren().add(artView);
 
 		quoteView = new ImageView(quoteButton);
 		quoteView.setLayoutX(810);
-		quoteView.setLayoutY(843);
+		quoteView.setLayoutY(873);
 		canvas.getChildren().add(quoteView);
 
 		Image backImg = new Image("media/background_gallery.png", 1600, 1000,
