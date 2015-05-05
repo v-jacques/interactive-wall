@@ -514,7 +514,7 @@ public class ArtGalleryExperience extends Listener implements Experience {
 		};
 
 		textInformation = new Text();
-		textInformation.setFont(Font.font(null, FontWeight.NORMAL, 40));
+		textInformation.setFont(Font.font("Avenir", FontWeight.NORMAL, 40));
 
 		TextFlow textFlow = new TextFlow();
 		textFlow.getChildren().add(textInformation);

@@ -180,13 +180,13 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 		topQ = new Text(quoteList[quoteHolder + 1].getQuote() + "\n- "
 				+ quoteList[quoteHolder + 1].getAuthor());
 
-		bottomQ.setFont(Font.font(null, FontWeight.NORMAL, 40));
+		bottomQ.setFont(Font.font("Avenir", FontWeight.NORMAL, 40));
 		bottomQ.setEffect(new GaussianBlur());
 		bottomQ.setOpacity(0.3);
 
-		mainQ.setFont(Font.font(null, FontWeight.NORMAL, 50));
+		mainQ.setFont(Font.font("Avenir", FontWeight.NORMAL, 50));
 
-		topQ.setFont(Font.font(null, FontWeight.NORMAL, 40));
+		topQ.setFont(Font.font("Avenir", FontWeight.NORMAL, 40));
 		topQ.setEffect(new GaussianBlur());
 		topQ.setOpacity(0.3);
 
