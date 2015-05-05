@@ -410,8 +410,8 @@ public class ArtGalleryExperience extends Listener implements Experience {
 					changeGalleryL.stop();
 					artView.setImage(artButton);
 					quoteView.setImage(quoteButton);
-					rightHand.setImage(palmRightNormal);
-					leftHand.setImage(palmLeftNormal);
+					//rightHand.setImage(palmRightNormal);
+					//leftHand.setImage(palmLeftNormal);
 				}
 
 				if (Util.isBetween(1353,1533, (int) rightHandPosX)
