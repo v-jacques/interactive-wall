@@ -443,7 +443,7 @@ public class BlockExperience extends Listener implements Experience {
 		WorldModel.addWall(3.0f,5.0f,0.25f,10.0f);
 		Rectangle left = new Rectangle();
 		left.setWidth(WorldModel.fromMetersToPixels(0.25f));
-		left.setHeight(WorldModel.fromMetersToPixels(9.0f));
+		left.setHeight(WorldModel.fromMetersToPixels(10.0f));
 		Stop[] stops = new Stop[] { new Stop(0, new Color(1,1,1,0.0)), new Stop(1, Color.CYAN)};
         LinearGradient lg1 = new LinearGradient(0, 0, 0, 1, true, CycleMethod.REFLECT, stops);
 		left.setFill(lg1);
@@ -451,18 +451,18 @@ public class BlockExperience extends Listener implements Experience {
 		left.setOpacity(0.70);
 		left.setEffect(new GaussianBlur());
 		left.setLayoutX(WorldModel.fromJPosXToSPosX(3.00f));
-		left.setLayoutY(WorldModel.fromJPosYToSPosY(10.5f));
+		left.setLayoutY(WorldModel.fromJPosYToSPosY(10.75f));
 		
 		WorldModel.addWall(13f,5.0f,0.25f,10.0f);
 		Rectangle right = new Rectangle();
 		right.setWidth(WorldModel.fromMetersToPixels(0.25f));
-		right.setHeight(WorldModel.fromMetersToPixels(9.0f));
+		right.setHeight(WorldModel.fromMetersToPixels(10.0f));
 		right.setFill(lg1);
 		right.setStroke(Color.LIGHTCYAN);
 		right.setOpacity(0.70);
 		right.setEffect(new GaussianBlur());
 		right.setLayoutX(WorldModel.fromJPosXToSPosX(12.75f));
-		right.setLayoutY(WorldModel.fromJPosYToSPosY(10.5f));
+		right.setLayoutY(WorldModel.fromJPosYToSPosY(10.75f));
 		
         
         /* DRAWING THE BLOCKS */        
@@ -603,7 +603,7 @@ public class BlockExperience extends Listener implements Experience {
 			pointPosX = Util.leapXtoPanelX(extended.get(0).stabilizedTipPosition().getX());
 			pointPosY = Util.leapYToPanelY(extended.get(0).stabilizedTipPosition().getY());
 			
-			if(pointPosX > 325 && pointPosX< 1325&& pointPosY > 75 && pointPosY< 825){
+			if(pointPosX > 325 && pointPosX< 1325&& pointPosY > 25 && pointPosY< 900){
 				// USER IS INSIDE BOUNDS 
 			for(int i = 0 ; i< arrayBlocks.size(); i++){
 				Block current = arrayBlocks.get(i);
