@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.scene.*;
 import javafx.stage.Stage;
 import javafx.animation.Timeline;
+import javafx.animation.FadeTransition;
 import javafx.scene.effect.*;
 import javafx.scene.paint.*;
 import javafx.scene.layout.*;
@@ -57,10 +58,14 @@ public class FireworkExperience extends Listener implements Experience {
     ImageView rightHand;
     ImageView leftHand;
     ImageView background;
+    ImageView dialog;
     ImageView foreground;
     ImageView[] fingerTips = new ImageView[10];
     FingerPoint[] fingerTipLocation = new FingerPoint[10];
 
+    FadeTransition intro;
+    FadeTransition start;
+    
     GraphicsContext gc;
     MediaPlayer countPing;
     MediaPlayer confirmComplete;
@@ -113,7 +118,7 @@ public class FireworkExperience extends Listener implements Experience {
             fingerTips[i] = new ImageView(new Image("media/tap.png", 50, 50,
                     true, true));
             fingerTips[i].setVisible(true);
-            fingerTips[i].relocate(i * 10, 100);
+            fingerTips[i].relocate(-100, -100);
         }
 
         colors = new Paint[181];
@@ -165,6 +170,22 @@ public class FireworkExperience extends Listener implements Experience {
         exitView.setLayoutX(1335);
         exitView.setLayoutY(710);
 
+        Image introDialog = new Image("media/fireworkinstruction.png", 1600, 1000,
+				true, true);
+		dialog = new ImageView(introDialog);
+		dialog.setPreserveRatio(true);
+        dialog.setOpacity(0.0);
+        intro =  new FadeTransition(Duration.millis(3000), dialog);
+		intro.setFromValue(1.0);
+		intro.setToValue(0.0);		
+		intro.setAutoReverse(true);	
+		intro.setDelay(Duration.millis(5000));
+        
+         start =  new FadeTransition(Duration.millis(1000), dialog);
+		start.setFromValue(0.0);
+		start.setToValue(1.0);		
+		start.setAutoReverse(true);	
+        
         rightHandChange = new Timeline(new KeyFrame(Duration.seconds(.5),
                 ae -> {
                     rightHand.setImage(rightHandFull);
@@ -267,6 +288,7 @@ public class FireworkExperience extends Listener implements Experience {
                     exitView.setImage(exitImg);
                     exitView.setOpacity(0.3);
                     rightHand.setVisible(false);
+                    leftHand.setVisible(false);
                     rightHandChange.stop();
                     rightMainExit.stop();
                     rightHand.setImage(palmRightNormal);
@@ -297,8 +319,10 @@ public class FireworkExperience extends Listener implements Experience {
         for (int i = 0; i < fingerTips.length; i++) {
             pane.getChildren().add(fingerTips[i]);
         }
-
-        pane.getChildren().addAll(rightHand, leftHand);
+        BorderPane introPane = new BorderPane();
+		introPane.setCenter(dialog);
+        
+        pane.getChildren().addAll(rightHand, leftHand,introPane);
     }
 
     private void drawFireworks(GraphicsContext gc) {
@@ -451,7 +475,7 @@ public class FireworkExperience extends Listener implements Experience {
 
     public void onConnect(Controller controller) {
         controller.enableGesture(Gesture.Type.TYPE_SCREEN_TAP);
-        controller.config().setFloat("Gestures.ScreenTap.MinDistance", -3f);
+        controller.config().setFloat("Gestures.ScreenTap.MinDistance", 3f);
         controller.config().setFloat("Gestures.ScreenTap.MinForwardVelocity", 1.0f);
         controller.config().setFloat("Gestures.ScreenTap.HistorySeconds", .25f);
         controller.config().save();
@@ -518,6 +542,9 @@ public class FireworkExperience extends Listener implements Experience {
 
     @Override
     public void startExperience() {
+               start.play();
+
+        intro.play();
         timer.start();
         drawHands.start();
         fadePlay.play();
@@ -529,7 +556,7 @@ public class FireworkExperience extends Listener implements Experience {
         timer.stop();
         drawHands.stop();
         rightMainExit.stop();
-	leftMainExit.stop();
+	    leftMainExit.stop();
         fadeStop.play();
         particles.clear();
     }

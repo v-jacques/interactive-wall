@@ -62,8 +62,8 @@ public class InteractiveWall extends Application {
 		mainContainer.loadExperience(GALLERY, GALLERY_Ex);
 		mainContainer.loadExperience(GALLERY_QUOTE, GALLERY_QUOTE_Ex);
 
-        mainContainer.setExperience(MAIN_MENU);
-		// mainContainer.setExperience(SLEEP_MODE);
+        //mainContainer.setExperience(MAIN_MENU);
+		 mainContainer.setExperience(SLEEP_MODE);
 		// mainContainer.setExperience(POND);
 		// mainContainer.setExperience(FIREWORK);
 		//mainContainer.setExperience(GALLERY);
@@ -73,7 +73,7 @@ public class InteractiveWall extends Application {
 		main.setCursor(Cursor.NONE);
 		primaryStage.setScene(main);
 		primaryStage.setTitle("Interactive Wall");
-		// primaryStage.setFullScreen(true);
+        primaryStage.setFullScreen(true);
 		primaryStage.show();
 
 	}

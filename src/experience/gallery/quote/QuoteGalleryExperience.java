@@ -5,6 +5,7 @@ import java.io.File;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.animation.Animation.Status;
 import javafx.scene.Node;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
@@ -212,7 +213,7 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 
 		upA = new ImageView(upArrow);
 		upA.setLayoutX(700);
-		upA.setLayoutY(40);
+		upA.setLayoutY(70);
 		canvas.getChildren().add(upA);
 
 		downA = new ImageView(downArrow);
@@ -302,16 +303,16 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 				if (Util.isBetween(517, 787, (int) rightHandPosX)
 						&& Util.isBetween(849, 912, (int) rightHandPosY)) {
 					changeGalleryR.play();
+                    artView.setImage(artButtonHovered);
 				} else if (Util.isBetween(517, 787, (int) leftHandPosX)
 						&& Util.isBetween(849, 912, (int) leftHandPosY)) {
 					changeGalleryL.play();
+                    artView.setImage(artButtonHovered);
 				} else {
 					changeGalleryR.stop();
 					changeGalleryL.stop();
 					artView.setImage(artButton);
 					quoteView.setImage(quoteButton);
-					rightHand.setImage(palmRightNormal);
-					leftHand.setImage(palmLeftNormal);
 				}
 
 				if (Util.isBetween(1353, 1533, (int) rightHandPosX)
@@ -328,9 +329,7 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 					exitView.setImage(exitImg);
 					exitView.setOpacity(0.3);
 					rightMainExit.stop();
-					rightHand.setImage(palmRightNormal);
 					leftMainExit.stop();
-					leftHand.setImage(palmLeftNormal);
 				}
 			}
 		};
@@ -346,8 +345,7 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 			rightHand.setImage(rightHandFull);
 		}), new KeyFrame(Duration.seconds(1), ae -> {
 			direction = true;
-			confirmComplete.stop();
-			confirmComplete.play();
+			
 			changeQuotes.start();
 		}), new KeyFrame(Duration.seconds(2), ae -> {
 			rightHand.setImage(palmRightNormal);
@@ -357,8 +355,7 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 			leftHand.setImage(leftHandFull);
 		}), new KeyFrame(Duration.seconds(1), ae -> {
 			direction = true;
-			confirmComplete.stop();
-			confirmComplete.play();
+			
 			changeQuotes.start();
 		}), new KeyFrame(Duration.seconds(2), ae -> {
 			leftHand.setImage(palmLeftNormal);
@@ -368,8 +365,7 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 			rightHand.setImage(rightHandFull);
 		}), new KeyFrame(Duration.seconds(1), ae -> {
 			direction = false;
-			confirmComplete.stop();
-			confirmComplete.play();
+			
 			changeQuotes.start();
 		}), new KeyFrame(Duration.seconds(2), ae -> {
 			rightHand.setImage(palmRightNormal);
@@ -379,8 +375,7 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 			leftHand.setImage(leftHandFull);
 		}), new KeyFrame(Duration.seconds(1), ae -> {
 			direction = false;
-			confirmComplete.stop();
-			confirmComplete.play();
+
 			changeQuotes.start();
 		}), new KeyFrame(Duration.seconds(2), ae -> {
 			leftHand.setImage(palmLeftNormal);
@@ -390,11 +385,11 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 			@Override
 			public void handle(long now) {
 				if (Util.isBetween(700, 700 + 200, (int) rightHandPosX)
-						&& Util.isBetween(40, 40 + 80, (int) rightHandPosY)) {
+						&& Util.isBetween(70, 70 + 80, (int) rightHandPosY)) {
 					upArrowR.play();
 					upA.setImage(upArrowHovered);
 				} else if (Util.isBetween(700, 700 + 200, (int) leftHandPosX)
-						&& Util.isBetween(40, 40 + 80, (int) leftHandPosY)) {
+						&& Util.isBetween(70, 70 + 80, (int) leftHandPosY)) {
 					upArrowL.play();
 					upA.setImage(upArrowHovered);
 				} else if (Util.isBetween(700, 700 + 200, (int) rightHandPosX)
@@ -410,11 +405,23 @@ public class QuoteGalleryExperience extends Listener implements Experience {
 					upArrowL.stop();
 					downArrowR.stop();
 					downArrowL.stop();
-					rightHand.setImage(palmRightNormal);
-					leftHand.setImage(palmLeftNormal);
 					upA.setImage(upArrow);
 					downA.setImage(downArrow);
+                   
 				}
+                
+                 //IF NOT IN ANY BUTTON
+                    if(downArrowL.getStatus() ==  Status.STOPPED && downArrowR.getStatus() ==  Status.STOPPED
+                      && upArrowL.getStatus() ==  Status.STOPPED && upArrowR.getStatus() ==  Status.STOPPED
+                      && !Util.isBetween(517, 787, (int) rightHandPosX)
+						&& !Util.isBetween(849, 912, (int) rightHandPosY)&&!Util.isBetween(517, 787, (int) leftHandPosX)
+						&& !Util.isBetween(849, 912, (int) leftHandPosY)&&!Util.isBetween(1353, 1533, (int) rightHandPosX)
+						&& !Util.isBetween(745, 965, (int) rightHandPosY)&&!Util.isBetween(1353, 1533, (int) leftHandPosX)
+						&& !Util.isBetween(745, 965, (int) leftHandPosY)){
+                        			leftHand.setImage(palmLeftNormal);
+                                			rightHand.setImage(palmRightNormal);
+
+                    }
 			}
 		};
 

@@ -3,6 +3,7 @@ package experience.gallery.art;
 import java.io.File;
 
 import javafx.animation.AnimationTimer;
+import javafx.animation.Animation.Status;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Node;
@@ -291,7 +292,7 @@ public class ArtGalleryExperience extends Listener implements Experience {
 				600, true, true);
 		mainView = new ImageView(mainImg);
 
-		Image rightImg = new Image(imageList[0].getPath(), 800, 500, false,
+		Image rightImg = new Image(imageList[imageHolder+2].getPath(), 800, 500, false,
 				false);
 		rightView = new ImageView(rightImg);
 
@@ -402,16 +403,18 @@ public class ArtGalleryExperience extends Listener implements Experience {
 						&& Util.isBetween(849,912,
 								(int) rightHandPosY)) {
 					changeGalleryR.play();
+                    quoteView.setImage(quoteButtonHovered);
 				} else if (Util.isBetween(812, 1082, (int) leftHandPosX)
 						&& Util.isBetween(849,912, (int) leftHandPosY)) {
 					changeGalleryL.play();
+                    quoteView.setImage(quoteButtonHovered);
+                    
 				} else {
 					changeGalleryR.stop();
 					changeGalleryL.stop();
 					artView.setImage(artButton);
 					quoteView.setImage(quoteButton);
-					rightHand.setImage(palmRightNormal);
-					leftHand.setImage(palmLeftNormal);
+					
 				}
 
 				if (Util.isBetween(1353,1533, (int) rightHandPosX)
@@ -428,10 +431,9 @@ public class ArtGalleryExperience extends Listener implements Experience {
 					exitView.setImage(exitImg);
 					exitView.setOpacity(0.3);
 					rightMainExit.stop();
-					rightHand.setImage(palmRightNormal);
+					
 					leftMainExit.stop();
-					leftHand.setImage(palmLeftNormal);
-				}
+                }
 			}
 		};
 
@@ -505,11 +507,22 @@ public class ArtGalleryExperience extends Listener implements Experience {
 					rightArrowL.stop();
 					leftArrowR.stop();
 					leftArrowL.stop();
-					rightHand.setImage(palmRightNormal);
-					leftHand.setImage(palmLeftNormal);
 					rightA.setImage(rightArrow);
 					leftA.setImage(leftArrow);
 				}
+                
+                //IF NOT IN ANY BUTTON
+                    if(leftArrowL.getStatus() ==  Status.STOPPED && leftArrowR.getStatus() ==  Status.STOPPED
+                      && rightArrowL.getStatus() ==  Status.STOPPED && rightArrowR.getStatus() ==  Status.STOPPED
+                      && !Util.isBetween(517, 787, (int) rightHandPosX)
+						&& !Util.isBetween(849, 912, (int) rightHandPosY)&&!Util.isBetween(517, 787, (int) leftHandPosX)
+						&& !Util.isBetween(849, 912, (int) leftHandPosY)&&!Util.isBetween(1353, 1533, (int) rightHandPosX)
+						&& !Util.isBetween(745, 965, (int) rightHandPosY)&&!Util.isBetween(1353, 1533, (int) leftHandPosX)
+						&& !Util.isBetween(745, 965, (int) leftHandPosY)){
+                        			leftHand.setImage(palmLeftNormal);
+                                			rightHand.setImage(palmRightNormal);
+
+                    }
 			}
 		};
 

@@ -84,7 +84,8 @@ public class BlockExperience extends Listener implements Experience {
 	Timeline fadePlay;
 	Timeline fadeStop;
 	FadeTransition intro;
-	
+		FadeTransition start;
+
 	MediaPlayer countPing;
 	MediaPlayer confirmComplete;
 	
@@ -138,7 +139,13 @@ public class BlockExperience extends Listener implements Experience {
 				true, true);
 		dialog = new ImageView(introDialog);
 		dialog.setPreserveRatio(true);
-			
+        dialog.setOpacity(0.0);
+	
+         start =  new FadeTransition(Duration.millis(1000), dialog);
+		start.setFromValue(0.0);
+		start.setToValue(1.0);		
+		start.setAutoReverse(true);	
+        
 		Media countMedia = new Media(COUNT_URL);
 		countPing = new MediaPlayer(countMedia);
 		countPing.setVolume(.25);
@@ -163,7 +170,7 @@ public class BlockExperience extends Listener implements Experience {
 				
 		Image addRectBlockNormal = new Image("media/BlockRectPlus.png", 250,125,
 				true, true);
-		addRectBlockImage = new ImageView(addSquareBlockNormal);
+		addRectBlockImage = new ImageView(addRectBlockNormal);
 		
 		Image addRectBlockHovered = new Image("media/BlockRectPlusHovered.png", 250,125,
 				true, true);
@@ -526,6 +533,7 @@ public class BlockExperience extends Listener implements Experience {
 	@Override
 	public void startExperience() {
 		intro.play();
+        start.play();
 		createDefaultBlocks();
 		drawHands.start();
 		sleepTimer.play();
@@ -555,7 +563,6 @@ public class BlockExperience extends Listener implements Experience {
 		exit.stop();
 		confirmComplete.stop();
 		countPing.stop();
-		dialog.setOpacity(1.0);
 		// REMOVE BLOCKS
 		for(int i = 0 ; i< blocks.getChildren().size(); i++){
 				Node current = (Node)blocks.getChildren().get(i);
