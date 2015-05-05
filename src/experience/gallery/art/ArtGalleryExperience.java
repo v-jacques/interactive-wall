@@ -414,7 +414,7 @@ public class ArtGalleryExperience extends Listener implements Experience {
 					changeGalleryL.stop();
 					artView.setImage(artButton);
 					quoteView.setImage(quoteButton);
-					
+
 				}
 
 				if (Util.isBetween(1353,1533, (int) rightHandPosX)
