@@ -13,7 +13,7 @@ import javafx.util.Duration;
 public class QuoteGalleryMusic {
 
 	private static File background = new File(
-			"src/media/John_Lewis_Grant_-_10_-_Bach_Prelude___Fugue_10.mp3");
+			"media/John_Lewis_Grant_-_10_-_Bach_Prelude___Fugue_10.mp3");
 	private static final String BACKGROUND_MUSIC = background.toURI()
 			.toString();
 	private static Media backgroundMusic = new Media(BACKGROUND_MUSIC);

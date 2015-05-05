@@ -75,7 +75,7 @@ public class PondExperience extends Listener implements Experience {
 	Timeline rightHandChange;
 	Timeline leftHandChange;
 	MediaPlayer confirmComplete;
-	private File confirm = new File("src/media/confirmComplete.mp3");
+	private File confirm = new File("media/confirmComplete.mp3");
 	private final String CONFIRM_URL = confirm.toURI().toString();
 
 	public PondExperience() {

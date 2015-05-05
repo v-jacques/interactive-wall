@@ -82,7 +82,7 @@ public class ArtGalleryExperience extends Listener implements Experience {
 	boolean direction;
 
 	MediaPlayer confirmComplete;
-	private File confirm = new File("src/media/confirmComplete.mp3");
+	private File confirm = new File("media/confirmComplete.mp3");
 	private final String CONFIRM_URL = confirm.toURI().toString();
 
 	Image artButton = new Image("media/galleryButton-selected 270_63 px.png",
@@ -258,13 +258,13 @@ public class ArtGalleryExperience extends Listener implements Experience {
 		canvas = new Pane();
 
 		artView = new ImageView(artButton);
-		artView.setLayoutX(425);
-		artView.setLayoutY(873);
+		artView.setLayoutX(517);
+		artView.setLayoutY(849);
 		canvas.getChildren().add(artView);
 
 		quoteView = new ImageView(quoteButton);
-		quoteView.setLayoutX(810);
-		quoteView.setLayoutY(873);
+		quoteView.setLayoutX(812);
+		quoteView.setLayoutY(849);
 		canvas.getChildren().add(quoteView);
 
 		Image backImg = new Image("media/background_gallery.png", 1600, 1000,
@@ -279,8 +279,8 @@ public class ArtGalleryExperience extends Listener implements Experience {
 		ImageView exitView = new ImageView(exitImg);
 		exitView.setOpacity(0.3);
 		exitView.setPreserveRatio(true);
-		exitView.setLayoutX(1370);
-		exitView.setLayoutY(800);
+		exitView.setLayoutX(1353);
+		exitView.setLayoutY(785);
 		canvas.getChildren().add(exitView);
 
 		Image leftImg = new Image(imageList[imageHolder].getPath(), 800, 500,
@@ -398,12 +398,12 @@ public class ArtGalleryExperience extends Listener implements Experience {
 				leftHand.setTranslateX(leftHandPosX);
 				leftHand.setTranslateY(leftHandPosY);
 
-				if (Util.isBetween(810, 810 + 270, (int) rightHandPosX)
-						&& Util.isBetween(843.5, 843.5 + 63,
+				if (Util.isBetween(812, 1082, (int) rightHandPosX)
+						&& Util.isBetween(849,912,
 								(int) rightHandPosY)) {
 					changeGalleryR.play();
-				} else if (Util.isBetween(810, 810 + 270, (int) leftHandPosX)
-						&& Util.isBetween(843.5, 843.5 + 63, (int) leftHandPosY)) {
+				} else if (Util.isBetween(812, 1082, (int) leftHandPosX)
+						&& Util.isBetween(849,912, (int) leftHandPosY)) {
 					changeGalleryL.play();
 				} else {
 					changeGalleryR.stop();
@@ -414,13 +414,13 @@ public class ArtGalleryExperience extends Listener implements Experience {
 					leftHand.setImage(palmLeftNormal);
 				}
 
-				if (Util.isBetween(1370, 1500, (int) rightHandPosX)
-						&& Util.isBetween(800, 1150, (int) rightHandPosY)) {
+				if (Util.isBetween(1353,1533, (int) rightHandPosX)
+						&& Util.isBetween(745,965, (int) rightHandPosY)) {
 					exitView.setImage(exitHoveredImg);
 					exitView.setOpacity(1.0);
 					rightMainExit.play();
-				} else if (Util.isBetween(1370, 1500, (int) leftHandPosX)
-						&& Util.isBetween(800, 1150, (int) leftHandPosY)) {
+				} else if (Util.isBetween(1353,1533, (int) leftHandPosX)
+						&& Util.isBetween(745,965, (int) leftHandPosY)) {
 					exitView.setImage(exitHoveredImg);
 					exitView.setOpacity(1.0);
 					leftMainExit.play();
@@ -445,8 +445,7 @@ public class ArtGalleryExperience extends Listener implements Experience {
 		rightArrowR = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
 			rightHand.setImage(rightHandFull);
 		}), new KeyFrame(Duration.seconds(1), ae -> {
-			confirmComplete.stop();
-			confirmComplete.play();
+			
 			direction = true;
 			changeImgs.start();
 		}), new KeyFrame(Duration.seconds(2), ae -> {
@@ -456,8 +455,7 @@ public class ArtGalleryExperience extends Listener implements Experience {
 		rightArrowL = new Timeline(new KeyFrame(Duration.seconds(.5), ae -> {
 			leftHand.setImage(leftHandFull);
 		}), new KeyFrame(Duration.seconds(1), ae -> {
-			confirmComplete.stop();
-			confirmComplete.play();
+			
 			direction = true;
 			changeImgs.start();
 		}), new KeyFrame(Duration.seconds(2), ae -> {
@@ -468,8 +466,6 @@ public class ArtGalleryExperience extends Listener implements Experience {
 			rightHand.setImage(rightHandFull);
 		}), new KeyFrame(Duration.seconds(1), ae -> {
 			direction = false;
-			confirmComplete.stop();
-			confirmComplete.play();
 			changeImgs.start();
 		}), new KeyFrame(Duration.seconds(2), ae -> {
 			rightHand.setImage(palmRightNormal);
@@ -479,8 +475,7 @@ public class ArtGalleryExperience extends Listener implements Experience {
 			leftHand.setImage(leftHandFull);
 		}), new KeyFrame(Duration.seconds(1), ae -> {
 			direction = false;
-			confirmComplete.stop();
-			confirmComplete.play();
+			
 			changeImgs.start();
 		}), new KeyFrame(Duration.seconds(2), ae -> {
 			leftHand.setImage(palmLeftNormal);

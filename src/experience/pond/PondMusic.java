@@ -12,7 +12,7 @@ import javafx.util.Duration;
 public class PondMusic {
 
 	private static File background = new File(
-			"src/media/Lee_Rosevere_-_03_-_Cosmic_Tingles.mp3");
+			"media/Lee_Rosevere_-_03_-_Cosmic_Tingles.mp3");
 	private static final String BACKGROUND_MUSIC = background.toURI()
 			.toString();
 	private static Media backgroundMusic = new Media(BACKGROUND_MUSIC);

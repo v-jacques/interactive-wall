@@ -33,6 +33,7 @@ public class MainMenuExperience extends Listener implements Experience {
 	Pane canvas;
 	Timeline sleepTimer;
 	Timeline rightHandChange;
+	Timeline leftHandChange;
 	String nextExperience = "";
 	Hand right;
 	Hand left;
@@ -44,10 +45,10 @@ public class MainMenuExperience extends Listener implements Experience {
 
 	MediaPlayer countPing;
 	MediaPlayer confirmComplete;
-	private File count = new File("src/media/countPing.mp3");
+	private File count = new File("media/countPing.mp3");
 	private final String COUNT_URL = count.toURI().toString();
 
-	private File confirm = new File("src/media/confirmComplete.mp3");
+	private File confirm = new File("media/confirmComplete.mp3");
 	private final String CONFIRM_URL = confirm.toURI().toString();
 
 	double rightHandPosX = -100.0;
@@ -117,6 +118,17 @@ public class MainMenuExperience extends Listener implements Experience {
 		Image palmLeftNormal = new Image("media/palmLeft.png", 100, 100, true,
 				true);
 		leftHand = new ImageView(palmLeftNormal);
+		
+		// LEft Hand 2 1 0 Images
+		Image leftHand0 = new Image("media/HoldLeft_0s_102_107.png", 100, 100,
+				true, true);
+		Image leftHand1 = new Image("media/HoldLeft_1s_102_107.png", 100, 100,
+				true, true);
+		Image leftHand2 = new Image("media/HoldLeft_2s_102_107.png", 100, 100,
+				true, true);
+
+		Image leftHandFull = new Image("media/HoldLeft_fullHand_102_107.png", 100,
+				100, true, true);
 
 		// RIGHT Hand 2 1 0 Images
 		Image rightHand0 = new Image("media/Hold_0s_102_107.png", 100, 100,
@@ -128,6 +140,8 @@ public class MainMenuExperience extends Listener implements Experience {
 
 		Image rightHandFull = new Image("media/Hold_fullHand_102_107.png", 100,
 				100, true, true);
+				
+		
 
 		rightHandChange = new Timeline(new KeyFrame(Duration.seconds(1),
 				ae -> {
@@ -147,6 +161,25 @@ public class MainMenuExperience extends Listener implements Experience {
 					confirmComplete.stop();
 					confirmComplete.play();
 				}, new KeyValue(rightHand.imageProperty(), rightHandFull)));
+			
+		leftHandChange = new Timeline(new KeyFrame(Duration.seconds(1),
+				ae -> {
+					countPing.stop();
+					countPing.play();
+				}, new KeyValue(leftHand.imageProperty(), leftHand2)),
+				new KeyFrame(Duration.seconds(1.5), ae -> {
+					countPing.stop();
+					countPing.play();
+				}, new KeyValue(leftHand.imageProperty(), leftHand1)),
+				new KeyFrame(Duration.seconds(2), ae -> {
+					countPing.stop();
+					countPing.play();
+				}, new KeyValue(leftHand.imageProperty(), leftHand0)),
+				new KeyFrame(Duration.seconds(2.5), ae -> {
+					goToNextExperience();
+					confirmComplete.stop();
+					confirmComplete.play();
+				}, new KeyValue(leftHand.imageProperty(), leftHandFull)));
 
 		drawHands = new AnimationTimer() {
 			@Override
@@ -188,11 +221,17 @@ public class MainMenuExperience extends Listener implements Experience {
 			@Override
 			public void handle(long now) {
 
-				boolean inABox = false;
-
+				boolean inABoxRight = false;
+				boolean inABoxLeft = false;
+				
+				
+				
+				
+				if(!inABoxLeft){
 				if (Util.isBetween(270, 270 + 486, (int) rightHandPosX)
 						&& Util.isBetween(147, 147 + 289, (int) rightHandPosY)) {
-					inABox = true;
+					inABoxRight = true;
+					inABoxLeft = false;
 					rightHandChange.play();
 					nextExperience = InteractiveWall.BLOCK;
 					blockView.setImage(blockkHover);
@@ -202,7 +241,8 @@ public class MainMenuExperience extends Listener implements Experience {
 
 				if (Util.isBetween(843, 843 + 486, (int) rightHandPosX)
 						&& Util.isBetween(147, 147 + 289, (int) rightHandPosY)) {
-					inABox = true;
+					inABoxRight = true;
+					inABoxLeft = false;
 					rightHandChange.play();
 					nextExperience = InteractiveWall.FIREWORK;
 					fireworkView.setImage(fireworkHover);
@@ -212,7 +252,8 @@ public class MainMenuExperience extends Listener implements Experience {
 
 				if (Util.isBetween(270, 270 + 486, (int) rightHandPosX)
 						&& Util.isBetween(509, 509 + 289, (int) rightHandPosY)) {
-					inABox = true;
+					inABoxRight = true;
+					inABoxLeft = false;
 					rightHandChange.play();
 					nextExperience = InteractiveWall.GALLERY;
 					galleryView.setImage(galleryHover);
@@ -222,18 +263,76 @@ public class MainMenuExperience extends Listener implements Experience {
 
 				if (Util.isBetween(843, 843 + 486, (int) rightHandPosX)
 						&& Util.isBetween(509, 509 + 289, (int) rightHandPosY)) {
-					inABox = true;
+					inABoxRight = true;
+					inABoxLeft = false;
 					rightHandChange.play();
 					nextExperience = InteractiveWall.POND;
 					pondView.setImage(pondHover);
 				} else {
 					pondView.setImage(pondImg);
 				}
+				}
+				
+				if(!inABoxRight){
+					if (Util.isBetween(270, 270 + 486, (int) leftHandPosX)
+						&& Util.isBetween(147, 147 + 289, (int) leftHandPosY)) {
+					inABoxLeft = true;
+					inABoxRight = false;
+					leftHandChange.play();
+					nextExperience = InteractiveWall.BLOCK;
+					blockView.setImage(blockkHover);
+				} else {
+					blockView.setImage(blockImg);
+				}
 
-				if (!inABox) {
-					nextExperience = "";
+				if (Util.isBetween(843, 843 + 486, (int) leftHandPosX)
+						&& Util.isBetween(147, 147 + 289, (int) leftHandPosY)) {
+					inABoxLeft = true;
+					inABoxRight = false;
+					leftHandChange.play();
+					nextExperience = InteractiveWall.FIREWORK;
+					fireworkView.setImage(fireworkHover);
+				} else {
+					fireworkView.setImage(fireworkImg);
+				}
+
+				if (Util.isBetween(270, 270 + 486, (int) leftHandPosX)
+						&& Util.isBetween(509, 509 + 289, (int) leftHandPosY)) {
+					inABoxLeft = true;
+					inABoxRight = false;
+					leftHandChange.play();
+					nextExperience = InteractiveWall.GALLERY;
+					galleryView.setImage(galleryHover);
+				} else {
+					galleryView.setImage(galleryImg);
+				}
+
+				if (Util.isBetween(843, 843 + 486, (int) leftHandPosX)
+						&& Util.isBetween(509, 509 + 289, (int) leftHandPosY)) {
+					inABoxLeft = true;
+					inABoxRight = false;
+					leftHandChange.play();
+					nextExperience = InteractiveWall.POND;
+					pondView.setImage(pondHover);
+				} else {
+					pondView.setImage(pondImg);
+				}
+				}
+				
+				if (!inABoxRight) {
 					rightHandChange.stop();
 					rightHand.setImage(palmRightNormal);
+				}
+				
+				if (!inABoxLeft) {
+					leftHandChange.stop();
+					leftHand.setImage(palmLeftNormal);
+				}
+				
+				if (!inABoxRight && !inABoxLeft) {
+					rightHandChange.stop();
+					leftHandChange.stop();
+					nextExperience = "";
 				}
 
 			}
@@ -276,6 +375,7 @@ public class MainMenuExperience extends Listener implements Experience {
 		leftHandPosX = -100.0;
 		leftHandPosY = -100.0;
 		rightHandChange.stop();
+		leftHandChange.stop();
 		drawHands.stop();
 		drawIcons.stop();
 		sleepTimer.stop();
