@@ -545,6 +545,28 @@ public class ArtGalleryExperience extends Listener implements Experience {
 					textFlow.setLayoutX(mainView.getLayoutX() + 40);
 					textFlow.setLayoutY(mainImg.getHeight() / 4
 							+ mainView.getLayoutY());
+				}
+                                else if (Util.isBetween(
+						(int) (1600 - mainImg.getWidth()) / 2,
+						(int) (1600 - mainImg.getWidth()) / 2
+								+ (int) mainImg.getWidth(), (int) leftHandPosX)
+						&& Util.isBetween(
+								(int) (1000 - mainImg.getHeight()) / 2,
+								(int) (1000 - mainImg.getHeight()) / 2
+										+ (int) mainImg.getHeight(),
+								(int) leftHandPosY)) {
+					mainView.setOpacity(0.3);
+					textInformation.setText("Title: "
+							+ imageList[imageHolder].getTitle() + "\n"
+							+ "Artist: " + imageList[imageHolder].getAuthor()
+							+ "\n" + "Medium: "
+							+ imageList[imageHolder].getMedium() + "\n"
+							+ "Date: " + imageList[imageHolder].getDate());
+					textFlow.setMaxSize(imageList[imageHolder].getWidth() - 80,
+							imageList[imageHolder].getHeight() / 2);
+					textFlow.setLayoutX(mainView.getLayoutX() + 40);
+					textFlow.setLayoutY(mainImg.getHeight() / 4
+							+ mainView.getLayoutY());
 				} else {
 					mainView.setOpacity(1);
 					textInformation.setText("");
