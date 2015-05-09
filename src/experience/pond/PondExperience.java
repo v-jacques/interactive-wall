@@ -1,5 +1,7 @@
 package experience.pond;
 
+import java.io.File;
+
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -21,6 +23,8 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
 import main.Experience;
 import main.ExperienceController;
@@ -68,13 +72,32 @@ public class PondExperience extends Listener implements Experience {
 	protected final ObservableList<Point3D> points = FXCollections
 			.observableArrayList();
 
+	Timeline rightHandChange;
+	Timeline leftHandChange;
+	MediaPlayer confirmComplete;
+	private File confirm = new File("media/confirmComplete.mp3");
+	private final String CONFIRM_URL = confirm.toURI().toString();
+
 	public PondExperience() {
 		pane = new StackPane();
 		canvas = new Pane();
 
-		Image backImg = new Image("media/pond1600-1000px-unfinished.jpg", 1600,
-				1000, true, true);
+		Image backImg = new Image("media/TaiChi1600_1000.jpg", 1600, 1000,
+				true, true);
 		ImageView backView = new ImageView(backImg);
+		backView.setPreserveRatio(true);
+		backView.setLayoutY(300); // DO NOT LIKE THIS
+		pane.getChildren().add(backView);
+
+		Image exitImg = new Image("media/Exit180_180.png", 150, 150, true, true);
+		Image exitHoveredImg = new Image("media/ExitHovered180_180.png", 150,
+				150, true, true);
+		ImageView exitView = new ImageView(exitImg);
+		exitView.setOpacity(0.3);
+		exitView.setPreserveRatio(true);
+		exitView.setLayoutX(1335);
+		exitView.setLayoutY(710);
+		canvas.getChildren().add(exitView);
 
 		width = (int) backView.getImage().getWidth();
 		height = (int) backView.getImage().getHeight();
@@ -90,9 +113,6 @@ public class PondExperience extends Listener implements Experience {
 		pixelReader.getPixels(0, 0, width, height,
 				WritablePixelFormat.getIntArgbInstance(), original, 0, width);
 
-		backView.setPreserveRatio(true);
-		pane.getChildren().add(backView);
-
 		lastTimerCall = System.nanoTime();
 		timer = new AnimationTimer() {
 			@Override
@@ -104,16 +124,50 @@ public class PondExperience extends Listener implements Experience {
 			}
 		};
 
-		sleepTimer = new Timeline(new KeyFrame(Duration.millis(15000),
+		sleepTimer = new Timeline(new KeyFrame(Duration.millis(20000),
 				ae -> goToMainMenu()));
 
 		Image palmRightNormal = new Image("media/palmRight.png", 100, 100,
 				true, true);
 		rightHand = new ImageView(palmRightNormal);
+		rightHand.setVisible(false);
+
+		Image rightHandFull = new Image("media/Hold_fullHand_102_107.png", 100,
+				100, true, true);
 
 		Image palmLeftNormal = new Image("media/palmLeft.png", 100, 100, true,
 				true);
 		leftHand = new ImageView(palmLeftNormal);
+		leftHand.setVisible(false);
+
+		Image leftHandFull = new Image("media/HoldLeft_fullHand_102_107.png",
+				100, 100, true, true);
+
+		Media confirmMedia = new Media(CONFIRM_URL);
+		confirmComplete = new MediaPlayer(confirmMedia);
+		confirmComplete.setVolume(.25);
+
+		rightHandChange = new Timeline(new KeyFrame(Duration.seconds(.5),
+				ae -> {
+					rightHand.setImage(rightHandFull);
+					confirmComplete.stop();
+					confirmComplete.play();
+				}), new KeyFrame(Duration.seconds(1), ae -> {
+			goToMainMenu();
+		}), new KeyFrame(Duration.seconds(2), ae -> {
+			rightHand.setImage(palmRightNormal);
+		}));
+
+		leftHandChange = new Timeline(new KeyFrame(Duration.seconds(.5),
+				ae -> {
+					leftHand.setImage(leftHandFull);
+					confirmComplete.stop();
+					confirmComplete.play();
+				}), new KeyFrame(Duration.seconds(1), ae -> {
+			goToMainMenu();
+		}), new KeyFrame(Duration.seconds(2), ae -> {
+			leftHand.setImage(palmLeftNormal);
+		}));
 
 		drawHands = new AnimationTimer() {
 			@Override
@@ -122,6 +176,37 @@ public class PondExperience extends Listener implements Experience {
 				rightHand.setTranslateY(rightHandPosY);
 				leftHand.setTranslateX(leftHandPosX);
 				leftHand.setTranslateY(leftHandPosY);
+
+				if (Util.isBetween(1235, 1550, (int) rightHandPosX)
+						&& Util.isBetween(610, 960, (int) rightHandPosY)) {
+					rightHand.setVisible(true);
+					if (Util.isBetween(1335, 1450, (int) rightHandPosX)
+							&& Util.isBetween(710, 860, (int) rightHandPosY)) {
+						exitView.setImage(exitHoveredImg);
+						exitView.setOpacity(1.0);
+						rightHandChange.play();
+					}
+				} else if (Util.isBetween(1235, 1550, (int) leftHandPosX)
+						&& Util.isBetween(610, 960, (int) leftHandPosY)) {
+					leftHand.setVisible(true);
+					if (Util.isBetween(1335, 1450, (int) leftHandPosX)
+							&& Util.isBetween(710, 860, (int) leftHandPosY)) {
+						exitView.setImage(exitHoveredImg);
+						exitView.setOpacity(1.0);
+						leftHandChange.play();
+					}
+				} else {
+					exitView.setImage(exitImg);
+					exitView.setOpacity(0.3);
+
+					rightHand.setVisible(false);
+					rightHandChange.stop();
+					rightHand.setImage(palmRightNormal);
+
+					leftHand.setVisible(false);
+					leftHandChange.stop();
+					leftHand.setImage(palmLeftNormal);
+				}
 			}
 		};
 
@@ -141,8 +226,6 @@ public class PondExperience extends Listener implements Experience {
 								Point2D d = canvas.sceneToLocal(t1.getX(),
 										t1.getY());
 								double dx = d.getX(), dy = d.getY();
-								// System.out.println("x " + dx);
-								// System.out.println("h " + rightHandPosX);
 
 								if (dx >= 0d && dx <= canvas.getWidth()
 										&& dy >= 0d && dy <= canvas.getHeight()) {
@@ -161,9 +244,10 @@ public class PondExperience extends Listener implements Experience {
 
 	@Override
 	public void startExperience() {
-		// drawHands.start();
+		drawHands.start();
 		sleepTimer.play();
 		timer.start();
+		PondMusic.playBackgroundMusic();
 		controller = new Controller(this);
 	}
 
@@ -180,6 +264,7 @@ public class PondExperience extends Listener implements Experience {
 		drawHands.stop();
 		sleepTimer.stop();
 		timer.stop();
+		PondMusic.pauseBackgroundMusic();
 	}
 
 	@Override
@@ -188,6 +273,7 @@ public class PondExperience extends Listener implements Experience {
 	}
 
 	private void goToMainMenu() {
+		stopExperience();
 		controller.removeListener(this);
 		myController.setExperience(InteractiveWall.MAIN_MENU);
 	}
@@ -214,14 +300,18 @@ public class PondExperience extends Listener implements Experience {
 
 			if (hands.get(i).isRight()) {
 				right = hands.get(i);
-				rightHandPosX = Util.palmXToPanelX(right);
-				rightHandPosY = Util.palmYToPanelY(right);
+				rightHandPosX = Util.leapXtoPanelX(right
+						.stabilizedPalmPosition().getX());
+				rightHandPosY = Util.leapYToPanelY(right
+						.stabilizedPalmPosition().getY());
 				realRightHandPosX = right.palmPosition().getX();
 				realRightHandPosY = right.palmPosition().getY();
 			} else if (hands.get(i).isLeft()) {
 				left = hands.get(i);
-				leftHandPosX = Util.palmXToPanelX(left);
-				leftHandPosY = Util.palmYToPanelY(left);
+				leftHandPosX = Util.leapXtoPanelX(left.stabilizedPalmPosition()
+						.getX());
+				leftHandPosY = Util.leapYToPanelY(left.stabilizedPalmPosition()
+						.getY());
 				realLeftHandPosX = left.palmPosition().getX();
 				realLeftHandPosY = left.palmPosition().getY();
 			}
@@ -233,9 +323,10 @@ public class PondExperience extends Listener implements Experience {
 			// getZ is being used to only capture pointing fingers
 			if (finger.isValid() && finger.tipPosition().getZ() < 25) {
 				// System.out.println(finger.tipPosition().getX());
-				Point3D p = new Point3D(Util.fingerXtoPanelX(finger
-						.tipPosition().getX()), Util.fingerYToPanelY(finger
-						.tipPosition().getY()), finger.tipPosition().getZ());
+				Point3D p = new Point3D(Util.leapXtoPanelX(finger
+						.stabilizedTipPosition().getX()),
+						Util.leapYToPanelY(finger.stabilizedTipPosition()
+								.getY()), finger.stabilizedTipPosition().getZ());
 				points.add(p);
 			}
 		}
@@ -263,7 +354,8 @@ public class PondExperience extends Listener implements Experience {
 				short data = (short) ((waterMap[mapInd - width]
 						+ waterMap[mapInd + width] + waterMap[mapInd - 1] + waterMap[mapInd + 1]) >> 1);
 				data -= waterMap[newInd + i];
-				data -= data >> 4;
+				// ripple effect size
+				data -= data >> 5;
 				waterMap[newInd + i] = data;
 				data = (short) (1024 - data);
 				a = ((x - halfWidth) * data / 1024) + halfWidth;

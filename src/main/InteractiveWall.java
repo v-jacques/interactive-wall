@@ -19,7 +19,8 @@ import experience.mainmenu.MainMenuExperience;
 import experience.pond.PondExperience;
 import experience.firework.FireworkExperience;
 import experience.block.BlockExperience;
-import experience.gallery.GalleryExperience;
+import experience.gallery.art.ArtGalleryExperience;
+import experience.gallery.quote.QuoteGalleryExperience;
 import experience.sleepmode.ConfirmationExperience;
 import experience.sleepmode.SleepModeExperience;
 import static javafx.application.Application.launch;
@@ -40,7 +41,9 @@ public class InteractiveWall extends Application {
 	public static final String BLOCK = "block";
 	public static final Experience BLOCK_Ex = new BlockExperience();
 	public static final String GALLERY = "gallery";
-	public static final Experience GALLERY_Ex = new GalleryExperience();
+	public static final Experience GALLERY_Ex = new ArtGalleryExperience();
+	public static final String GALLERY_QUOTE = "gallery_quote";
+	public static final Experience GALLERY_QUOTE_Ex = new QuoteGalleryExperience();
 
 	public static void main(String[] args) {
 		launch(args);
@@ -57,16 +60,20 @@ public class InteractiveWall extends Application {
 		mainContainer.loadExperience(FIREWORK, FIREWORK_Ex);
 		mainContainer.loadExperience(BLOCK, BLOCK_Ex);
 		mainContainer.loadExperience(GALLERY, GALLERY_Ex);
+		mainContainer.loadExperience(GALLERY_QUOTE, GALLERY_QUOTE_Ex);
 
-		mainContainer.setExperience(SLEEP_MODE);
+        //mainContainer.setExperience(MAIN_MENU);
+		 mainContainer.setExperience(SLEEP_MODE);
 		// mainContainer.setExperience(POND);
+		// mainContainer.setExperience(FIREWORK);
+		//mainContainer.setExperience(GALLERY);
 
 		Scene main = new Scene(mainContainer, 1600, 1000);
 		main.setFill(Color.BLACK);
 		main.setCursor(Cursor.NONE);
 		primaryStage.setScene(main);
 		primaryStage.setTitle("Interactive Wall");
-		// primaryStage.setFullScreen(true);
+        primaryStage.setFullScreen(true);
 		primaryStage.show();
 
 	}
